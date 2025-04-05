@@ -52,9 +52,15 @@
           toast(`ID ${id} ครบยอด 9000 แล้ว! 🙂`,
             {
               "position": "top-center",
-              "autoClose": 2000,
-                "theme": "dark",
+              "autoClose": 1500,
+                "theme": "light",
                 "type": "warning",
+                "style": {
+                  "fontSize": "22px",
+                  "width": "30%",
+                  "textAlign": "center",
+                    "color": "#000",
+                }
 
             }
           )
