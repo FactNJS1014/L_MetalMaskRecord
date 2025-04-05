@@ -2,19 +2,19 @@
     <div class="flex justify-center items-center mt-5 w-full">
         <div class="card w-[45%] lg:w-[50%] bg-base-100 shadow-xl">
             <div class="card-body ">
-                <h5 class="card-title text-center font-bold text-2xl text-black bg-blue-300 p-3 rounded-lg">Change Model Form</h5>
+                <h5 class="card-title text-center font-bold text-2xl text-black bg-blue-300 p-3 rounded-lg"><span class="mr-3">&#128203;</span>Change Model Form</h5>
                 <form @submit.prevent="handleSubmit">
                     <div class="grid grid-cols-2  gap-4 text-black">
                         <div class="flex flex-col col-span-2">
-                            <label for="Barcode" class="text-xl font-bold">Barcode : </label>
+                            <label for="Barcode" class="text-xl font-bold">Barcode : <span>&#128292;</span></label>
                             <input type="text" class="input input-bordered mt-2" placeholder="Barcode" v-model="formChange.barcode" />
                         </div>
                         <div class="flex flex-col">
-                            <label for="empID" class="text-xl font-bold">EmpID : </label>
+                            <label for="empID" class="text-xl font-bold">EmpID : <span>&#128292;</span></label>
                             <input type="text" class="input input-bordered mt-2" placeholder="Employee ID" v-model="formChange.empID" />
                         </div>
                         <div class="flex flex-col">
-                            <label for="Line" class="text-xl font-bold">Line SMT : </label>
+                            <label for="Line" class="text-xl font-bold">Line SMT : <span>&#128292;</span></label>
                             <select class="select select-bordered mt-2" v-model="formChange.line">
                                 <option disabled selected>Choose Line</option>
                                 <option value="SMT-1">SMT-1</option>
@@ -40,23 +40,23 @@
                             </select>
                         </div>
                         <div class="flex flex-col">
-                            <label for="customer" class="text-xl font-bold">Customer : </label>
+                            <label for="customer" class="text-xl font-bold">Customer : <span>&#128292;</span></label>
                             <input type="text" class="input input-bordered mt-2" placeholder="Customer" v-model="formChange.customer" />
                         </div>
                         <div class="flex flex-col">
-                            <label for="process" class="text-xl font-bold">Process : </label>
+                            <label for="process" class="text-xl font-bold">Process : <span>&#128292;</span></label>
                             <input type="text" class="input input-bordered mt-2" placeholder="Process" v-model="formChange.process" />
                         </div>
                         <div class="flex flex-col col-span-2">
-                            <label for="model" class="text-xl font-bold">Model : </label>
+                            <label for="model" class="text-xl font-bold">Model : <span>&#128292;</span></label>
                             <input type="text" class="input input-bordered mt-2" placeholder="Model" v-model="formChange.model"/>
                         </div>
                         <div class="flex flex-col">
-                            <label for="won" class="text-xl font-bold">Work Order No. : </label>
+                            <label for="won" class="text-xl font-bold">Work Order No. : <span>&#128292;</span></label>
                             <input type="text" class="input input-bordered mt-2" placeholder="Won No." v-model="formChange.wonNo" />
                         </div>
                         <div class="flex flex-col">
-                            <label for="shift" class="text-xl font-bold">Shift : </label>
+                            <label for="shift" class="text-xl font-bold">Shift : <span>&#127747; or &#127751;</span></label>
                             <select class="select select-bordered mt-2" v-model="formChange.shift">
                                 <option disabled selected>Choose Shift</option>
                                 <option value="Day">Day</option>
@@ -76,7 +76,7 @@
     <div class="flex justify-center items-center">
         <div class="card w-[95%] mt-3 ">
             <div class="card-body">
-                <h5 class="card-title text-center font-bold text-2xl text-black bg-blue-300 p-3 rounded-lg">Change Model History</h5>
+                <h5 class="card-title text-center font-bold text-2xl text-black bg-blue-300 p-3 rounded-lg"><span class="mr-3">&#128214;</span>Change Model History</h5>
                 <table class="table w-full overflow-x-auto text-black ">
                     <thead>
                         <tr class="text-center text-xl bg-info text-white">

@@ -33,56 +33,56 @@
                 </div>
             </div>
 
-            <h3 class="text-xl font-bold text-center mt-5 mb-3 bg-cyan-600 p-3 text-white rounded-lg">แบบฟอร์มบันทึก
+            <h3 class="text-xl font-bold text-center mt-5 mb-3 bg-cyan-600 p-3 text-white rounded-lg"><span class="mr-3">&#128196;</span>แบบฟอร์มบันทึก
                 Metal Mask
                 Sheet</h3>
             <form @submit.prevent="savedData" class="text-xl font-bold text-blue-600 ">
                 <div class="grid grid-cols-2 gap-4">
                     <div class="flex flex-col col-span-2">
-                        <label for="model" class="label">Model Name:</label>
+                        <label for="model" class="label">Model Name: <span>&#128292;</span></label>
                         <input type="text" id="name" v-model="scannedResult"
                             class="input input-bordered w-full focus:outline-none" />
                     </div>
                     <div class="flex flex-col">
-                        <label for="pcbno" class="label">PCB No.</label>
+                        <label for="pcbno" class="label">PCB No. <span>&#128292;</span></label>
                         <input type="text" id="name" v-model="mask.pcbno"
                             class="input input-bordered w-full focus:outline-none" />
 
                     </div>
                     <div class="flex flex-col">
-                        <label for="ref" class="label">Reference ID:</label>
+                        <label for="ref" class="label">Reference ID: <span>&#128292;</span></label>
                         <input type="text" id="name" v-model="mask.ref"
                             class="input input-bordered w-full focus:outline-none" />
                     </div>
                     <div class="flex flex-col">
-                        <label for="cus" class="label">Customer:</label>
+                        <label for="cus" class="label">Customer: <span>&#128292;</span></label>
                         <input type="text" id="name" v-model="mask.cus"
                             class="input input-bordered w-full focus:outline-none" />
                     </div>
                     <div class="flex flex-col">
-                        <label for="process" class="label">Process:</label>
+                        <label for="process" class="label">Process: <span>&#128292;</span></label>
                         <input type="text" id="name" v-model="mask.procs"
                             class="input input-bordered w-full focus:outline-none" />
                     </div>
                     <div class="flex flex-col">
-                        <label for="rev" class="label">Revision:</label>
+                        <label for="rev" class="label">Revision: <span>🔢</span></label>
                         <input type="number" class="input input-bordered w-full focus:outline-none"
                             v-model="mask.rev" />
                     </div>
                     <div class="flex flex-col">
-                        <label for="dateexpire" class="label">Product Date:</label>
+                        <label for="dateexpire" class="label">Product Date: <span>📆</span></label>
                         <input type="date" id="name" v-model="mask.expire_d"
                             class="input input-bordered w-full focus:outline-none" />
 
                     </div>
                     <div class="flex flex-col">
-                        <label for="won" class="label">Work Order:</label>
+                        <label for="won" class="label">Work Order: <span>&#128292;</span></label>
                         <input type="text" id="name" v-model="mask.won"
                             class="input input-bordered w-full focus:outline-none" />
 
                     </div>
                     <div class="flex flex-col">
-                        <label for="lot" class="label">Lot Size:</label>
+                        <label for="lot" class="label">Lot Size: <span>🔢</span></label>
                         <input type="text" id="name" v-model="mask.lot"
                             class="input input-bordered w-full focus:outline-none" />
 
