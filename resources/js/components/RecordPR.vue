@@ -39,8 +39,25 @@
             <form @submit.prevent="savedData" class="text-xl font-bold text-blue-600 ">
                 <div class="grid grid-cols-2 gap-4">
                     <div class="flex flex-col col-span-2">
-                        <label for="model" class="label">Model Name: <span>&#128292;</span></label>
+                        <label for="qrcode" class="label">QR Code ID: <span>&#128292;</span></label>
                         <input type="text" id="name" v-model="scannedResult"
+                            class="input input-bordered w-full focus:outline-none" />
+                    </div>
+
+                    <div class="flex flex-col">
+                        <label for="cus" class="label">Customer: <span>&#128292;</span></label>
+                        <input type="text" id="name" v-model="mask.cus"
+                            class="input input-bordered w-full focus:outline-none" />
+                    </div>
+                    <div class="flex flex-col">
+                        <label for="won" class="label">Work Order: <span>&#128292;</span></label>
+                        <input type="text" id="name" v-model="mask.won"
+                            class="input input-bordered w-full focus:outline-none" />
+
+                    </div>
+                    <div class="flex flex-col">
+                        <label for="model" class="label">Model Code: <span>&#128292;</span></label>
+                        <input type="text" id="name" v-model="mask.mdlcd"
                             class="input input-bordered w-full focus:outline-none" />
                     </div>
                     <div class="flex flex-col">
@@ -50,14 +67,10 @@
 
                     </div>
                     <div class="flex flex-col">
-                        <label for="ref" class="label">Reference ID: <span>&#128292;</span></label>
-                        <input type="text" id="name" v-model="mask.ref"
+                        <label for="mskname" class="label">Metal Mask Name: <span>&#128292;</span></label>
+                        <input type="text" id="name" v-model="mask.mskname"
                             class="input input-bordered w-full focus:outline-none" />
-                    </div>
-                    <div class="flex flex-col">
-                        <label for="cus" class="label">Customer: <span>&#128292;</span></label>
-                        <input type="text" id="name" v-model="mask.cus"
-                            class="input input-bordered w-full focus:outline-none" />
+
                     </div>
                     <div class="flex flex-col">
                         <label for="process" class="label">Process: <span>&#128292;</span></label>
@@ -70,20 +83,34 @@
                             v-model="mask.rev" />
                     </div>
                     <div class="flex flex-col">
+                        <label for="ref" class="label">Reference Number: <span>&#128292;</span></label>
+                        <input type="text" id="name" v-model="mask.ref"
+                            class="input input-bordered w-full focus:outline-none" />
+                    </div>
+
+
+
+                    <div class="flex flex-col">
                         <label for="dateexpire" class="label">Product Date: <span>📆</span></label>
                         <input type="date" id="name" v-model="mask.expire_d"
                             class="input input-bordered w-full focus:outline-none" />
 
                     </div>
                     <div class="flex flex-col">
-                        <label for="won" class="label">Work Order: <span>&#128292;</span></label>
-                        <input type="text" id="name" v-model="mask.won"
+                        <label for="lot" class="label">Lot Size: <span>🔢</span></label>
+                        <input type="text" id="name" v-model="mask.lot"
                             class="input input-bordered w-full focus:outline-none" />
 
                     </div>
                     <div class="flex flex-col">
-                        <label for="lot" class="label">Lot Size: <span>🔢</span></label>
-                        <input type="text" id="name" v-model="mask.lot"
+                        <label for="vendor" class="label">Vendor/Maker: <span>&#128292;</span></label>
+                        <input type="text" id="name" v-model="mask.vendor"
+                            class="input input-bordered w-full focus:outline-none" />
+
+                    </div>
+                    <div class="flex flex-col">
+                        <label for="remark" class="label">Remark: <span>&#128292;</span></label>
+                        <input type="text" id="name" v-model="mask.remark"
                             class="input input-bordered w-full focus:outline-none" />
 
                     </div>
@@ -138,6 +165,10 @@ export default {
                 won: "",
                 lot: "",
                 rev: "",
+                mdlcd: "",
+                mskname: "",
+                vendor: "",
+                remark: "",
             },
             isModalOpen: false,
         };
@@ -153,6 +184,10 @@ export default {
                 won: { required },
                 lot: { required },
                 rev: { required },
+                mdlcd: { required },
+                mskname: { required },
+                vendor: { required },
+                remark: { required },
             }
         };
     },
@@ -189,7 +224,7 @@ export default {
                     theme: "colored",
                     autoClose: 2000,
                 });
-                this.$router.push({ name: 'prmetalmask' });
+
             }
         },
         handleItemSelected(item) {
