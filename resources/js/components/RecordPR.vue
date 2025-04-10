@@ -33,7 +33,8 @@
                 </div>
             </div>
 
-            <h3 class="text-xl font-bold text-center mt-5 mb-3 bg-cyan-600 p-3 text-white rounded-lg"><span class="mr-3">&#128196;</span>แบบฟอร์มบันทึก
+            <h3 class="text-xl font-bold text-center mt-5 mb-3 bg-cyan-600 p-3 text-white rounded-lg"><span
+                    class="mr-3">&#128196;</span>แบบฟอร์มบันทึก
                 Metal Mask
                 Sheet</h3>
             <form @submit.prevent="savedData" class="text-xl font-bold text-blue-600 ">
@@ -43,23 +44,28 @@
                         <input type="text" id="name" v-model="scannedResult"
                             class="input input-bordered w-full focus:outline-none" />
                     </div>
-
-                    <div class="flex flex-col">
-                        <label for="cus" class="label">Customer: <span>&#128292;</span></label>
-                        <input type="text" id="name" v-model="mask.cus"
+                    <div class="flex flex-col col-span-2">
+                        <label for="mdlcd" class="label">Model Code: <span>&#128292;</span></label>
+                        <input type="text" id="name" v-model="mask.mdlcd"
                             class="input input-bordered w-full focus:outline-none" />
+
                     </div>
                     <div class="flex flex-col">
                         <label for="won" class="label">Work Order: <span>&#128292;</span></label>
                         <input type="text" id="name" v-model="mask.won"
                             class="input input-bordered w-full focus:outline-none" />
-
                     </div>
                     <div class="flex flex-col">
-                        <label for="model" class="label">Model Code: <span>&#128292;</span></label>
-                        <input type="text" id="name" v-model="mask.mdlcd"
+                        <label for="listno" class="label">List No.: <span>&#128292;</span></label>
+                        <input type="text" id="name" v-model="mask.listno"
                             class="input input-bordered w-full focus:outline-none" />
                     </div>
+                    <div class="flex flex-col">
+                        <label for="cus" class="label">Customer: <span>&#128292;</span></label>
+                        <input type="text" id="name" v-model="mask.cus"
+                            class="input input-bordered w-full focus:outline-none" />
+                    </div>
+
                     <div class="flex flex-col">
                         <label for="pcbno" class="label">PCB No. <span>&#128292;</span></label>
                         <input type="text" id="name" v-model="mask.pcbno"
@@ -109,6 +115,39 @@
 
                     </div>
                     <div class="flex flex-col">
+                        <label for="details" class="label">Details: <span>&#128292;</span></label>
+                        <input type="text" id="name" v-model="mask.details"
+                            class="input input-bordered w-full focus:outline-none" />
+
+                    </div>
+                    <div class="flex flex-col mt-3 ms-3">
+                        <div class="flex flex-row gap-2">
+                            <div class="flex items-center gap-1">
+                                <input type="radio" v-model="mask.types" class="radio" id="defaultRadio1"
+                                    value="receive" />
+                                <label class="label-text text-blue-600 text-xl" for="defaultRadio1">Receive</label>
+                            </div>
+                            <div class="flex items-center gap-1">
+                                <input type="radio" v-model="mask.types" class="radio" id="defaultRadio2"
+                                    value="takeout" />
+                                <label class="label-text text-blue-600 text-xl" for="defaultRadio2">Take out</label>
+                            </div>
+                        </div>
+                        <div class="flex flex-row gap-4">
+                            <div class="flex items-center gap-1">
+                                <input type="radio" v-model="mask.types" class="radio" id="defaultRadio3"
+                                    value="return" />
+                                <label class="label-text text-blue-600 text-xl" for="defaultRadio3">Return</label>
+                            </div>
+                            <div class="flex items-center gap-1">
+                                <input type="radio" v-model="mask.types" class="radio" id="defaultRadio4"
+                                    value="scrap" />
+                                <label class="label-text text-blue-600 text-xl" for="defaultRadio4">Scrap</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col">
                         <label for="remark" class="label">Remark: <span>&#128292;</span></label>
                         <input type="text" id="name" v-model="mask.remark"
                             class="input input-bordered w-full focus:outline-none" />
@@ -116,8 +155,8 @@
                     </div>
 
                 </div>
-                <div class="flex justify-start mt-5">
-                    <button type="submit" class="btn btn-primary w-[20%] text-xl font-semibold"><span
+                <div class="flex justify-center items-center mt-10">
+                    <button type="submit" class="btn btn-primary w-[25%] text-xl font-semibold"><span
                             class="icon-[material-symbols--save-as] size-6"></span>บันทึก</button>
 
                 </div>
@@ -136,7 +175,7 @@ import "vue3-toastify/dist/index.css"
 import { toast } from "vue3-toastify"
 
 export default {
-    components: { QrcodeStream},
+    components: { QrcodeStream },
     setup() {
         return {
             v$: useVuelidate(),
@@ -162,13 +201,16 @@ export default {
                 cus: "",
                 procs: "",
                 expire_d: "",
-                won: "",
                 lot: "",
                 rev: "",
-                mdlcd: "",
                 mskname: "",
                 vendor: "",
                 remark: "",
+                details: "",
+                types: "",
+                listno: "",
+                mdlcd: "",
+                won: "",
             },
             isModalOpen: false,
         };
@@ -181,13 +223,16 @@ export default {
                 cus: { required },
                 procs: { required },
                 expire_d: { required },
-                won: { required },
                 lot: { required },
                 rev: { required },
-                mdlcd: { required },
                 mskname: { required },
                 vendor: { required },
                 remark: { required },
+                details: { required },
+                types: { required },
+                listno: { required },
+                mdlcd: { required },
+                won: { required },
             }
         };
     },

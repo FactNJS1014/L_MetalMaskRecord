@@ -7,8 +7,14 @@
     <title>Metal Mask</title>
     @vite('resources/css/app.css')
     @vite('resources/js/app.js')
+    <style>
+        body {
+            background-color: #00d3f2;
+
+        }
+    </style>
   </head>
-  <body class="bg-blue-400 h-screen">
+  <body>
     <div id="app">
 
     </div>

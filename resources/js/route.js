@@ -3,6 +3,7 @@ import ChangeForm from "./components/ChangeForm.vue";
 import Report from "./components/ReportChangeModel.vue";
 import RecordPR from "./components/RecordPR.vue";
 import ReportMain from "./components/ReportMain.vue";
+import Settingmaster from "./components/settingmaster.vue";
 
 const routes = [
     {
@@ -24,6 +25,12 @@ const routes = [
         path: "/reportMain",
         name: "reportMain",
         component: ReportMain,
+    },
+    {
+        path: "/setting",
+        name: "setting",
+        component: Settingmaster,
+
     }
 
 ]
