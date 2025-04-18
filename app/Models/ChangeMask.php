@@ -23,10 +23,7 @@ class ChangeMask extends Model
         'MMCHANGE_SHIFT',
         'MMCHANGE_LSTDT',
         'MMCHANGE_STD',
-        'MMNONCHANGE_DETAILS',
-        'MMCHANGE_DETAILS',
-        'MMCHANGE_APPR_STD',
-        'MMCHANGE_APPR_EMPID',
+
     ];
-    
+
 }

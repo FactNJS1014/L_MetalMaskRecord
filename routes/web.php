@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\GetDataController;
+use App\Http\Controllers\InsertChangeModelController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,3 +24,4 @@ Route::post('/get-model-code', [GetDataController::class, 'getModelCode']);
 Route::post('/show-value', [GetDataController::class, 'showValueToInput']);
 Route::post('/search', [GetDataController::class, 'SearchWon']);
 Route::post('/get-wono', [GetDataController::class, 'getWono']);
+Route::post('/insert-change-model', [InsertChangeModelController::class, 'insertChangeModel']);

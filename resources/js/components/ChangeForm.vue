@@ -38,29 +38,36 @@
                 <form @submit.prevent="handleSubmit">
                     <div class="grid grid-cols-2  gap-4 text-black">
                         <div class="flex flex-col col-span-2">
-                            <label for="Barcode" class="text-xl font-bold">QR_ID <span class="text-sky-600">(Scan auto show value)</span>  : <span>&#128292;</span></label>
+                            <label for="Barcode" class="text-xl font-bold">QR_ID <span class="text-sky-600">(Scan auto
+                                    show
+                                    value)</span> : <span>&#128292;</span></label>
                             <input type="text" class="input input-bordered mt-2" placeholder="QR Code ID"
                                 v-model="formChange.barcode" />
                         </div>
                         <div class="flex flex-col col-span-2">
-                            <label for="model" class="text-xl font-bold">Model <span class="text-sky-600">(Auto Show value)</span> : <span>&#128292;</span></label>
-                            <!-- <select v-model="formChange.model" class="input input-bordered w-full focus:outline-none">
+                            <label for="model" class="text-xl font-bold">Model <span class="text-sky-600">(Auto Show
+                                    value)</span> :
+                                <span>&#128292;</span></label>
+                            <select v-model="formChange.model" class="input input-bordered w-full focus:outline-none">
                                 <option value="" disabled selected>เลือก Model Code</option>
                                 <option v-for="item in listModel" :key="item.LISTMDL_MDLCD" :value="item.LISTMDL_MDLCD">
                                     {{
                                         item.LISTMDL_MDLCD }}</option>
-                            </select> -->
-                            <input type="text" class="input input-bordered mt-2" placeholder="Model Code"
-                                v-model="formChange.model" />
+                            </select>
+                            <!-- <input type="text" class="input input-bordered mt-2" placeholder="Model Code"
+                                v-model="formChange.model" /> -->
                         </div>
                         <div class="flex flex-col">
                             <label for="won" class="text-xl font-bold">Work Order No. : <span>&#128292;</span></label>
-                            <AutoComplete v-model="formChange.wonNo" :suggestions="items" field="label" @complete="search"
-                                @change="checkModel" placeholder="Search WONO..." class="input input-bordered w-full mt-2" />
+                            <AutoComplete v-model="formChange.wonNo" :suggestions="items" field="label"
+                                @complete="search" @change="checkModel" placeholder="Search WONO..."
+                                class="input input-bordered w-full mt-2" />
 
                         </div>
                         <div class="flex flex-col">
-                            <label for="customer" class="text-xl font-bold">Customer <span class="text-sky-600">(Auto Show value)</span> : <span>&#128292;</span></label>
+                            <label for="customer" class="text-xl font-bold">Customer <span class="text-sky-600">(Auto
+                                    Show
+                                    value)</span> : <span>&#128292;</span></label>
                             <input type="text" class="input input-bordered mt-2" placeholder="Customer"
                                 v-model="formChange.customer" />
                         </div>
@@ -92,7 +99,8 @@
                             </select>
                         </div>
                         <div class="flex flex-col">
-                            <label for="process" class="text-xl font-bold">Process <span class="text-sky-600">(Auto Show value)</span> : <span>&#128292;</span></label>
+                            <label for="process" class="text-xl font-bold">Process <span class="text-sky-600">(Auto Show
+                                    value)</span> : <span>&#128292;</span></label>
                             <input type="text" class="input input-bordered mt-2" placeholder="Process"
                                 v-model="formChange.process" />
                         </div>
@@ -125,29 +133,47 @@
         </div>
     </div>
     <div class="flex justify-center items-center">
-        <div class="card w-[95%] mt-3 border border-cyan-600">
-            <div class="card-body">
+        <div class="card w-[95%] mt-3 border border-cyan-600 ">
+            <div class="card-body ">
                 <h5 class="card-title text-center font-bold text-2xl text-black bg-blue-300 p-3 rounded-lg"><span
                         class="mr-3">&#128214;</span>Change Model History</h5>
-                <table class="table w-full overflow-x-auto text-black ">
-                    <thead>
-                        <tr class="text-center text-xl bg-info text-white">
-                            <th>Issue</th>
-                            <th>Date</th>
-                            <th>Shift</th>
-                            <th>Customer</th>
-                            <th>Model</th>
-                            <th>Process</th>
-                            <th>Won No.</th>
-                            <th>SMT</th>
-                            <th>EmpID</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Add your data rows here -->
-                    </tbody>
-                </table>
+                <div class="overflow-x-auto">
+                    <table class="table w-full  text-black ">
+                        <thead>
+                            <tr class="text-center text-xl bg-info text-white">
+                                <th>QR_ID</th>
+                                <th>Date</th>
+                                <th>Shift</th>
+                                <th>Customer</th>
+                                <th>Model</th>
+                                <th>Process</th>
+                                <th>Won No.</th>
+                                <th>SMT</th>
+                                <th>EmpID</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Add your data rows here -->
+                            <tr v-for="data in dataChange" :key="data.MMCHANGE_ID">
+                                <td class="text-lg font-semibold">{{ data.MMCHANGE_BARCODE }}</td>
+                                <td class="text-lg font-semibold">{{ data.MMCHANGE_LSTDT }}</td>
+                                <td class="text-lg font-semibold">{{ data.MMCHANGE_SHIFT }}</td>
+                                <td class="text-lg font-semibold">{{ data.MMCHANGE_CUS }}</td>
+                                <td class="text-lg font-semibold">{{ data.MMCHANGE_MDL }}</td>
+                                <td class="text-lg font-semibold">{{ data.MMCHANGE_PRCS }}</td>
+                                <td class="text-lg font-semibold">{{ data.MMCHANGE_WONNO }}</td>
+                                <td class="text-lg font-semibold">{{ data.MMCHANGE_LINE }}</td>
+                                <td class="text-lg font-semibold">{{ data.MMCHANGE_EMPID }}</td>
+                                <td class="space-x-5 ">
+                                    <button class="btn btn-accent text-[18px]">อนุมัติเปลี่ยน</button>
+                                    <button class="btn btn-error text-[18px]">ไม่อนุมัติเปลี่ยน</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
             </div>
 
         </div>
@@ -200,6 +226,7 @@ export default {
             listModel: [],
             items: [],
             mdlcode: "",
+            dataChange: [],
 
         }
     },
@@ -218,6 +245,9 @@ export default {
 
         }
     },
+    mounted() {
+        this.GetDataChange()
+    },
     methods: {
         async handleSubmit() {
             // Handle form submission logic here
@@ -232,12 +262,50 @@ export default {
 
                 })
             } else {
-                toast.success("Change Model Success", {
-                    position: "top-center",
-                    duration: 5000,
-                    theme: "colored",
-                    autoClose: 2000,
+                //    console.log(this.formChange)
+                axios.post('/L_MetalMaskRecord/insert-change-model', {
+                    formChange: this.formChange
+                }, {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
                 })
+                    .then(response => {
+                        console.log(response.data);
+                        if (response.data) {
+                            toast.success("Change Model Success", {
+                                position: "top-center",
+                                duration: 5000,
+                                theme: "colored",
+                                autoClose: 2000,
+                                onClose:()=>{
+                                    location.reload()
+                                }
+                            })
+                            this.formChange = {
+                                barcode: '',
+                                empID: '',
+                                line: '',
+                                customer: '',
+                                process: '',
+                                model: '',
+                                wonNo: '',
+                                shift: ''
+                            }
+                            // location.reload()
+                        } else {
+                            toast.error("Change Model Failed", {
+                                position: "top-center",
+                                duration: 5000,
+                                theme: "colored",
+                                autoClose: 2000,
+                            })
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+
             }
         },
         toggleCamera() {
@@ -268,9 +336,9 @@ export default {
                     // console.log(response.data);
                     this.listModel = response.data;
                     console.log(this.listModel)
-                    this.listModel.map((value)=>{
-                       this.formChange.model = value.LISTMDL_MDLCD;
-                       this.formChange.process = value.MMST_PROCS;
+                    this.listModel.map((value) => {
+                        //    this.formChange.model = value.LISTMDL_MDLCD;
+                        this.formChange.process = value.MMST_PROCS;
 
                     })
 
@@ -287,6 +355,7 @@ export default {
         },
         onInit(promise) {
             promise.catch(console.error);
+
 
         },
         search(event) {
@@ -350,7 +419,20 @@ export default {
                     });
             }
 
+        },
+        GetDataChange() {
+            axios.get('/L_MetalMaskRecord/api/get-change-data')
+                .then(res => {
+                    this.dataChange = res.data;
+                    console.log(this.dataChange);
+                })
+                .catch(error => {
+                    console.error('Error fetching change data:', error);
+                });
         }
-    }
+
+
+    },
+
 }
 </script>

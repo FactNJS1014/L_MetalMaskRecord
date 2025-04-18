@@ -20,4 +20,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 // Route::post('/search', [GetDataController::class, 'SearchWon']);
+Route::get('/get-change-data',[GetDataController::class , 'GetChangeData']);
 

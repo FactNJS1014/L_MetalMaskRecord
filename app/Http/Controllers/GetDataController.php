@@ -31,7 +31,7 @@ class GetDataController extends Controller
 
         // Query the database table using a LIKE clause
         $get_won_code = DB::table('VWORLIST_1Y')
-            ->where('WONO', 'LIKE', '%' .$query. '%')
+            ->where('WONO', 'LIKE', '%' . $query . '%')
             ->pluck('WONO');
 
         // Return the result as JSON
@@ -46,12 +46,16 @@ class GetDataController extends Controller
         // Query the database table using a LIKE clause
         $get_mdl_code = DB::table('VWORLIST_1Y')
             ->where('WONO', '=', $won)
-            ->select('MDLCD','BSGRP')
+            ->select('MDLCD', 'BSGRP')
             ->get();
 
         // Return the result as JSON
         return response()->json($get_mdl_code);
     }
 
-
+    public function GetChangeData()
+    {
+        $data = DB::table('MMCHN_MDL_TBL')->get();
+        return response()->json($data);
+    }
 }
