@@ -1,22 +1,74 @@
 <template>
     <div class="flex justify-center items-center mt-5 w-full">
-        <div class="card w-[45%] lg:w-[50%] bg-base-100 shadow-xl">
+        <div class="card w-[45%] lg:w-[50%] bg-base-100 shadow-xl border border-cyan-600">
+            <div class="flex flex-col justify-center items-center mt-5">
+                <button @click="toggleCamera" class="btn btn-primary w-[10%] h-10">
+                    <span
+                        :class="isCameraOpen ? 'icon-[material-symbols--video-camera-back-rounded]  size-8' : 'icon-[material-symbols--video-camera-front-off-rounded] size-8'"></span>
+                </button>
+            </div>
+            <!-- Modal Popup -->
+            <div v-if="isModalOpen" id="middle-center-modal"
+                class="overlay modal fixed inset-0 flex items-start justify-center bg-black bg-opacity-50 transition-opacity duration-300"
+                :class="{ 'opacity-100': isModalOpen, 'hidden': !isModalOpen }" role="dialog" tabindex="-1">
+
+                <div class="modal-dialog bg-white p-6 rounded-lg shadow-lg w-96 transition-transform duration-300 mt-10"
+                    :class="{ 'opacity-100 scale-100': isModalOpen, 'opacity-0 scale-90': !isModalOpen }">
+
+                    <div class="modal-content">
+                        <qrcode-stream @decode="onDecode" @init="onInit" :constraints="cameraConstraints"
+                            v-if="isCameraOpen" :scan-region-size="scanRegionSize" :paused="!isCameraOpen">
+                            <template #default="{ decodedString }">
+                                <div class="text-center">
+                                    <p class="text-lg font-bold">{{ decodedString }}</p>
+                                </div>
+                            </template>
+                            <template #error="{ error }">
+                                <div class="text-red-500 text-center">
+                                    <p>Error: {{ error }}</p>
+                                </div>
+                            </template>
+                        </qrcode-stream>
+                    </div>
+                </div>
+            </div>
             <div class="card-body ">
-                <h5 class="card-title text-center font-bold text-2xl text-black bg-blue-300 p-3 rounded-lg"><span class="mr-3">&#128203;</span>Change Model Form</h5>
+                <h5 class="card-title text-center font-bold text-2xl text-black bg-blue-300 p-3 rounded-lg"><span
+                        class="mr-3">&#128203;</span>Change Model Form</h5>
                 <form @submit.prevent="handleSubmit">
                     <div class="grid grid-cols-2  gap-4 text-black">
                         <div class="flex flex-col col-span-2">
-                            <label for="Barcode" class="text-xl font-bold">Barcode : <span>&#128292;</span></label>
-                            <input type="text" class="input input-bordered mt-2" placeholder="Barcode" v-model="formChange.barcode" />
+                            <label for="Barcode" class="text-xl font-bold">QR_ID <span class="text-sky-600">(Scan auto show value)</span>  : <span>&#128292;</span></label>
+                            <input type="text" class="input input-bordered mt-2" placeholder="QR Code ID"
+                                v-model="formChange.barcode" />
+                        </div>
+                        <div class="flex flex-col col-span-2">
+                            <label for="model" class="text-xl font-bold">Model <span class="text-sky-600">(Auto Show value)</span> : <span>&#128292;</span></label>
+                            <!-- <select v-model="formChange.model" class="input input-bordered w-full focus:outline-none">
+                                <option value="" disabled selected>เลือก Model Code</option>
+                                <option v-for="item in listModel" :key="item.LISTMDL_MDLCD" :value="item.LISTMDL_MDLCD">
+                                    {{
+                                        item.LISTMDL_MDLCD }}</option>
+                            </select> -->
+                            <input type="text" class="input input-bordered mt-2" placeholder="Model Code"
+                                v-model="formChange.model" />
                         </div>
                         <div class="flex flex-col">
-                            <label for="empID" class="text-xl font-bold">EmpID : <span>&#128292;</span></label>
-                            <input type="text" class="input input-bordered mt-2" placeholder="Employee ID" v-model="formChange.empID" />
+                            <label for="won" class="text-xl font-bold">Work Order No. : <span>&#128292;</span></label>
+                            <AutoComplete v-model="formChange.wonNo" :suggestions="items" field="label" @complete="search"
+                                @change="checkModel" placeholder="Search WONO..." class="input input-bordered w-full mt-2" />
+
                         </div>
+                        <div class="flex flex-col">
+                            <label for="customer" class="text-xl font-bold">Customer <span class="text-sky-600">(Auto Show value)</span> : <span>&#128292;</span></label>
+                            <input type="text" class="input input-bordered mt-2" placeholder="Customer"
+                                v-model="formChange.customer" />
+                        </div>
+
                         <div class="flex flex-col">
                             <label for="Line" class="text-xl font-bold">Line SMT : <span>&#128292;</span></label>
                             <select class="select select-bordered mt-2" v-model="formChange.line">
-                                <option disabled selected>Choose Line</option>
+                                <option value="" disabled selected>Choose Line</option>
                                 <option value="SMT-1">SMT-1</option>
                                 <option value="SMT-2">SMT-2</option>
                                 <option value="SMT-3">SMT-3</option>
@@ -40,32 +92,31 @@
                             </select>
                         </div>
                         <div class="flex flex-col">
-                            <label for="customer" class="text-xl font-bold">Customer : <span>&#128292;</span></label>
-                            <input type="text" class="input input-bordered mt-2" placeholder="Customer" v-model="formChange.customer" />
+                            <label for="process" class="text-xl font-bold">Process <span class="text-sky-600">(Auto Show value)</span> : <span>&#128292;</span></label>
+                            <input type="text" class="input input-bordered mt-2" placeholder="Process"
+                                v-model="formChange.process" />
                         </div>
                         <div class="flex flex-col">
-                            <label for="process" class="text-xl font-bold">Process : <span>&#128292;</span></label>
-                            <input type="text" class="input input-bordered mt-2" placeholder="Process" v-model="formChange.process" />
+                            <label for="empID" class="text-xl font-bold">EmpID : <span>&#128292;</span></label>
+                            <input type="text" class="input input-bordered mt-2" placeholder="Employee ID"
+                                v-model="formChange.empID" />
                         </div>
-                        <div class="flex flex-col col-span-2">
-                            <label for="model" class="text-xl font-bold">Model : <span>&#128292;</span></label>
-                            <input type="text" class="input input-bordered mt-2" placeholder="Model" v-model="formChange.model"/>
-                        </div>
+
+
                         <div class="flex flex-col">
-                            <label for="won" class="text-xl font-bold">Work Order No. : <span>&#128292;</span></label>
-                            <input type="text" class="input input-bordered mt-2" placeholder="Won No." v-model="formChange.wonNo" />
-                        </div>
-                        <div class="flex flex-col">
-                            <label for="shift" class="text-xl font-bold">Shift : <span>&#127747; or &#127751;</span></label>
+                            <label for="shift" class="text-xl font-bold">Shift : <span>&#127747; or
+                                    &#127751;</span></label>
                             <select class="select select-bordered mt-2" v-model="formChange.shift">
-                                <option disabled selected>Choose Shift</option>
+                                <option value="" disabled selected>Choose Shift</option>
                                 <option value="Day">Day</option>
                                 <option value="Night">Night</option>
                             </select>
                         </div>
                     </div>
                     <div class="card-actions mt-5 justify-between">
-                        <button class="btn btn-success text-2xl h-12 font-bold hover:bg-white hover:text-success hover:border-0" type="submit"><i class="pi pi-save"></i> Save</button>
+                        <button
+                            class="btn btn-success text-2xl h-12 font-bold hover:bg-white hover:text-success hover:border-0"
+                            type="submit"><i class="pi pi-save"></i> Save</button>
                         <!-- <button class="btn bg-teal-500 border-0 text-2xl h-12 font-bold text-black hover:bg-white hover:text-teal-500 hover:border-0" type="submit"><i class="pi pi-user-edit"></i> Change</button> -->
 
                     </div>
@@ -74,9 +125,10 @@
         </div>
     </div>
     <div class="flex justify-center items-center">
-        <div class="card w-[95%] mt-3 ">
+        <div class="card w-[95%] mt-3 border border-cyan-600">
             <div class="card-body">
-                <h5 class="card-title text-center font-bold text-2xl text-black bg-blue-300 p-3 rounded-lg"><span class="mr-3">&#128214;</span>Change Model History</h5>
+                <h5 class="card-title text-center font-bold text-2xl text-black bg-blue-300 p-3 rounded-lg"><span
+                        class="mr-3">&#128214;</span>Change Model History</h5>
                 <table class="table w-full overflow-x-auto text-black ">
                     <thead>
                         <tr class="text-center text-xl bg-info text-white">
@@ -88,6 +140,7 @@
                             <th>Process</th>
                             <th>Won No.</th>
                             <th>SMT</th>
+                            <th>EmpID</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -103,15 +156,22 @@
 </template>
 <script>
 import 'primeicons/primeicons.css'
-import {useVuelidate} from '@vuelidate/core'
-import {required} from '@vuelidate/validators'
+import { useVuelidate } from '@vuelidate/core'
+import { required } from '@vuelidate/validators'
 import "vue3-toastify/dist/index.css"
 import { toast } from "vue3-toastify";
-
+import { QrcodeStream } from "vue3-qrcode-reader";
+import AutoComplete from 'primevue/autocomplete';
+import Swal from 'sweetalert2'
+import axios from 'axios';
 export default {
+    components: {
+        QrcodeStream,
+        AutoComplete,
+    },
     setup() {
         const v$ = useVuelidate()
-        return {v$}
+        return { v$ }
     },
     data() {
         return {
@@ -124,21 +184,38 @@ export default {
                 model: '',
                 wonNo: '',
                 shift: ''
-            }
+            },
+            isCameraOpen: false,
+            scanRegionSize: 3.1, // Adjust this value as needed
+            cameraConstraints: {
+                video: {
+                    facingMode: "environment",
+                    width: { ideal: 1920, min: 1280 },
+                    height: { ideal: 1080, min: 720 },
+                    focusMode: "continuous",
+                    zoom: 2, // Try adding zoom (may not be supported on all devices)
+                },
+            },
+            isModalOpen: false,
+            listModel: [],
+            items: [],
+            mdlcode: "",
+
         }
     },
-    validations(){
+    validations() {
         return {
             formChange: {
-                barcode: {required},
-                empID: {required},
-                line: {required},
-                customer: {required},
-                process: {required},
-                model: {required},
-                wonNo: {required},
-                shift: {required}
-            }
+                barcode: { required },
+                empID: { required },
+                line: { required },
+                customer: { required },
+                process: { required },
+                model: { required },
+                wonNo: { required },
+                shift: { required }
+            },
+
         }
     },
     methods: {
@@ -147,7 +224,7 @@ export default {
             console.log("Form submitted");
             const isValid = await this.v$.$validate()
             if (!isValid) {
-                toast.error("Please fill in all required fields.",{
+                toast.error("Please fill in all required fields.", {
                     position: "top-center",
                     duration: 5000,
                     theme: "colored",
@@ -155,13 +232,124 @@ export default {
 
                 })
             } else {
-                toast.success("Change Model Success",{
+                toast.success("Change Model Success", {
                     position: "top-center",
                     duration: 5000,
                     theme: "colored",
                     autoClose: 2000,
                 })
             }
+        },
+        toggleCamera() {
+            this.isCameraOpen = !this.isCameraOpen;
+            if (this.isCameraOpen) {
+                this.formChange.barcode = "";
+                this.isModalOpen = true;
+            }
+        },
+        onDecode(result) {
+            this.formChange.barcode = result;
+            this.isCameraOpen = false;
+            this.isModalOpen = false;
+            let id = result;
+            const qrid = id.split('_');
+            const ref_id = qrid[3];
+            // console.log(ref_id)
+            axios.post('/L_MetalMaskRecord/get-model-code', {
+                ref_id: ref_id
+            },
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+
+                    }
+                })
+                .then(response => {
+                    // console.log(response.data);
+                    this.listModel = response.data;
+                    console.log(this.listModel)
+                    this.listModel.map((value)=>{
+                       this.formChange.model = value.LISTMDL_MDLCD;
+                       this.formChange.process = value.MMST_PROCS;
+
+                    })
+
+
+                    // Do something with response
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+
+
+
+
+        },
+        onInit(promise) {
+            promise.catch(console.error);
+
+        },
+        search(event) {
+            const query = event.query;
+            axios.post('/L_MetalMaskRecord/search', {
+                query: query
+            }, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => {
+                    this.items = response.data;
+
+
+
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+
+
+        },
+        checkModel() {
+            const won = this.formChange.wonNo;
+            // console.log(this.mask.mdlcd)
+            if (won.length >= 15) {
+                axios.post('/L_MetalMaskRecord/get-wono', {
+                    won: won
+                }, {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                    .then(response => {
+                        this.mdlcode = response.data;
+                        this.mdlcode.map((item => {
+                            // this.mask.cus = item.BSGRP;
+                            if (this.formChange.model === item.MDLCD) {
+                                toast.success("Model Code is correct", {
+                                    position: "top-center",
+                                    duration: 5000,
+                                    theme: "colored",
+                                    autoClose: 2000,
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Model Code is not correct',
+                                    text: 'Model Code is not correct',
+                                    showCancelButton: false,
+                                    showConfirmButton: false,
+                                    timer: 1500,
+                                })
+                            }
+                            this.formChange.customer = item.BSGRP;
+                        }))
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+            }
+
         }
     }
 }

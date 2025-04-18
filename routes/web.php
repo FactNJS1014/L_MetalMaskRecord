@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\GetDataController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,3 +18,8 @@ use Illuminate\Support\Facades\Route;
 Route::get('/{any}', function () {
     return view('app');
 })->where('any', '.*');
+
+Route::post('/get-model-code', [GetDataController::class, 'getModelCode']);
+Route::post('/show-value', [GetDataController::class, 'showValueToInput']);
+Route::post('/search', [GetDataController::class, 'SearchWon']);
+Route::post('/get-wono', [GetDataController::class, 'getWono']);
