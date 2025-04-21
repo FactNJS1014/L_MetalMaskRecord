@@ -40,6 +40,7 @@ class InsertChangeModelController extends Controller
         $changeModel->MMCHANGE_SHIFT = $data['shift'];
         $changeModel->MMCHANGE_LSTDT = date('Y-m-d H:i:s');
         $changeModel->MMCHANGE_STD = 1;
+        $changeModel->MMCHANGE_MDLCHN = $data['mdlch'];
         // Save the model to the database
         $changeModel->save();
 

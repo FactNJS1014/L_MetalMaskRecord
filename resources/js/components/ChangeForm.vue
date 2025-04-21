@@ -61,6 +61,12 @@
                                 <!-- <input type="text" class="input input-bordered mt-2" placeholder="Model Code"
                                 v-model="formChange.model" /> -->
                             </div>
+                            <div class="flex flex-col col-span-2">
+                                <label for="model" class="text-xl font-bold">Model ที่ต้องการเปลี่ยน :
+                                    <span>&#128292;</span></label>
+                                <input type="text" class="input input-bordered mt-2" placeholder="ใส่ข้อมูล Model ที่ต้องการเปลี่ยน..."
+                                v-model="formChange.mdlch" />
+                            </div>
                             <div class="flex flex-col">
                                 <label for="won" class="text-xl font-bold">Work Order No. :
                                     <span>&#128292;</span></label>
@@ -144,15 +150,16 @@
                 <div class="card-body ">
                     <h5 class="card-title text-center font-bold text-2xl text-black bg-fuchsia-500 p-3 rounded-lg"><span
                             class="mr-3">&#128214;</span>Change Model History</h5>
-                    <div class="overflow-x-auto">
-                        <table class="table w-full  text-black ">
+                    <div class=" overflow-x-auto ">
+                        <table class="table w-full  text-black border-base-content/25 border">
                             <thead>
                                 <tr class="text-center text-xl bg-info text-white">
                                     <th>QR_ID</th>
                                     <th>Date</th>
                                     <th>Shift</th>
                                     <th>Customer</th>
-                                    <th>Model</th>
+                                    <th>Model เดิม</th>
+                                    <th>Model ที่ต้องการเปลี่ยน</th>
                                     <th>Process</th>
                                     <th>Won No.</th>
                                     <th>SMT</th>
@@ -168,14 +175,17 @@
                                     <td class="text-lg font-semibold">{{ data.MMCHANGE_SHIFT }}</td>
                                     <td class="text-lg font-semibold">{{ data.MMCHANGE_CUS }}</td>
                                     <td class="text-lg font-semibold">{{ data.MMCHANGE_MDL }}</td>
+                                    <td class="text-lg font-semibold">{{ data.MMCHANGE_MDLCHN }}</td>
                                     <td class="text-lg font-semibold">{{ data.MMCHANGE_PRCS }}</td>
                                     <td class="text-lg font-semibold">{{ data.MMCHANGE_WONNO }}</td>
                                     <td class="text-lg font-semibold">{{ data.MMCHANGE_LINE }}</td>
                                     <td class="text-lg font-semibold">{{ data.MMCHANGE_EMPID }}</td>
                                     <td class="space-x-5 ">
                                         <button class="btn btn-accent text-[18px]"
-                                            @click="AprChange(data.MMCHANGE_ID , data.MMCHANGE_BARCODE)" :disabled="isDisabled">อนุมัติเปลี่ยน</button>
-                                        <button class="btn btn-error text-[18px]" :disabled="isDisabled">ไม่อนุมัติเปลี่ยน</button>
+                                            @click="AprChange(data.MMCHANGE_ID, data.MMCHANGE_BARCODE)"
+                                            :disabled="isDisabled">อนุมัติเปลี่ยน</button>
+                                        <button class="btn btn-error text-[18px]"
+                                            :disabled="isDisabled">ไม่อนุมัติเปลี่ยน</button>
                                     </td>
                                 </tr>
                             </tbody>
@@ -189,38 +199,42 @@
 
         </div>
         <div class="flex justify-center items-center">
-            <div class="card w-[50%] mt-3 border border-cyan-600 absolute top-190 " v-if="isModalShow">
-            <div class="card-body">
-                <h5 class="card-title bg-pink-200 p-5 rounded-lg text-2xl"><span class="mx-2">&#128204;</span>Input Remark for Submit Approve Change Model</h5>
-                <p class="text-xl font-bold">{{ mChangeQRID }}</p>
-                <form @submit.prevent="SubmitAprChange(mChangeID)">
-                    <div class="grid grid-cols-1 mt-5">
-                        <div class="flex flex-col">
-                            <div class="join mb-3">
-                                <label for="model"
-                                    class="join-item rounded-s-lg bg-pink-100 w-60 text-lg font-semibold flex justify-start items-center text-black">Employee ID:</label>
-                                <input type="text" class="input input-bordered join-item rounded-e-lg"
-                                    placeholder="Input Employee ID..." v-model="apr.empid" />
-                            </div>
+            <div class="card w-[50%] mt-3 border border-cyan-600 absolute top-155 " v-if="isModalShow">
+                <div class="card-body">
+                    <h5 class="card-title bg-pink-200 p-5 rounded-lg text-2xl"><span class="mx-2">&#128204;</span>Input
+                        Remark
+                        for Submit Approve Change Model</h5>
+                    <p class="text-xl font-bold">{{ mChangeQRID }}</p>
+                    <form @submit.prevent="SubmitAprChange(mChangeID)">
+                        <div class="grid grid-cols-1 mt-5">
+                            <div class="flex flex-col">
+                                <div class="join mb-3">
+                                    <label for="model"
+                                        class="join-item rounded-s-lg bg-pink-100 w-60 text-lg font-semibold flex justify-start items-center text-black">Employee
+                                        ID:</label>
+                                    <input type="text" class="input input-bordered join-item rounded-e-lg"
+                                        placeholder="Input Employee ID..." v-model="apr.empid" />
+                                </div>
 
-                        </div>
-                        <div class="flex flex-col">
-                            <div class="join mb-3">
-                                <label for="model"
-                                    class="join-item rounded-s-lg bg-pink-100 w-60 text-lg font-semibold flex justify-start items-center text-black">Remark for Approve:</label>
-                                <input type="text" class="input input-bordered join-item rounded-e-lg"
-                                    placeholder="Input Remark for Approve..." v-model="apr.aprremark" />
                             </div>
+                            <div class="flex flex-col">
+                                <div class="join mb-3">
+                                    <label for="model"
+                                        class="join-item rounded-s-lg bg-pink-100 w-60 text-lg font-semibold flex justify-start items-center text-black">Remark
+                                        for Approve:</label>
+                                    <input type="text" class="input input-bordered join-item rounded-e-lg"
+                                        placeholder="Input Remark for Approve..." v-model="apr.aprremark" />
+                                </div>
 
+                            </div>
                         </div>
-                    </div>
-                    <div class="flex justify-between items-center">
-                        <button class="btn btn-error h-12 text-lg mt-5" @click="CloseModal">Close</button>
-                        <button class="btn btn-success h-12 text-lg mt-5" >OK / Submit</button>
-                    </div>
-                </form>
+                        <div class="flex justify-between items-center">
+                            <button class="btn btn-error h-12 text-lg mt-5" @click="CloseModal">Close</button>
+                            <button class="btn btn-success h-12 text-lg mt-5">OK / Submit</button>
+                        </div>
+                    </form>
+                </div>
             </div>
-        </div>
         </div>
 
     </div>
@@ -256,7 +270,8 @@ export default {
                 process: '',
                 model: '',
                 wonNo: '',
-                shift: ''
+                shift: '',
+                mdlch: '',
             },
             isCameraOpen: false,
             scanRegionSize: 3.1, // Adjust this value as needed
@@ -275,13 +290,14 @@ export default {
             mdlcode: "",
             dataChange: [],
             isModalShow: false,
-            apr:{
+            apr: {
                 empid: "",
                 aprremark: ""
             },
             mChangeQRID: "",
             isDisabled: false,
             mChangeID: "",
+
 
 
         }
@@ -296,7 +312,8 @@ export default {
                 process: { required },
                 model: { required },
                 wonNo: { required },
-                shift: { required }
+                shift: { required },
+                mdlch: {required}
             },
 
         }
@@ -486,18 +503,43 @@ export default {
                     console.error('Error fetching change data:', error);
                 });
         },
-        AprChange(id,qrid) {
+        AprChange(id, qrid) {
             this.isModalShow = true;
             this.mChangeQRID = qrid;
             this.mChangeID = id;
             this.isDisabled = true;
         },
-        CloseModal(){
+        CloseModal() {
             this.isModalShow = false;
             this.isDisabled = false;
         },
-        SubmitAprChange(id){
-            console.log(id)
+        SubmitAprChange(id) {
+            const rec_id = id;
+            // console.log(this.apr)
+            axios.put('/L_MetalMaskRecord/update-approve',
+                {
+                    formapr: this.apr,
+                    id: rec_id
+                }, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }
+            ).then(res => {
+                if (res.data) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Approve Successfully',
+                        showCancelButton: false,
+                        showConfirmButton: false,
+                        timer: 1500,
+                    }).then(() => {
+                        this.isModalShow = false
+                        this.isDisabled = false
+                    })
+                }
+
+            })
         }
 
 

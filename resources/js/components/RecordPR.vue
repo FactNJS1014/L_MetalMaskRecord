@@ -56,7 +56,7 @@
                     </div>
                     <div class="flex flex-col">
                         <label for="won" class="label">Work Order: <span>&#128292;</span></label>
-                        <AutoComplete v-model="won" :suggestions="items" field="label" @complete="search"
+                        <AutoComplete v-model="mask.won" :suggestions="items" field="label" @complete="search"
                         @change="checkModel"
                             placeholder="Search WONO..." class="input input-bordered w-full" />
 
@@ -144,27 +144,33 @@
                         <div class="flex flex-row gap-2">
                             <div class="flex items-center gap-1">
                                 <input type="radio" v-model="mask.types" class="radio" id="defaultRadio1"
-                                    value="receive" />
+                                    value="Receive" />
                                 <label class="label-text text-blue-600 text-xl" for="defaultRadio1">Receive</label>
                             </div>
                             <div class="flex items-center gap-1">
                                 <input type="radio" v-model="mask.types" class="radio" id="defaultRadio2"
-                                    value="takeout" />
+                                    value="Take out" />
                                 <label class="label-text text-blue-600 text-xl" for="defaultRadio2">Take out</label>
                             </div>
                         </div>
                         <div class="flex flex-row gap-4">
                             <div class="flex items-center gap-1">
                                 <input type="radio" v-model="mask.types" class="radio" id="defaultRadio3"
-                                    value="return" />
+                                    value="Return" />
                                 <label class="label-text text-blue-600 text-xl" for="defaultRadio3">Return</label>
                             </div>
                             <div class="flex items-center gap-1">
                                 <input type="radio" v-model="mask.types" class="radio" id="defaultRadio4"
-                                    value="scrap" />
+                                    value="Scrap" />
                                 <label class="label-text text-blue-600 text-xl" for="defaultRadio4">Scrap</label>
                             </div>
                         </div>
+                    </div>
+                    <div class="flex flex-col">
+                        <label for="details" class="label">BlockPerSheet: <span>🔢</span></label>
+                        <input type="number" id="name" v-model="mask.blocksheet"
+                            class="input input-bordered w-full focus:outline-none" />
+
                     </div>
 
 
@@ -234,12 +240,13 @@ export default {
                 types: "",
                 listno: "",
                 mdlcd: "",
-
+                blocksheet: "",
+                won: "",
             },
             isModalOpen: false,
             listModel: [],
             items: [],
-            won: "",
+            
             mdlcode: "",
 
         };
@@ -252,7 +259,7 @@ export default {
                 cus: { required },
                 procs: { required },
                 expire_d: { required },
-                // lot: { required },
+                // // lot: { required },
                 rev: { required },
                 mskname: { required },
                 vendor: { required },
@@ -261,6 +268,7 @@ export default {
                 listno: { required },
                 mdlcd: { required },
                 won: { required },
+                blocksheet: { required },
                 // selectedItem: { required },
             }
         };
@@ -339,12 +347,7 @@ export default {
                     timer: 1500,
                 })
             } else {
-                toast.success("บันทึกข้อมูลสำเร็จ", {
-                    position: "top-center",
-                    duration: 5000,
-                    theme: "colored",
-                    autoClose: 2000,
-                });
+                console.log(this.mask);
 
             }
 
@@ -371,7 +374,7 @@ export default {
 
         },
         checkModel(){
-            const won = this.won;
+            const won = this.mask.won;
             // console.log(this.mask.mdlcd)
             if(won.length >= 15){
                 axios.post('/L_MetalMaskRecord/get-wono', {
@@ -403,6 +406,7 @@ export default {
                             })
                         }
                         this.mask.cus = item.BSGRP;
+                        this.mask.lot = item.WONQT;
                     }))
                 })
                 .catch(error => {

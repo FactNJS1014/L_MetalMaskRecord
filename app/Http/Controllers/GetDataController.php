@@ -46,7 +46,7 @@ class GetDataController extends Controller
         // Query the database table using a LIKE clause
         $get_mdl_code = DB::table('VWORLIST_1Y')
             ->where('WONO', '=', $won)
-            ->select('MDLCD', 'BSGRP')
+            ->select('MDLCD', 'BSGRP','WONQT')
             ->get();
 
         // Return the result as JSON
@@ -57,5 +57,25 @@ class GetDataController extends Controller
     {
         $data = DB::table('MMCHN_MDL_TBL')->get();
         return response()->json($data);
+    }
+
+    public function GetModelChange(){
+        $data = DB::table('MMCHN_MDL_TBL')
+        ->join('MM_MASTERMSK_TBL' ,'MMCHN_MDL_TBL.MMCHANGE_BARCODE' , '=' , 'MM_MASTERMSK_TBL.MMST_QRID')
+        ->where('MMCHANGE_APPR_STD' , '=' , '1')
+        ->get();
+        return response()->json($data);
+    }
+
+    public function GetPullData(Request $request){
+        $code_id = $request->code;
+        $pulldata = DB::table('MMCHN_MDL_TBL')
+        ->join('MM_MASTERMSK_TBL' ,'MMCHN_MDL_TBL.MMCHANGE_BARCODE' , '=' , 'MM_MASTERMSK_TBL.MMST_QRID')
+        ->where('MMCHN_MDL_TBL.MMCHANGE_APPR_STD' , '=' , '1')
+        ->where('MMCHN_MDL_TBL.MMCHANGE_BARCODE', $code_id)
+        ->get();
+
+        return response()->json($pulldata);
+
     }
 }

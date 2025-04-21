@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\GetDataController;
 use App\Http\Controllers\InsertChangeModelController;
-
+use App\Http\Controllers\UpdateDataController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -25,3 +25,4 @@ Route::post('/show-value', [GetDataController::class, 'showValueToInput']);
 Route::post('/search', [GetDataController::class, 'SearchWon']);
 Route::post('/get-wono', [GetDataController::class, 'getWono']);
 Route::post('/insert-change-model', [InsertChangeModelController::class, 'insertChangeModel']);
+Route::put('/update-approve',[UpdateDataController::class , 'updateApr']);

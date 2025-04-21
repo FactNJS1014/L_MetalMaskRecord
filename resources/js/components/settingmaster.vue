@@ -7,24 +7,24 @@
                         <table class="table">
                             <thead>
                                 <tr class="bg-emerald-500 text-white">
-                                    <th class="text-center text-lg font-semibold">Model</th>
+                                    <th class="text-center text-lg font-semibold">Model เดิม</th>
+                                    <th class="text-center text-lg font-semibold">Model ที่ต้องการเปลี่ยนแปลง</th>
                                     <th class="text-center text-lg font-semibold">PCB No.</th>
                                     <th class="text-center text-lg font-semibold">Process</th>
-                                    <th class="text-center text-lg font-semibold">Ref. No.</th>
                                     <th class="text-center text-lg font-semibold">QR Code ID</th>
                                     <th class="text-center text-lg font-semibold">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td class="text-center text-lg font-semibold">Model 1</td>
-                                    <td class="text-center text-lg font-semibold">PCB No. 1</td>
-                                    <td class="text-center text-lg font-semibold">Process 1</td>
-                                    <td class="text-center text-lg font-semibold">Ref. No. 1</td>
-                                    <td class="text-center text-lg font-semibold">QR Code ID 1</td>
+                                <tr v-for="item in DataModelChange" :key="item.MMCHANGE_ID">
+                                    <td class="text-center text-lg font-semibold">{{ item.MMCHANGE_MDL }}</td>
+                                    <td class="text-center text-lg font-semibold">{{item.MMCHANGE_MDLCHN}}</td>
+                                    <td class="text-center text-lg font-semibold">{{item.MMCHANGE_PRCS}}</td>
+                                    <td class="text-center text-lg font-semibold">{{item.MMCHANGE_REFNO}}</td>
+                                    <td class="text-center text-lg font-semibold">{{ item.MMCHANGE_BARCODE }}</td>
                                     <td class="text-center text-lg font-semibold">
-                                        <button type="button" class="btn btn-success btn-sm rounded-full ">
-                                            &#10004;</button>
+                                        <button type="button" class="btn btn-success text-white text-xl" @click="PullData(item.MMCHANGE_BARCODE)"><span>&#128317;</span>ดึงข้อมูล
+                                            </button>
 
                                     </td>
                                 </tr>
@@ -36,14 +36,14 @@
                 <h5 class="card-title mb-0 text-center bg-emerald-300 p-5 rounded-lg text-black font-bold text-2xl">
                     Setting Model Form</h5>
 
-                <form>
+                <form @submit.prevent="SubmitChange">
                     <div class="grid grid-cols-2 mt-5">
                         <div class="flex flex-col">
                             <div class="join mb-3">
                                 <label for="model"
                                     class="join-item rounded-s-lg bg-emerald-100 w-24 text-lg font-semibold flex justify-center items-center">Model:</label>
                                 <input type="text" class="input input-bordered join-item rounded-e-lg"
-                                    placeholder="Model..." />
+                                    placeholder="Model..." v-model="formf.model"/>
                             </div>
 
                         </div>
@@ -53,7 +53,7 @@
                                     class="join-item rounded-s-lg bg-emerald-100 w-24 text-lg font-semibold flex justify-center items-center">PCB
                                     No.</label>
                                 <input type="text" class="input input-bordered join-item rounded-e-lg"
-                                    placeholder="PCB Number..." />
+                                    placeholder="PCB Number..." v-model="formf.pcbno" />
                             </div>
                         </div>
                         <div class="flex flex-col">
@@ -61,7 +61,7 @@
                                 <label for="process"
                                     class="join-item rounded-s-lg bg-emerald-100 w-24 text-lg font-semibold flex justify-center items-center">Process:</label>
                                 <input type="text" class="input input-bordered join-item rounded-e-lg"
-                                    placeholder="Process..." />
+                                    placeholder="Process..." v-model="formf.procs" />
                             </div>
 
                         </div>
@@ -71,7 +71,7 @@
                                     class="join-item rounded-s-lg bg-emerald-100 w-24 text-lg font-semibold flex justify-center items-center">Ref.
                                     No.</label>
                                 <input type="text" class="input input-bordered join-item rounded-e-lg"
-                                    placeholder="Reference Number..." />
+                                    placeholder="Reference Number..." v-model="formf.ref" />
                             </div>
                         </div>
                         <div class="flex flex-col col-span-2 w-full">
@@ -80,7 +80,7 @@
                                     class="join-item rounded-s-lg bg-emerald-100 w-44 text-lg font-semibold flex justify-center items-center">QR
                                     Code ID:</label>
                                 <input type="text" class="input input-bordered join-item rounded-e-lg"
-                                    placeholder="QR Code Number..." />
+                                    placeholder="QR Code Number..." v-model="formf.codeid" />
 
                             </div>
                         </div>
@@ -226,22 +226,73 @@
     </div>
 </template>
 <script>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted ,reactive} from 'vue'
+import axios from 'axios'
+
 
 export default {
     name: 'SettingMaster',
     setup() {
         const settingModel = ref(false)
         const settingMsk = ref(false)
+        const DataModelChange = ref([])
+        const GetData = ref("")
+        const formf = reactive({
+            model: '',
+            pcbno: '',
+            procs: '',
+            ref: '',
+            codeid: '',
+        })
+
 
         onMounted(() => {
             settingModel.value = true
             settingMsk.value = false
+            GetDataModelChange()
         })
+
+        function GetDataModelChange(){
+            axios.get('/L_MetalMaskRecord/api/get-change-model')
+            .then(res => {
+                DataModelChange.value = res.data
+                DataModelChange.value.map((g)=>{
+                    code_id = g.MMCHANGE_BARCODE
+                })
+
+            })
+
+        }
+
+        function PullData(code){
+            axios.get('/L_MetalMaskRecord/api/get-pull-data',{
+                params:{
+                    code:code
+                }
+            }).then(res =>{
+                GetData.value = res.data
+                GetData.value.map((data)=>{
+                    formf.model = data.MMCHANGE_MDL
+                    formf.pcbno = data.MMST_PCBNO
+                    formf.procs = data.MMST_PROCS
+                    formf.ref = data.MMST_REFNO
+                    formf.codeid = data.MMST_QRID
+                })
+            })
+
+        }
+        function SubmitChange(){
+            console.log(formf)
+        }
 
         return {
             settingModel,
-            settingMsk
+            settingMsk,
+            DataModelChange,
+            PullData,
+            formf,
+            GetData,
+            SubmitChange
         }
     }
 }
