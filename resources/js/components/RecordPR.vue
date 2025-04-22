@@ -41,7 +41,7 @@
                 <div class="grid grid-cols-2 gap-4">
                     <div class="flex flex-col col-span-2">
                         <label for="qrcode" class="label">QR Code ID: <span>&#128292;</span></label>
-                        <input type="text" id="qrcode" v-model="scannedResult"
+                        <input type="text" id="qrcode" v-model="mask.scannedResult"
                             class="input input-bordered w-full focus:outline-none" />
                     </div>
 
@@ -214,7 +214,7 @@ export default {
     data() {
         return {
             isCameraOpen: false,
-            scannedResult: "",
+            
             scanRegionSize: 3.1, // Adjust this value as needed
             cameraConstraints: {
                 video: {
@@ -242,6 +242,7 @@ export default {
                 mdlcd: "",
                 blocksheet: "",
                 won: "",
+                scannedResult: "",
             },
             isModalOpen: false,
             listModel: [],
@@ -277,12 +278,12 @@ export default {
         toggleCamera() {
             this.isCameraOpen = !this.isCameraOpen;
             if (this.isCameraOpen) {
-                this.scannedResult = "";
+                this.mask.scannedResult = "";
                 this.isModalOpen = true;
             }
         },
         onDecode(result) {
-            this.scannedResult = result;
+            this.mask.scannedResult = result;
             this.isCameraOpen = false;
             this.isModalOpen = false;
             let id = result;
@@ -348,7 +349,27 @@ export default {
                 })
             } else {
                 console.log(this.mask);
-
+                axios.post('/L_MetalMaskRecord/save-data', {
+                    mask: this.mask
+                }, {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                }).then(response => {
+                    // console.log(response.data);
+                    if(response.data){
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Insert Data Successfully',
+                            text: 'บันทึกข้อมูลสำเร็จ',
+                            showCancelButton: false,
+                            showConfirmButton: false,
+                            timer: 1500,
+                        }).then(() => {
+                            location.reload();
+                        })
+                    }
+                })
             }
 
         },

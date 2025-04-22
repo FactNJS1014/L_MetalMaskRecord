@@ -26,3 +26,4 @@ Route::post('/search', [GetDataController::class, 'SearchWon']);
 Route::post('/get-wono', [GetDataController::class, 'getWono']);
 Route::post('/insert-change-model', [InsertChangeModelController::class, 'insertChangeModel']);
 Route::put('/update-approve',[UpdateDataController::class , 'updateApr']);
+Route::post('save-data', [InsertChangeModelController::class, 'saveData']);

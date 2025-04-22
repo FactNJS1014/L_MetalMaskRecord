@@ -2,7 +2,7 @@
     <div class="flex justify-center items-center mt-5 w-full">
         <div class="card w-[95%]">
             <div class="card-body">
-                <h5 class="card-title text-center font-bold text-2xl text-black bg-orange-500 p-3 rounded-lg">Report Change Model</h5>
+                <h5 class="card-title text-center font-bold text-2xl text-black bg-orange-500 p-3 rounded-lg">ประวัติการเปลี่ยนโมเดล</h5>
                 <table class="table w-full overflow-x-auto text-black ">
                     <thead>
                         <tr class="text-center text-xl bg-info text-white">

@@ -78,4 +78,9 @@ class GetDataController extends Controller
         return response()->json($pulldata);
 
     }
+
+    public function GetValues(){
+        $getval = DB::table('MM_MSKREC_TBL')->get();
+        return response()->json($getval);
+    }
 }
