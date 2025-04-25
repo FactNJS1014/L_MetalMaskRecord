@@ -17,8 +17,8 @@
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="(sum, qrid) in runningSums" :key="qrid" class="text-[16px] font-semibold">
-                  <td class="text-center">{{ qrid }}</td>
+                <tr v-for="(sum, mdl) in runningSums" :key="mdl" class="text-[16px] font-semibold">
+                  <td class="text-center">{{ mdl }}</td>
                   <td class="text-center">{{ sum }}</td>
                 </tr>
               </tbody>
@@ -117,31 +117,40 @@ export default {
             notifyStatus[mdl] = item.MSKREC_NOTIFY_STD;
           }
         });
+        console.log(grouped)
 
         this.runningSums = grouped;
+        console.log(this.runningSums)
+        console.log(notifyStatus)
 
-        Object.entries(grouped).forEach(([mdl, total]) => {
-          const notified = notifyStatus[mdl] === 1;
+        // Object.entries(grouped).forEach(([mdl, total]) => {
+        //   const notified = notifyStatus[mdl] == 1;
 
-          if (total >= 95000 && !notified) {
-            Swal.fire({
-              title: 'แจ้งเตือน!',
-              text: `Model: ${mdl} ครบ ${total} แล้ว!`,
-              icon: 'warning',
-              confirmButtonText: 'ตกลง',
-              confirmButtonColor: '#8b5cf6'
-            })
+        //   if (total >= 600 && !notified) {
+        //     Swal.fire({
+        //       title: 'แจ้งเตือน!',
+        //       text: `Model: ${mdl} ครบ ${total} แล้ว!`,
+        //       icon: 'warning',
+        //       confirmButtonText: 'ตกลง',
+        //       confirmButtonColor: '#8b5cf6'
+        //     }).then((result) => {
+        //       if (result.isConfirmed) {
+        //         // PUT เพื่อ update notify std
+        //         axios.put('/L_MetalMaskRecord/update-notify-status', {
+        //           mdl: mdl,
 
-            // POST เพื่อ update notify std
-            // axios.post('/L_MetalMaskRecord/api/update-notify-status', {
-            //   qrid: qrid,
-            //   status: 1
-            // });
+        //         }).then(response => {
+        //           console.log('Status updated successfully:', response.data);
+        //         });
+        //       }
+        //     })
 
-            // อัปเดต local statusMap เพื่อไม่แจ้งซ้ำ
-            this.statusMap[mdl] = 1;
-          }
-        });
+
+
+        //     // อัปเดต local statusMap เพื่อไม่แจ้งซ้ำ
+        //     this.statusMap[mdl] = 1;
+        //   }
+        // });
 
 
       } catch (error) {

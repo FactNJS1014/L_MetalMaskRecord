@@ -24,4 +24,8 @@ Route::get('/get-change-data',[GetDataController::class , 'GetChangeData']);
 Route::get('/get-change-model',[GetDataController::class, 'GetModelChange']);
 Route::get('/get-pull-data',[GetDataController::class, 'GetPullData']);
 Route::get('/get-values',[GetDataController::class, 'GetValues']);
+Route::get('/get-change-history',[GetDataController::class, 'GetChangeHistory']);
+Route::get('/get-list-models',[GetDataController::class, 'GetListModel']);
+Route::get('/get-list-mask',[GetDataController::class, 'GetListMask']);
+
 

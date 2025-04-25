@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\GetDataController;
 use App\Http\Controllers\InsertChangeModelController;
 use App\Http\Controllers\UpdateDataController;
+use App\Http\Controllers\InsertMetalMaskController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -26,4 +27,7 @@ Route::post('/search', [GetDataController::class, 'SearchWon']);
 Route::post('/get-wono', [GetDataController::class, 'getWono']);
 Route::post('/insert-change-model', [InsertChangeModelController::class, 'insertChangeModel']);
 Route::put('/update-approve',[UpdateDataController::class , 'updateApr']);
-Route::post('save-data', [InsertChangeModelController::class, 'saveData']);
+Route::post('save-data', [InsertMetalMaskController::class, 'saveData']);
+Route::put('/update-notify-status',[UpdateDataController::class, 'updateNotiStatus']);
+Route::post('/search-list-models',[GetDataController::class, 'SearchlistModels']);
+Route::post('/search-list-masks',[GetDataController::class, 'SearchlistMasks']);

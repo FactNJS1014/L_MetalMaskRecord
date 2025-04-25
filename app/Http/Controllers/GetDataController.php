@@ -83,4 +83,39 @@ class GetDataController extends Controller
         $getval = DB::table('MM_MSKREC_TBL')->get();
         return response()->json($getval);
     }
+
+    public function GetChangeHistory(){
+        $gethistory = DB::table('MMCHN_MDL_TBL')
+        ->where('MMCHANGE_APPR_STD', '=', '1')
+        ->get();
+        return response()->json($gethistory);
+    }
+
+    public function GetListModel(){
+        $getlistmodel = DB::table('MM_LISTMDL_TBL')->get();
+        return response()->json($getlistmodel);
+    }
+
+    public function GetListMask(){
+        $getlistmask = DB::table('MM_MASTERMSK_TBL')
+        ->orderBy('MMST_NO', 'asc') // Sort by MMST_QRID in ascending orde
+        ->get();
+        return response()->json($getlistmask);
+    }
+
+    public function SearchlistModels(Request $request){
+        $search = $request->input('search');
+        $getlistmodel = DB::table('MM_LISTMDL_TBL')
+        ->where('LISTMDL_QRID', 'LIKE', '%'. $search. '%')
+        ->get();
+        return response()->json($getlistmodel);
+    }
+
+    public function SearchlistMasks(Request $request){
+        $search = $request->input('search');
+        $getlistmask = DB::table('MM_MASTERMSK_TBL')
+        ->where('MMST_QRID', 'LIKE', '%'. $search. '%')
+        ->get();
+        return response()->json($getlistmask);
+    }
 }

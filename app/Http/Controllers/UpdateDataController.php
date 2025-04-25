@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\ApproveChange;
+use App\Models\NotifyMaskRec;
 
 class UpdateDataController extends Controller
 {
@@ -22,5 +23,16 @@ class UpdateDataController extends Controller
         }
 
         return response()->json($changeapr);
+    }
+
+    public function updateNotiStatus(Request $request){
+        $mdl = $request->mdl;
+        $noti = NotifyMaskRec::find($mdl);
+        if($noti){
+            $noti->MSKREC_NOTIFY_STD = 1;
+            $noti->save();
+        }
+        return response()->json($noti);
+    
     }
 }

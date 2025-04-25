@@ -57,16 +57,10 @@
                     <div class="flex flex-col">
                         <label for="won" class="label">Work Order: <span>&#128292;</span></label>
                         <AutoComplete v-model="mask.won" :suggestions="items" field="label" @complete="search"
-                        @change="checkModel"
-                            placeholder="Search WONO..." class="input input-bordered w-full" />
+                            @change="checkModel" placeholder="Search WONO..." class="input w-full" />
 
 
 
-
-                        <!-- <div>
-                            <autocomplete v-model="searchQuery" :items="items" :search="onSearch"
-                                placeholder="Search WONNO..." class="input input-bordered w-full focus:outline-none" />
-                        </div> -->
                     </div>
                     <div class="flex flex-col">
                         <label for="listno" class="label">List No.: <span>&#128292;</span></label>
@@ -214,7 +208,7 @@ export default {
     data() {
         return {
             isCameraOpen: false,
-            
+
             scanRegionSize: 3.1, // Adjust this value as needed
             cameraConstraints: {
                 video: {
@@ -247,8 +241,9 @@ export default {
             isModalOpen: false,
             listModel: [],
             items: [],
-            
             mdlcode: "",
+            runningSums: {},
+            statusMap: {},
 
         };
     },
@@ -304,15 +299,15 @@ export default {
                     // console.log(response.data);
                     this.listModel = response.data;
                     console.log(this.listModel)
-                    this.listModel.map((value)=>{
+                    this.listModel.map((value) => {
                         this.mask.listno = value.MMST_NO;
                         this.mask.pcbno = value.MMST_PCBNO;
                         this.mask.procs = value.MMST_PROCS;
                         this.mask.expire_d = value.MMST_PRDDATE;
                         this.mask.vendor = value.MMST_VENDOR;
-                        if(value.MMST_REMARK === ""){
+                        if (value.MMST_REMARK === "") {
                             this.mask.remark = "-";
-                        }else{
+                        } else {
                             this.mask.remark = value.MMST_REMARK;
                         }
                         this.mask.rev = value.MMST_REVS;
@@ -357,7 +352,7 @@ export default {
                     }
                 }).then(response => {
                     // console.log(response.data);
-                    if(response.data){
+                    if (response.data) {
                         Swal.fire({
                             icon: 'success',
                             title: 'Insert Data Successfully',
@@ -394,10 +389,10 @@ export default {
 
 
         },
-        checkModel(){
+        checkModel() {
             const won = this.mask.won;
             // console.log(this.mask.mdlcd)
-            if(won.length >= 15){
+            if (won.length >= 15) {
                 axios.post('/L_MetalMaskRecord/get-wono', {
                     won: won
                 }, {
@@ -405,44 +400,110 @@ export default {
                         'Content-Type': 'application/json'
                     }
                 })
-                .then(response => {
-                    this.mdlcode = response.data;
-                    this.mdlcode.map((item => {
-                        // this.mask.cus = item.BSGRP;
-                        if(this.mask.mdlcd === item.MDLCD){
-                            toast.success("Model Code is correct", {
-                                position: "top-center",
-                                duration: 5000,
-                                theme: "colored",
-                                autoClose: 2000,
-                            });
-                        }else{
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Model Code is not correct',
-                                text: 'Model Code is not correct',
-                                showCancelButton: false,
-                                showConfirmButton: false,
-                                timer: 1500,
-                            })
-                        }
-                        this.mask.cus = item.BSGRP;
-                        this.mask.lot = item.WONQT;
-                    }))
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
+                    .then(response => {
+                        this.mdlcode = response.data;
+                        this.mdlcode.map((item => {
+                            // this.mask.cus = item.BSGRP;
+                            if (this.mask.mdlcd === item.MDLCD) {
+                                toast.success("Model Code is correct", {
+                                    position: "top-center",
+                                    duration: 5000,
+                                    theme: "colored",
+                                    autoClose: 2000,
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Model Code is not correct',
+                                    text: 'Model Code is not correct',
+                                    showCancelButton: false,
+                                    showConfirmButton: false,
+                                    timer: 1500,
+                                })
+                            }
+                            this.mask.cus = item.BSGRP;
+                            this.mask.lot = item.WONQT;
+                        }))
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
             }
 
-        }
+        },
+        async fetchReportData() {
+            try {
+                const res = await axios.get('/L_MetalMaskRecord/api/get-values');
+                const data = res.data;
 
+                this.MaskData = data;
+
+                const grouped = {}
+                const notifyStatus = {};
+                // รวม Shots และจำ Notify STD
+                data.forEach(item => {
+                    const mdl = item.MSKREC_MDLCD;
+                    const shots = parseInt(item.MSKREC_SHOTS) || 0;
+
+                    grouped[mdl] = (grouped[mdl] || 0) + shots;
+
+                    // Store status for each QRID (assumes the same QRID has same status)
+                    if (!(mdl in notifyStatus)) {
+                        notifyStatus[mdl] = item.MSKREC_NOTIFY_STD;
+                    }
+                });
+                console.log(grouped)
+
+                this.runningSums = grouped;
+                console.log(this.runningSums)
+                console.log(notifyStatus)
+
+                Object.entries(grouped).forEach(([mdl, total]) => {
+                    const notified = notifyStatus[mdl] == 1;
+
+                    if (total >= 600 && !notified) {
+                        Swal.fire({
+                            title: 'แจ้งเตือน!',
+                            text: `Model: ${mdl} ครบ ${total} แล้ว!`,
+                            icon: 'warning',
+                            confirmButtonText: 'ตกลง',
+                            confirmButtonColor: '#8b5cf6'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                // PUT เพื่อ update notify std
+                                axios.put('/L_MetalMaskRecord/update-notify-status', {
+                                    mdl: mdl,
+
+                                }).then(response => {
+                                    console.log('Status updated successfully:', response.data);
+                                });
+                            }
+                        })
+
+
+
+                        // อัปเดต local statusMap เพื่อไม่แจ้งซ้ำ
+                        this.statusMap[mdl] = 1;
+                    }
+                });
+
+
+            } catch (error) {
+                console.error('เกิดข้อผิดพลาด:', error);
+
+            }
+
+
+
+        },
 
 
     },
-
-
-};
+    mounted() {
+        this.fetchReportData();
+        
+    }
+}
 </script>
 
 <style>
