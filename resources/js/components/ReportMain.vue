@@ -9,20 +9,7 @@
           <!-- ตารางรวมผล Shots ตาม QRID -->
           <div class="mt-3 overflow-y-auto h-[50%]">
             <h5 class="text-center font-bold text-purple-700 text-xl">รวม Shots แต่ละ Model</h5>
-            <table class="table w-full border mt-4">
-              <thead>
-                <tr class="text-center text-lg font-bold text-white bg-purple-800">
-                  <th>Model Code</th>
-                  <th>รวม Shots</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="(sum, mdl) in runningSums" :key="mdl" class="text-[16px] font-semibold">
-                  <td class="text-center">{{ mdl }}</td>
-                  <td class="text-center">{{ sum }}</td>
-                </tr>
-              </tbody>
-            </table>
+            <MaskChart v-if="runningSums" :chartData="runningSums" />
           </div>
           <h5 class="text-center font-bold text-purple-700 text-xl mt-6">รายการใช้งาน Metal Mask ทั้งหมด</h5>
           <div class="overflow-auto mt-4 h-[60%]">
@@ -87,12 +74,16 @@ import "vue3-toastify/dist/index.css"
 import { toast } from "vue3-toastify";
 import Swal from 'sweetalert2'
 import axios from 'axios';
+import MaskChart from "../Chartjs/MaskChart.vue";
 export default {
+  components: {
+    MaskChart
+  },
   data() {
     return {
-      runningSums: {},
-      statusMap: {},
-      MaskData: []
+      MaskData: [],
+      runningSums: null,
+      statusMap: {}
     };
   },
   methods: {

@@ -44,9 +44,9 @@ class GetDataController extends Controller
         $won = $request->input('won');
 
         // Query the database table using a LIKE clause
-        $get_mdl_code = DB::table('VWORLIST_1Y')
-            ->where('WONO', '=', $won)
-            ->select('MDLCD', 'BSGRP','WONQT')
+        $get_mdl_code = DB::table('VWORLIST')
+            ->where('WON', '=', $won)
+            ->select('MDLCD', 'BGCD','WONQT')
             ->get();
 
         // Return the result as JSON
@@ -55,7 +55,10 @@ class GetDataController extends Controller
 
     public function GetChangeData()
     {
-        $data = DB::table('MMCHN_MDL_TBL')->get();
+        $data = DB::table('VLINE')
+        ->where('LINE_SECTION', '=', 'AM')
+        ->orderBy('LINE_LIST' , 'asc')
+        ->get();
         return response()->json($data);
     }
 

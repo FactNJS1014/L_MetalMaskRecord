@@ -54,15 +54,118 @@
                         </select>
 
                     </div>
-                    <div class="flex flex-col col-span-2">
+                    <div class="flex flex-col">
                         <label for="won" class="label">Work Order: <span>&#128292;</span></label>
                         <AutoComplete v-model="mask.won" :suggestions="items" field="label" @complete="search"
                             @change="checkModel" placeholder="Search WONO..." class="input w-full" />
 
+
+
                     </div>
-                    
-                    
-                    
+                    <div class="flex flex-col">
+                        <label for="listno" class="label">List No.: <span>&#128292;</span></label>
+                        <input type="text" id="name" v-model="mask.listno"
+                            class="input input-bordered w-full focus:outline-none" />
+                    </div>
+                    <div class="flex flex-col">
+                        <label for="cus" class="label">Customer: <span>&#128292;</span></label>
+                        <input type="text" id="name" v-model="mask.cus"
+                            class="input input-bordered w-full focus:outline-none" />
+                    </div>
+
+                    <div class="flex flex-col">
+                        <label for="pcbno" class="label">PCB No. <span>&#128292;</span></label>
+                        <input type="text" id="name" v-model="mask.pcbno"
+                            class="input input-bordered w-full focus:outline-none" />
+
+                    </div>
+                    <div class="flex flex-col">
+                        <label for="mskname" class="label">Metal Mask Name: <span>&#128292;</span></label>
+                        <input type="text" id="name" v-model="mask.mskname"
+                            class="input input-bordered w-full focus:outline-none" />
+
+                    </div>
+                    <div class="flex flex-col">
+                        <label for="process" class="label">Process: <span>&#128292;</span></label>
+                        <input type="text" id="name" v-model="mask.procs"
+                            class="input input-bordered w-full focus:outline-none" />
+                    </div>
+                    <div class="flex flex-col">
+                        <label for="rev" class="label">Revision: <span>🔢</span></label>
+                        <input type="number" class="input input-bordered w-full focus:outline-none"
+                            v-model="mask.rev" />
+                    </div>
+                    <div class="flex flex-col">
+                        <label for="ref" class="label">Reference Number: <span>&#128292;</span></label>
+                        <input type="text" id="name" v-model="mask.ref"
+                            class="input input-bordered w-full focus:outline-none" />
+                    </div>
+
+
+
+                    <div class="flex flex-col">
+                        <label for="dateexpire" class="label">Product Date: <span>📆</span></label>
+                        <input type="date" id="name" v-model="mask.expire_d"
+                            class="input input-bordered w-full focus:outline-none" />
+
+                    </div>
+                    <!-- <div class="flex flex-col">
+                        <label for="lot" class="label">Lot Size: <span>🔢</span></label>
+                         />
+
+                    </div> -->
+                    <input type="hidden" v-model="mask.lot" class="input input-bordered w-full focus:outline-none" />
+                    <div class="flex flex-col">
+                        <label for="vendor" class="label">Vendor/Maker: <span>&#128292;</span></label>
+                        <input type="text" id="name" v-model="mask.vendor"
+                            class="input input-bordered w-full focus:outline-none" />
+
+                    </div>
+                    <div class="flex flex-col">
+                        <label for="remark" class="label">Remark: <span>&#128292;</span></label>
+                        <input type="text" id="name" v-model="mask.remark"
+                            class="input input-bordered w-full focus:outline-none" />
+
+                    </div>
+                    <div class="flex flex-col">
+                        <label for="details" class="label">Details: <span>&#128292;</span></label>
+                        <input type="text" id="name" v-model="mask.details"
+                            class="input input-bordered w-full focus:outline-none" />
+
+                    </div>
+                    <div class="flex flex-col mt-3 ms-3">
+                        <label for="types" class="label">Types: <span>&#9989;</span></label>
+                        <div class="flex flex-row gap-2">
+                            <div class="flex items-center gap-1">
+                                <input type="radio" v-model="mask.types" class="radio" id="defaultRadio1"
+                                    value="Receive" />
+                                <label class="label-text text-blue-600 text-xl" for="defaultRadio1">Receive</label>
+                            </div>
+                            <div class="flex items-center gap-1">
+                                <input type="radio" v-model="mask.types" class="radio" id="defaultRadio2"
+                                    value="Take out" />
+                                <label class="label-text text-blue-600 text-xl" for="defaultRadio2">Take out</label>
+                            </div>
+                        </div>
+                        <div class="flex flex-row gap-4">
+                            <div class="flex items-center gap-1">
+                                <input type="radio" v-model="mask.types" class="radio" id="defaultRadio3"
+                                    value="Return" />
+                                <label class="label-text text-blue-600 text-xl" for="defaultRadio3">Return</label>
+                            </div>
+                            <div class="flex items-center gap-1">
+                                <input type="radio" v-model="mask.types" class="radio" id="defaultRadio4"
+                                    value="Scrap" />
+                                <label class="label-text text-blue-600 text-xl" for="defaultRadio4">Scrap</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex flex-col">
+                        <label for="details" class="label">BlockPerSheet: <span>🔢</span></label>
+                        <input type="number" id="name" v-model="mask.blocksheet"
+                            class="input input-bordered w-full focus:outline-none" />
+
+                    </div>
 
 
 

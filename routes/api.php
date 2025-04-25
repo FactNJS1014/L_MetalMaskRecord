@@ -20,7 +20,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 // Route::post('/search', [GetDataController::class, 'SearchWon']);
-Route::get('/get-change-data',[GetDataController::class , 'GetChangeData']);
+Route::get('/get-list-line',[GetDataController::class , 'GetChangeData']);
 Route::get('/get-change-model',[GetDataController::class, 'GetModelChange']);
 Route::get('/get-pull-data',[GetDataController::class, 'GetPullData']);
 Route::get('/get-values',[GetDataController::class, 'GetValues']);
