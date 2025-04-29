@@ -9,20 +9,21 @@
                 </router-link>
             </li>
             <li>
+                <router-link to="/reportChange" active-class="text-xl font-semibold text-white bg-blue-500 hover:bg-slate-200 hover:text-blue-500">
+                    <span class="icon-[material-symbols--counter-2] size-8"></span>
+
+                   การแจ้งเปลี่ยนโมเดล
+                </router-link>
+
+            </li>
+            <li>
                 <router-link to="/prmetalmask" active-class="text-xl font-bold text-white bg-blue-500 hover:bg-slate-200 hover:text-blue-500">
-                    <span class="icon-[material-symbols--counter-2-rounded] size-8"></span>
+                    <span class="icon-[material-symbols--counter-3-rounded] size-8"></span>
 
                     บันทึกการใช้งาน
                 </router-link>
             </li>
-            <li>
-                <router-link to="/reportChange" active-class="text-xl font-semibold text-white bg-blue-500 hover:bg-slate-200 hover:text-blue-500">
-                    <span class="icon-[material-symbols--counter-3] size-8"></span>
-
-                   รายงานการเปลี่ยนโมเดล
-                </router-link>
-
-            </li>
+            
             <li>
                 <router-link to="/reportMain" active-class="text-xl font-semibold text-white bg-blue-500 hover:bg-slate-200 hover:text-blue-500">
                     <span class="icon-[material-symbols--counter-4-rounded] size-8"></span>

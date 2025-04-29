@@ -1,4 +1,31 @@
 <template>
+    <div class="flex justify-center items-center">
+        <div class="card p-3 mt-3">
+            <div class="overflow-auto">
+                <table class="table">  
+                    <thead>
+                        <tr class="bg-amber-500 text-xl">
+                            <th>Model ที่ต้องการเปลี่ยนใช้งาน</th>
+                            <th>Process</th>
+                            <th>Customer</th>
+                            <th>Employee</th>
+                            <th>LINE PROD.</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr  v-for="e in changedata" :key="e.MMCHANGE_ID" class="text-[17px] font-semibold text-black">
+                            <td>{{ e.MMCHANGE_MDLCHN }}</td>
+                            <td>{{ e.MMCHANGE_PRCS }}</td>
+                            <td>{{ e.MMCHANGE_CUS }}</td>
+                            <td>{{ e.MMCHANGE_EMPID }}</td>
+                            <td>{{ e.MMCHANGE_LINE }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
     <div class="flex items-center justify-center">
         <div class="bg-base-100 w-[50%] rounded-2xl shadow-2xl p-5 mt-5 mb-5 border border-sky-600">
             <div class="flex flex-col justify-center items-center">
@@ -54,120 +81,18 @@
                         </select>
 
                     </div>
-                    <div class="flex flex-col">
+                    <div class="flex flex-col col-span-2">
                         <label for="won" class="label">Work Order: <span>&#128292;</span></label>
                         <AutoComplete v-model="mask.won" :suggestions="items" field="label" @complete="search"
                             @change="checkModel" placeholder="Search WONO..." class="input w-full" />
 
-
-
                     </div>
-                    <div class="flex flex-col">
-                        <label for="listno" class="label">List No.: <span>&#128292;</span></label>
-                        <input type="text" id="name" v-model="mask.listno"
-                            class="input input-bordered w-full focus:outline-none" />
-                    </div>
-                    <div class="flex flex-col">
-                        <label for="cus" class="label">Customer: <span>&#128292;</span></label>
-                        <input type="text" id="name" v-model="mask.cus"
-                            class="input input-bordered w-full focus:outline-none" />
-                    </div>
-
-                    <div class="flex flex-col">
-                        <label for="pcbno" class="label">PCB No. <span>&#128292;</span></label>
-                        <input type="text" id="name" v-model="mask.pcbno"
-                            class="input input-bordered w-full focus:outline-none" />
-
-                    </div>
-                    <div class="flex flex-col">
-                        <label for="mskname" class="label">Metal Mask Name: <span>&#128292;</span></label>
-                        <input type="text" id="name" v-model="mask.mskname"
-                            class="input input-bordered w-full focus:outline-none" />
-
-                    </div>
-                    <div class="flex flex-col">
-                        <label for="process" class="label">Process: <span>&#128292;</span></label>
-                        <input type="text" id="name" v-model="mask.procs"
-                            class="input input-bordered w-full focus:outline-none" />
-                    </div>
-                    <div class="flex flex-col">
-                        <label for="rev" class="label">Revision: <span>🔢</span></label>
-                        <input type="number" class="input input-bordered w-full focus:outline-none"
-                            v-model="mask.rev" />
-                    </div>
-                    <div class="flex flex-col">
-                        <label for="ref" class="label">Reference Number: <span>&#128292;</span></label>
-                        <input type="text" id="name" v-model="mask.ref"
-                            class="input input-bordered w-full focus:outline-none" />
-                    </div>
-
-
-
-                    <div class="flex flex-col">
-                        <label for="dateexpire" class="label">Product Date: <span>📆</span></label>
-                        <input type="date" id="name" v-model="mask.expire_d"
-                            class="input input-bordered w-full focus:outline-none" />
-
-                    </div>
-                    <!-- <div class="flex flex-col">
-                        <label for="lot" class="label">Lot Size: <span>🔢</span></label>
-                         />
-
-                    </div> -->
-                    <input type="hidden" v-model="mask.lot" class="input input-bordered w-full focus:outline-none" />
-                    <div class="flex flex-col">
-                        <label for="vendor" class="label">Vendor/Maker: <span>&#128292;</span></label>
-                        <input type="text" id="name" v-model="mask.vendor"
-                            class="input input-bordered w-full focus:outline-none" />
-
-                    </div>
-                    <div class="flex flex-col">
-                        <label for="remark" class="label">Remark: <span>&#128292;</span></label>
-                        <input type="text" id="name" v-model="mask.remark"
-                            class="input input-bordered w-full focus:outline-none" />
-
-                    </div>
-                    <div class="flex flex-col">
-                        <label for="details" class="label">Details: <span>&#128292;</span></label>
-                        <input type="text" id="name" v-model="mask.details"
-                            class="input input-bordered w-full focus:outline-none" />
-
-                    </div>
-                    <div class="flex flex-col mt-3 ms-3">
-                        <label for="types" class="label">Types: <span>&#9989;</span></label>
-                        <div class="flex flex-row gap-2">
-                            <div class="flex items-center gap-1">
-                                <input type="radio" v-model="mask.types" class="radio" id="defaultRadio1"
-                                    value="Receive" />
-                                <label class="label-text text-blue-600 text-xl" for="defaultRadio1">Receive</label>
-                            </div>
-                            <div class="flex items-center gap-1">
-                                <input type="radio" v-model="mask.types" class="radio" id="defaultRadio2"
-                                    value="Take out" />
-                                <label class="label-text text-blue-600 text-xl" for="defaultRadio2">Take out</label>
-                            </div>
-                        </div>
-                        <div class="flex flex-row gap-4">
-                            <div class="flex items-center gap-1">
-                                <input type="radio" v-model="mask.types" class="radio" id="defaultRadio3"
-                                    value="Return" />
-                                <label class="label-text text-blue-600 text-xl" for="defaultRadio3">Return</label>
-                            </div>
-                            <div class="flex items-center gap-1">
-                                <input type="radio" v-model="mask.types" class="radio" id="defaultRadio4"
-                                    value="Scrap" />
-                                <label class="label-text text-blue-600 text-xl" for="defaultRadio4">Scrap</label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="flex flex-col">
-                        <label for="details" class="label">BlockPerSheet: <span>🔢</span></label>
-                        <input type="number" id="name" v-model="mask.blocksheet"
-                            class="input input-bordered w-full focus:outline-none" />
-
-                    </div>
-
-
+                    <input type="hidden" v-model="mask.lot">
+                    <input type="hidden" v-model="mask.blocksheet">
+                    <input type="hidden" v-model="mask.cus">            
+                    <input type="hidden" v-model="mask.procs">            
+                    <input type="hidden" v-model="mask.changeId">            
+                              
 
                 </div>
                 <div class="flex justify-center items-center mt-10">
@@ -219,24 +144,15 @@ export default {
                     zoom: 2, // Try adding zoom (may not be supported on all devices)
                 },
             },
-            mask: {
-                pcbno: "",
-                ref: "",
-                cus: "",
-                procs: "",
-                expire_d: "",
-                lot: "",
-                rev: "",
-                mskname: "",
-                vendor: "",
-                remark: "",
-                details: "",
-                types: "",
-                listno: "",
-                mdlcd: "",
+            mask: {                
+                  
+                procs: "",                
+                lot: "",           
                 blocksheet: "",
                 won: "",
                 scannedResult: "",
+                cus: "",
+                changeId: "",
             },
             isModalOpen: false,
             listModel: [],
@@ -244,28 +160,17 @@ export default {
             mdlcode: "",
             runningSums: {},
             statusMap: {},
-
+            changedata: []
         };
     },
     validations() {
         return {
-            mask: {
-                pcbno: { required },
-                ref: { required },
-                cus: { required },
-                procs: { required },
-                expire_d: { required },
-                // // lot: { required },
-                rev: { required },
-                mskname: { required },
-                vendor: { required },
-                remark: { required },
-                types: { required },
-                listno: { required },
+            mask: {              
+                     
                 mdlcd: { required },
                 won: { required },
-                blocksheet: { required },
-                // selectedItem: { required },
+                              
+              
             }
         };
     },
@@ -300,19 +205,9 @@ export default {
                     this.listModel = response.data;
                     console.log(this.listModel)
                     this.listModel.map((value) => {
-                        this.mask.listno = value.MMST_NO;
-                        this.mask.pcbno = value.MMST_PCBNO;
+                        
                         this.mask.procs = value.MMST_PROCS;
-                        this.mask.expire_d = value.MMST_PRDDATE;
-                        this.mask.vendor = value.MMST_VENDOR;
-                        if (value.MMST_REMARK === "") {
-                            this.mask.remark = "-";
-                        } else {
-                            this.mask.remark = value.MMST_REMARK;
-                        }
-                        this.mask.rev = value.MMST_REVS;
-                        this.mask.mskname = value.MMST_MSKNAME;
-                        this.mask.ref = value.MMST_REFNO;
+                        
 
                     })
 
@@ -344,27 +239,27 @@ export default {
                 })
             } else {
                 console.log(this.mask);
-                axios.post('/L_MetalMaskRecord/save-data', {
-                    mask: this.mask
-                }, {
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                }).then(response => {
-                    // console.log(response.data);
-                    if (response.data) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Insert Data Successfully',
-                            text: 'บันทึกข้อมูลสำเร็จ',
-                            showCancelButton: false,
-                            showConfirmButton: false,
-                            timer: 1500,
-                        }).then(() => {
-                            location.reload();
-                        })
-                    }
-                })
+                // axios.post('/L_MetalMaskRecord/save-data', {
+                //     mask: this.mask
+                // }, {
+                //     headers: {
+                //         'Content-Type': 'application/json'
+                //     }
+                // }).then(response => {
+                //     // console.log(response.data);
+                //     if (response.data) {
+                //         Swal.fire({
+                //             icon: 'success',
+                //             title: 'Insert Data Successfully',
+                //             text: 'บันทึกข้อมูลสำเร็จ',
+                //             showCancelButton: false,
+                //             showConfirmButton: false,
+                //             timer: 1500,
+                //         }).then(() => {
+                //             location.reload();
+                //         })
+                //     }
+                // })
             }
 
         },
@@ -420,9 +315,10 @@ export default {
                                     showConfirmButton: false,
                                     timer: 1500,
                                 })
-                            }
-                            this.mask.cus = item.BSGRP;
+                            }                           
                             this.mask.lot = item.WONQT;
+                            this.mask.cus = item.BGCD
+                            this.mask.blocksheet = item.MDLQTY
                         }))
                     })
                     .catch(error => {
@@ -496,12 +392,19 @@ export default {
 
 
         },
+        async fetchChangeModel(){
+            const res = await axios.get('/L_MetalMaskRecord/api/get-change-model')
+            const data = res.data
+            this.changedata = data
+           
+            console.log(data)
+        }
 
 
     },
     mounted() {
         this.fetchReportData();
-        
+        this.fetchChangeModel();
     }
 }
 </script>

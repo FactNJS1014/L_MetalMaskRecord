@@ -4,6 +4,7 @@ import Report from "./components/ReportChangeModel.vue";
 import RecordPR from "./components/RecordPR.vue";
 import ReportMain from "./components/ReportMain.vue";
 import Settingmaster from "./components/settingmaster.vue";
+import DataChange from "./components/DataChange.vue";
 
 const routes = [
     {
@@ -31,6 +32,11 @@ const routes = [
         name: "setting",
         component: Settingmaster,
 
+    },
+    {
+        path: "/dataChange",
+        name: "dataChange",
+        component: DataChange,
     }
 
 ]

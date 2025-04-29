@@ -11,7 +11,7 @@ class InsertMetalMaskController extends Controller
     public function saveData(Request $request){
         $mask = $request->input('mask');
         $lotsize = intval($mask['lot']);
-        $bsheet = $mask['blocksheet'];
+        $bsheet = intval($mask['blocksheet']);
         
         if (is_numeric($bsheet) && $bsheet != 0) {
             $result = $lotsize / $bsheet;

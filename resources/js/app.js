@@ -7,6 +7,7 @@ import Column from 'primevue/column';
 import ColumnGroup from 'primevue/columngroup';   // optional
 import Row from 'primevue/row'; 
 import Aura from '@primeuix/themes/aura'                  // optional
+// index.js
 
 
 

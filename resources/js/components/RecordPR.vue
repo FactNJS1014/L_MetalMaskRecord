@@ -44,25 +44,132 @@
                         <input type="text" id="qrcode" v-model="mask.scannedResult"
                             class="input input-bordered w-full focus:outline-none" />
                     </div>
+                    <div class="flex flex-col col-span-2">
+                        <label for="mdlcd" class="label">Employee ID: <span>&#128292;</span></label>
+                        <input type="text" id="name" v-model="mask.empid" placeholder="Input Employee ID"
+                            class="input input-bordered w-full focus:outline-none" />
+
+                    </div>
 
                     <div class="flex flex-col col-span-2">
                         <label for="mdlcd" class="label">Model Code: <span>&#128292;</span></label>
-                        <select v-model="mask.mdlcd" class="input input-bordered w-full focus:outline-none">
+                        <input type="text" v-model="mask.mdlcd" class="input input-bordered w-full focus:outline-none"
+                            placeholder="Model Code">
+                        <!-- <select v-model="mask.mdlcd" class="input input-bordered w-full focus:outline-none">
                             <option value="" disabled selected>เลือก Model Code</option>
                             <option v-for="item in listModel" :key="item.LISTMDL_MDLCD" :value="item.LISTMDL_MDLCD">{{
                                 item.LISTMDL_MDLCD }}</option>
-                        </select>
+                        </select> -->
 
                     </div>
-                    <div class="flex flex-col col-span-2">
+                    <div class="flex flex-col">
                         <label for="won" class="label">Work Order: <span>&#128292;</span></label>
-                        <AutoComplete v-model="mask.won" :suggestions="items" field="label" @complete="search"
-                            @change="checkModel" placeholder="Search WONO..." class="input w-full" />
+                        <!-- <AutoComplete v-model="mask.won" :suggestions="items" field="label" @complete="search"
+                            @change="checkModel" placeholder="Search WONO..." class="input w-full" /> -->
+
+                        <input type="text" v-model="mask.won" class="input input-bordered w-full focus:outline-none"
+                            placeholder="Search WONO..." />
 
                     </div>
-                    
-                    
-                    
+                    <div class="flex flex-col">
+                        <label for="listno" class="label">List No.: <span>&#128292;</span></label>
+                        <input type="text" id="name" v-model="mask.listno"
+                            class="input input-bordered w-full focus:outline-none" />
+                    </div>
+                    <div class="flex flex-col">
+                        <label for="cus" class="label">Customer: <span>&#128292;</span></label>
+                        <input type="text" id="name" v-model="mask.cus"
+                            class="input input-bordered w-full focus:outline-none" />
+                    </div>
+
+                    <div class="flex flex-col">
+                        <label for="pcbno" class="label">PCB No. <span>&#128292;</span></label>
+                        <input type="text" id="name" v-model="mask.pcbno"
+                            class="input input-bordered w-full focus:outline-none" />
+
+                    </div>
+                    <div class="flex flex-col">
+                        <label for="mskname" class="label">Metal Mask Name: <span>&#128292;</span></label>
+                        <input type="text" id="name" v-model="mask.mskname"
+                            class="input input-bordered w-full focus:outline-none" />
+
+                    </div>
+                    <div class="flex flex-col">
+                        <label for="process" class="label">Process: <span>&#128292;</span></label>
+                        <input type="text" id="name" v-model="mask.procs"
+                            class="input input-bordered w-full focus:outline-none" />
+                    </div>
+                    <div class="flex flex-col">
+                        <label for="rev" class="label">Revision: <span>🔢</span></label>
+                        <input type="number" class="input input-bordered w-full focus:outline-none"
+                            v-model="mask.rev" />
+                    </div>
+                    <div class="flex flex-col">
+                        <label for="ref" class="label">Reference Number: <span>&#128292;</span></label>
+                        <input type="text" id="name" v-model="mask.ref"
+                            class="input input-bordered w-full focus:outline-none" />
+                    </div>
+
+
+
+                    <div class="flex flex-col">
+                        <label for="dateexpire" class="label">Product Date: <span>📆</span></label>
+                        <input type="date" id="name" v-model="mask.expire_d"
+                            class="input input-bordered w-full focus:outline-none" />
+
+                    </div>
+                    <!-- <div class="flex flex-col">
+                        <label for="lot" class="label">Lot Size: <span>🔢</span></label>
+                         />
+
+                    </div> -->
+                    <input type="hidden" v-model="mask.lot" class="input input-bordered w-full focus:outline-none" />
+                    <div class="flex flex-col">
+                        <label for="vendor" class="label">Vendor/Maker: <span>&#128292;</span></label>
+                        <input type="text" id="name" v-model="mask.vendor"
+                            class="input input-bordered w-full focus:outline-none" />
+
+                    </div>
+                    <div class="flex flex-col">
+                        <label for="remark" class="label">Remark: <span>&#128292;</span></label>
+                        <input type="text" id="name" v-model="mask.remark"
+                            class="input input-bordered w-full focus:outline-none" />
+
+                    </div>
+                    <div class="flex flex-col">
+                        <label for="details" class="label">Details: <span>&#128292;</span></label>
+                        <input type="text" id="name" v-model="mask.details"
+                            class="input input-bordered w-full focus:outline-none" />
+
+                    </div>
+                    <div class="flex flex-col mt-3 ms-3 col-span-2">
+                        <label for="types" class="label">Types: <span>&#9989;</span></label>
+                        <div class="flex flex-row gap-2">
+                            <div class="flex items-center gap-1">
+                                <input type="radio" v-model="mask.types" class="radio" id="defaultRadio1"
+                                    value="Receive" />
+                                <label class="label-text text-blue-600 text-xl" for="defaultRadio1">Receive</label>
+                            </div>
+                            <div class="flex items-center gap-1">
+                                <input type="radio" v-model="mask.types" class="radio" id="defaultRadio2"
+                                    value="Take out" />
+                                <label class="label-text text-blue-600 text-xl" for="defaultRadio2">Take out</label>
+                            </div>
+                        </div>
+                        <div class="flex flex-row gap-4">
+                            <div class="flex items-center gap-1">
+                                <input type="radio" v-model="mask.types" class="radio" id="defaultRadio3"
+                                    value="Return" />
+                                <label class="label-text text-blue-600 text-xl" for="defaultRadio3">Return</label>
+                            </div>
+                            <div class="flex items-center gap-1">
+                                <input type="radio" v-model="mask.types" class="radio" id="defaultRadio4"
+                                    value="Scrap" />
+                                <label class="label-text text-blue-600 text-xl" for="defaultRadio4">Scrap</label>
+                            </div>
+                        </div>
+                    </div>
+                    <input type="hidden" v-model="mask.blocksheet">
 
 
 
@@ -134,6 +241,7 @@ export default {
                 blocksheet: "",
                 won: "",
                 scannedResult: "",
+                empid: "",
             },
             isModalOpen: false,
             listModel: [],
@@ -161,7 +269,7 @@ export default {
                 listno: { required },
                 mdlcd: { required },
                 won: { required },
-                blocksheet: { required },
+
                 // selectedItem: { required },
             }
         };
@@ -241,27 +349,27 @@ export default {
                 })
             } else {
                 console.log(this.mask);
-                axios.post('/L_MetalMaskRecord/save-data', {
-                    mask: this.mask
-                }, {
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                }).then(response => {
-                    // console.log(response.data);
-                    if (response.data) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Insert Data Successfully',
-                            text: 'บันทึกข้อมูลสำเร็จ',
-                            showCancelButton: false,
-                            showConfirmButton: false,
-                            timer: 1500,
-                        }).then(() => {
-                            location.reload();
-                        })
-                    }
-                })
+                // axios.post('/L_MetalMaskRecord/save-data', {
+                //     mask: this.mask
+                // }, {
+                //     headers: {
+                //         'Content-Type': 'application/json'
+                //     }
+                // }).then(response => {
+                //     // console.log(response.data);
+                //     if (response.data) {
+                //         Swal.fire({
+                //             icon: 'success',
+                //             title: 'Insert Data Successfully',
+                //             text: 'บันทึกข้อมูลสำเร็จ',
+                //             showCancelButton: false,
+                //             showConfirmButton: false,
+                //             timer: 1500,
+                //         }).then(() => {
+                //             location.reload();
+                //         })
+                //     }
+                // })
             }
 
         },
@@ -286,46 +394,53 @@ export default {
 
 
         },
-        checkModel() {
-            const won = this.mask.won;
-            // console.log(this.mask.mdlcd)
-            if (won.length >= 15) {
-                axios.post('/L_MetalMaskRecord/get-wono', {
-                    won: won
-                }, {
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
+        // checkModel() {
+        //     const won = this.dataWon;
+        //     console.log(won)
+        //     if (won.length >= 15) {
+        //         axios.post('/L_MetalMaskRecord/get-wono', {
+        //             won: won
+        //         }, {
+        //             headers: {
+        //                 'Content-Type': 'application/json'
+        //             }
+        //         })
+        //             .then(response => {
+        //                 this.mdlcode = response.data;
+        //                 this.mdlcode.map((item => {                           
+        //                     this.mask.cus = item.BGCD;
+        //                     this.mask.lot = item.WONQT;
+        //                     this.mask.blocksheet = item.MDLQTY;
+        //                 }))
+        //             })
+        //             .catch(error => {
+        //                 console.error('Error:', error);
+        //             });
+        //     }
+
+        // },
+        getLotsAndBs() {
+            const won = this.dataWon;
+            // console.log(won)
+
+            axios.post('/L_MetalMaskRecord/get-wono', {
+                won: won
+            }, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => {
+                    this.mdlcode = response.data;
+                    this.mdlcode.map((item => {
+                        this.mask.cus = item.BGCD;
+                        this.mask.lot = item.WONQT;
+                        this.mask.blocksheet = item.MDLQTY;
+                    }))
                 })
-                    .then(response => {
-                        this.mdlcode = response.data;
-                        this.mdlcode.map((item => {
-                            // this.mask.cus = item.BSGRP;
-                            if (this.mask.mdlcd === item.MDLCD) {
-                                toast.success("Model Code is correct", {
-                                    position: "top-center",
-                                    duration: 5000,
-                                    theme: "colored",
-                                    autoClose: 2000,
-                                });
-                            } else {
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Model Code is not correct',
-                                    text: 'Model Code is not correct',
-                                    showCancelButton: false,
-                                    showConfirmButton: false,
-                                    timer: 1500,
-                                })
-                            }
-                            this.mask.cus = item.BSGRP;
-                            this.mask.lot = item.WONQT;
-                        }))
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                    });
-            }
+                .catch(error => {
+                    console.error('Error:', error);
+                });
 
         },
         async fetchReportData() {
@@ -349,11 +464,11 @@ export default {
                         notifyStatus[mdl] = item.MSKREC_NOTIFY_STD;
                     }
                 });
-                console.log(grouped)
+                // console.log(grouped)
 
                 this.runningSums = grouped;
-                console.log(this.runningSums)
-                console.log(notifyStatus)
+                // console.log(this.runningSums)
+                // console.log(notifyStatus)
 
                 Object.entries(grouped).forEach(([mdl, total]) => {
                     const notified = notifyStatus[mdl] == 1;
@@ -398,8 +513,22 @@ export default {
     },
     mounted() {
         this.fetchReportData();
-        
-    }
+        this.mask.won = this.dataWon;
+        this.mask.mdlcd = this.dataModel;
+        this.mask.cus = this.dataCus;
+        this.getLotsAndBs();
+    },
+    computed: {
+        dataWon() {
+            return this.$route.query.wono;
+        },
+        dataModel() {
+            return this.$route.query.model;
+        },
+        dataCus() {
+            return this.$route.query.cus;
+        },
+    },
 }
 </script>
 

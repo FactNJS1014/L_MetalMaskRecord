@@ -46,7 +46,7 @@ class GetDataController extends Controller
         // Query the database table using a LIKE clause
         $get_mdl_code = DB::table('VWORLIST')
             ->where('WON', '=', $won)
-            ->select('MDLCD', 'BGCD','WONQT')
+            ->select('MDLCD', 'BGCD','WONQT','MDLQTY')
             ->get();
 
         // Return the result as JSON
@@ -63,9 +63,8 @@ class GetDataController extends Controller
     }
 
     public function GetModelChange(){
-        $data = DB::table('MMCHN_MDL_TBL')
-        ->join('MM_MASTERMSK_TBL' ,'MMCHN_MDL_TBL.MMCHANGE_BARCODE' , '=' , 'MM_MASTERMSK_TBL.MMST_QRID')
-        ->where('MMCHANGE_APPR_STD' , '=' , '1')
+        $data = DB::table('MMCHN_MDL_TBL')   
+       
         ->get();
         return response()->json($data);
     }

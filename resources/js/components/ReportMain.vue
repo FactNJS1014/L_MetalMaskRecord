@@ -7,8 +7,8 @@
         </div>
         <div class="card-body mt-4">
           <!-- ตารางรวมผล Shots ตาม QRID -->
-          <div class="mt-3 overflow-y-auto h-[50%]">
-            <h5 class="text-center font-bold text-purple-700 text-xl">รวม Shots แต่ละ Model</h5>
+            <!-- <h5 class="text-center font-bold text-purple-700 text-xl">รวม Shots แต่ละ Model</h5> -->
+          <div class="mt-3 flex items-center justify-center">
             <MaskChart v-if="runningSums" :chartData="runningSums" />
           </div>
           <h5 class="text-center font-bold text-purple-700 text-xl mt-6">รายการใช้งาน Metal Mask ทั้งหมด</h5>
