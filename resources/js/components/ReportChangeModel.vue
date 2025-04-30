@@ -31,9 +31,10 @@
                                 <td>{{ history.MMCHANGE_LINE }}</td>
                                 <td>{{ history.MMCHANGE_EMPID }}</td>
                                 <td>{{ history.MMCHANGE_STD }}</td>
-                                <td><button class="btn btn-warning text-xl" @click="ToRecordPage(history)" type="button"><i class="pi pi-file-edit"
-                                            ></i>เปลี่ยนใช้งาน</button></td>
-                                <td><button type="button" class="btn btn-accent text-xl" @click="PageData(history)"><i
+                                <td><button class="btn btn-warning text-xl" @click="ToRecordPage(history)"
+                                        type="button"><i class="pi pi-file-edit"></i>เปลี่ยนใช้งาน</button></td>
+                                <td><button type="button" class="btn btn-accent text-xl"
+                                        @click="PageData(history.MMCHANGE_MDLCHN, history.MMCHANGE_PRCS)"><i
                                             class="pi pi-eye"></i>ดูข้อมูล</button></td>
 
                             </tr>
@@ -43,7 +44,7 @@
             </div>
 
         </div>
-        <div class="absolute bg-blue-300 p-6 rounded-lg w-[60%]" v-if="IsShow">
+        <div class="absolute bg-blue-300 p-6 rounded-lg w-[60%] mt-[10%]" v-if="IsShow">
             <div class="flex justify-end items-center">
                 <i class="pi pi-times " style="font-size: 24px; font-weight: bold; color: #e40004; cursor: pointer;"
                     @click="CloseComponent"></i>
@@ -67,13 +68,15 @@ export default {
     data() {
         return {
             changeHistory: [],
-            selectedItem: {},
+            selectedItem: [],
             IsShow: false,
+            gethistory: [],
 
         };
     },
     mounted() {
         this.fetchChangeHistory();
+
     },
     methods: {
         fetchChangeHistory() {
@@ -86,25 +89,43 @@ export default {
                     console.error('Error fetching change history:', error);
                 })
         },
-        PageData(item) {
+        PageData(mdl, prcs) {
             this.IsShow = true;
-            this.selectedItem = { ...item };
+            axios.post('/L_MetalMaskRecord/get-change-history', {
+                mdl: mdl,
+                prcs: prcs,
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+
+            })
+                .then(response => {
+                    this.gethistory = response.data;
+                    this.selectedItem = this.gethistory;
+                    console.log(this.selectedItem)
+                })
+                .catch(error => {
+                    console.error('Error fetching change history:', error);
+                })
+           
+            // console.log(prcs)
         },
         CloseComponent() {
             this.IsShow = false;
         },
         ToRecordPage(c) {
-            const cloneData = {...c};
+            const cloneData = { ...c };
             this.$router.push({
                 name: 'recordPR',
-                query:{
+                query: {
                     wono: cloneData.MMCHANGE_WONNO,
                     model: cloneData.MMCHANGE_MDLCHN,
                     cus: cloneData.MMCHANGE_CUS,
-                    
+
                 }
             });
-        }
+        },
+
     }
 }
 

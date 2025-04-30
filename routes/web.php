@@ -31,3 +31,4 @@ Route::post('save-data', [InsertMetalMaskController::class, 'saveData']);
 Route::put('/update-notify-status',[UpdateDataController::class, 'updateNotiStatus']);
 Route::post('/search-list-models',[GetDataController::class, 'SearchlistModels']);
 Route::post('/search-list-masks',[GetDataController::class, 'SearchlistMasks']);
+Route::post('/get-change-history',[GetDataController::class, 'GetChangeHistory']);
