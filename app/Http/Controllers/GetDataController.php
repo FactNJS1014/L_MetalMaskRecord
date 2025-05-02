@@ -12,11 +12,13 @@ class GetDataController extends Controller
     {
         // Get the input parameter named 'ref_id'
         $ref = $request->input('ref_id');
+        $mdl = $request->input('mdlcd');
 
         // Query the database table using a LIKE clause
         $get_model_code = DB::table('MM_LISTMDL_TBL')
             ->join('MM_MASTERMSK_TBL', 'MM_LISTMDL_TBL.LISTMDL_QRID', '=', 'MM_MASTERMSK_TBL.MMST_QRID')
             ->where('LISTMDL_QRID', 'LIKE', '%' . $ref . '%')
+            // ->where('LISTMDL_MDLCD', 'LIKE', '%' . $mdl . '%')
             ->select('MM_LISTMDL_TBL.*', 'MM_MASTERMSK_TBL.*')
             ->get();
 
@@ -88,7 +90,12 @@ class GetDataController extends Controller
 
     public function GetValues()
     {
-        $getval = DB::table('MM_MSKREC_TBL')->get();
+        $getval = DB::table('MM_MSKREC_TBL')
+        
+        // ->join('MM_LISTMDL2_TBL as mdl1', 'MM_MSKREC_TBL.MSKREC_MDLCD', '=','mdl1.LISTMDL_MDLCD')    
+         
+        ->get()
+        ;
         return response()->json($getval);
     }
 

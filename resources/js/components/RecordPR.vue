@@ -130,45 +130,7 @@
                             class="input input-bordered w-full focus:outline-none" />
 
                     </div>
-                    <div class="flex flex-col">
-                        <label for="remark" class="label">Remark: <span>&#128292;</span></label>
-                        <input type="text" id="name" v-model="mask.remark"
-                            class="input input-bordered w-full focus:outline-none" />
-
-                    </div>
-                    <div class="flex flex-col">
-                        <label for="details" class="label">Details: <span>&#128292;</span></label>
-                        <input type="text" id="name" v-model="mask.details"
-                            class="input input-bordered w-full focus:outline-none" />
-
-                    </div>
-                    <div class="flex flex-col mt-3 ms-3 col-span-2">
-                        <label for="types" class="label">Types: <span>&#9989;</span></label>
-                        <div class="flex flex-row gap-2">
-                            <div class="flex items-center gap-1">
-                                <input type="radio" v-model="mask.types" class="radio" id="defaultRadio1"
-                                    value="Receive" />
-                                <label class="label-text text-blue-600 text-xl" for="defaultRadio1">Receive</label>
-                            </div>
-                            <div class="flex items-center gap-1">
-                                <input type="radio" v-model="mask.types" class="radio" id="defaultRadio2"
-                                    value="Take out" />
-                                <label class="label-text text-blue-600 text-xl" for="defaultRadio2">Take out</label>
-                            </div>
-                        </div>
-                        <div class="flex flex-row gap-4">
-                            <div class="flex items-center gap-1">
-                                <input type="radio" v-model="mask.types" class="radio" id="defaultRadio3"
-                                    value="Return" />
-                                <label class="label-text text-blue-600 text-xl" for="defaultRadio3">Return</label>
-                            </div>
-                            <div class="flex items-center gap-1">
-                                <input type="radio" v-model="mask.types" class="radio" id="defaultRadio4"
-                                    value="Scrap" />
-                                <label class="label-text text-blue-600 text-xl" for="defaultRadio4">Scrap</label>
-                            </div>
-                        </div>
-                    </div>
+                   
                     <input type="hidden" v-model="mask.blocksheet">
 
 
@@ -232,10 +194,7 @@ export default {
                 lot: "",
                 rev: "",
                 mskname: "",
-                vendor: "",
-                remark: "",
-                details: "",
-                types: "",
+                vendor: "",               
                 listno: "",
                 mdlcd: "",
                 blocksheet: "",
@@ -249,6 +208,7 @@ export default {
             mdlcode: "",
             runningSums: {},
             statusMap: {},
+            found: false,
 
         };
     },
@@ -264,8 +224,7 @@ export default {
                 rev: { required },
                 mskname: { required },
                 vendor: { required },
-                remark: { required },
-                types: { required },
+               
                 listno: { required },
                 mdlcd: { required },
                 won: { required },
@@ -292,7 +251,8 @@ export default {
             // console.log(ref_id)
 
             axios.post('/L_MetalMaskRecord/get-model-code', {
-                ref_id: ref_id
+                ref_id: ref_id,
+                // mdlcd: this.mask.mdlcd,
             },
                 {
                     headers: {
@@ -304,6 +264,33 @@ export default {
                     // console.log(response.data);
                     this.listModel = response.data;
                     console.log(this.listModel)
+                    for (let i = 0; i < this.listModel.length; i++) {
+                        if (this.mask.mdlcd === this.listModel[i].LISTMDL_MDLCD) {
+                            this.found = true;
+                            
+                            toast.success('Model Code is match!', {
+                                position: "top-center",
+                                duration: 5000,
+                                theme: "colored",
+                                autoClose: 2000,
+                               
+                            });
+                            break; // stop checking after a match
+                        }
+                    }
+
+                    // Show error only if not found after loop
+                    if (!this.found) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Model Code is not found!',
+                            showConfirmButton: false,
+                            timer: 1500
+                        }).then(() => {
+                            location.reload();
+                        });
+                    }
                     this.listModel.map((value) => {
                         this.mask.listno = value.MMST_NO;
                         this.mask.pcbno = value.MMST_PCBNO;
@@ -318,6 +305,8 @@ export default {
                         this.mask.rev = value.MMST_REVS;
                         this.mask.mskname = value.MMST_MSKNAME;
                         this.mask.ref = value.MMST_REFNO;
+
+
 
                     })
 
@@ -349,27 +338,28 @@ export default {
                 })
             } else {
                 console.log(this.mask);
-                // axios.post('/L_MetalMaskRecord/save-data', {
-                //     mask: this.mask
-                // }, {
-                //     headers: {
-                //         'Content-Type': 'application/json'
-                //     }
-                // }).then(response => {
-                //     // console.log(response.data);
-                //     if (response.data) {
-                //         Swal.fire({
-                //             icon: 'success',
-                //             title: 'Insert Data Successfully',
-                //             text: 'บันทึกข้อมูลสำเร็จ',
-                //             showCancelButton: false,
-                //             showConfirmButton: false,
-                //             timer: 1500,
-                //         }).then(() => {
-                //             location.reload();
-                //         })
-                //     }
-                // })
+                axios.post('/L_MetalMaskRecord/save-data', {
+                    mask: this.mask
+                }, {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                }).then(response => {
+                    console.log(response.data);
+                    if (response.data) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Insert Data Successfully',
+                            text: 'บันทึกข้อมูลสำเร็จ',
+                            showCancelButton: false,
+                            showConfirmButton: false,
+                            timer: 1500,
+                        })
+                        .then(() => {
+                            location.reload();
+                        })
+                    }
+                })
             }
 
         },

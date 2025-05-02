@@ -9,7 +9,7 @@
           <!-- ตารางรวมผล Shots ตาม QRID -->
             <!-- <h5 class="text-center font-bold text-purple-700 text-xl">รวม Shots แต่ละ Model</h5> -->
           <div class="mt-3 flex items-center justify-center">
-            <MaskChart v-if="runningSums" :chartData="runningSums" />
+            <MaskChart v-if="runningSums" :chartData="runningSums" :rawData="MaskData" />
           </div>
           <h5 class="text-center font-bold text-purple-700 text-xl mt-6">รายการใช้งาน Metal Mask ทั้งหมด</h5>
           <div class="overflow-auto mt-4 h-[60%]">
@@ -93,7 +93,7 @@ export default {
         const data = res.data;
 
         this.MaskData = data;
-
+        console.log(data)
         const grouped = {}
         const notifyStatus = {};
         // รวม Shots และจำ Notify STD

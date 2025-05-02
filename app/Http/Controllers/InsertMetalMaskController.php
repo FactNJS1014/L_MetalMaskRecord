@@ -11,7 +11,9 @@ class InsertMetalMaskController extends Controller
     public function saveData(Request $request){
         $mask = $request->input('mask');
         $lotsize = intval($mask['lot']);
-        $bsheet = intval($mask['blocksheet']);
+        $bsheet = floor($mask['blocksheet']);
+        // return response()->json($lotsize/$bsheet);
+        $shots = $lotsize/$bsheet;
         
         if (is_numeric($bsheet) && $bsheet != 0) {
             $result = $lotsize / $bsheet;
@@ -42,8 +44,8 @@ class InsertMetalMaskController extends Controller
         $insertMask->MSKREC_LISTNO = $mask['listno'];
         $insertMask->MSKREC_CUS = $mask['cus'];
         $insertMask->MSKREC_LOTS = $lotsize;
-        $insertMask->MSKREC_BLOCKSHEET = $mask['blocksheet'];
-        $insertMask->MSKREC_SHOTS = $result;
+        $insertMask->MSKREC_BLOCKSHEET = $bsheet;
+        $insertMask->MSKREC_SHOTS = $shots;
         $insertMask->MSKREC_STD = 1;
         $insertMask->MSKREC_LSTDT = date('Y-m-d H:i:s');
         $insertMask->MSKREC_PCBNO = $mask['pcbno'];
@@ -53,9 +55,10 @@ class InsertMetalMaskController extends Controller
         $insertMask->MSKREC_REFNO = $mask['ref'];
         $insertMask->MSKREC_PRODDATE = $mask['expire_d'];
         $insertMask->MSKREC_VENDOR = $mask['vendor'];
-        $insertMask->MSKREC_DETAILS = $mask['details'];
-        $insertMask->MSKREC_TYPES = $mask['types'];
-        $insertMask->MSKREC_REMARK = $mask['remark'];
+        $insertMask->MSKREC_EMPREC = $mask['empid'];
+        // $insertMask->MSKREC_DETAILS = $mask['details'];
+        // $insertMask->MSKREC_TYPES = $mask['types'];
+        // $insertMask->MSKREC_REMARK = $mask['remark'];
         
         $insertMask->save();
 

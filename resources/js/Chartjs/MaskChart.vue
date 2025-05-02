@@ -14,8 +14,10 @@ Chart.register(...registerables);
 export default {
   name: 'MaskChart',
   props: {
-    chartData: Object
+    chartData: Object,
+    rawData: Array
   },
+
   mounted() {
     this.renderChart();
   },
@@ -47,37 +49,87 @@ export default {
           onClick: (evt, elements) => {
             if (elements.length > 0) {
               const index = elements[0].index;
-              const label = chart.data.labels[index];
+              const label = chart.data.labels[index]; // Model Code
               const value = chart.data.datasets[0].data[index];
 
-              // 👉 เตรียม table HTML
-              const tableHtml = `
-                <table style="width:100%; border-collapse: collapse; text-align: center;">
-                  <thead>
-                    <tr style="background-color: #f3f4f6;">
-                      <th style="padding: 8px; border: 1px solid #ccc;">Model</th>
-                      <th style="padding: 8px; border: 1px solid #ccc;">Total Shots</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td style="padding: 8px; border: 1px solid #ccc;">${label}</td>
-                      <td style="padding: 8px; border: 1px solid #ccc;">${value}</td>
-                    </tr>
-                  </tbody>
-                </table>
-              `;
+              // 👉 Filter ข้อมูลของ Model ที่คลิก และเอาแค่ 5 รายการล่าสุด
+              const relatedData = this.rawData
+                .filter(item => item.MSKREC_MDLCD === label)
+                .sort((a, b) => new Date(b.MSKREC_PRODDATE) - new Date(a.MSKREC_PRODDATE))
+                .slice(0, 5);
 
-              // 👉 แสดง SweetAlert2 พร้อม Table
+              // 👉 สร้างตาราง
+              let rows = relatedData.map(item => `
+      <tr>
+        <td style="padding: 8px; border: 1px solid #ccc;">${item.MSKREC_LISTNO}</td>
+        <td style="padding: 8px; border: 1px solid #ccc;">${item.MSKREC_MMNAME}</td>
+        <td style="padding: 8px; border: 1px solid #ccc;">${item.MSKREC_SHOTS}</td>
+        
+      </tr>
+    `).join('');
+
+              const tableHtml = `
+      <h4 style="margin-bottom: 10px;" class="text-[22px] font-semibold text-blue-600">Model: ${label} | Total Mask Shots: ${value}</h4>
+      <table style="width:100%; border-collapse: collapse; text-align: center;">
+        <thead style="background-color: #f3f4f6;">
+          <tr>
+            <th style="padding: 8px; border: 1px solid #ccc;">Metal Mask No.</th>
+            <th style="padding: 8px; border: 1px solid #ccc;">Metal Mask Name</th>
+            <th style="padding: 8px; border: 1px solid #ccc;">Shots</th>
+            
+          </tr>
+        </thead>
+        <tbody>
+          ${rows}
+        </tbody>
+      </table>
+    `;
+
               Swal.fire({
-                title: 'ข้อมูล Model',
+                title: 'ข้อมูล Metal Mask Shots',
                 html: tableHtml,
-                width: 600,
+                width: 800,
                 confirmButtonText: 'ตกลง',
                 confirmButtonColor: '#8b5cf6'
               });
             }
           },
+
+
+          // onClick: (evt, elements) => {
+          //   if (elements.length > 0) {
+          //     const index = elements[0].index;
+          //     const label = chart.data.labels[index];
+          //     const value = chart.data.datasets[0].data[index];
+
+          //     // 👉 เตรียม table HTML
+          //     const tableHtml = `
+          //       <table style="width:100%; border-collapse: collapse; text-align: center;">
+          //         <thead>
+          //           <tr style="background-color: #f3f4f6;">
+          //             <th style="padding: 8px; border: 1px solid #ccc;">Model</th>
+          //             <th style="padding: 8px; border: 1px solid #ccc;">Total Shots</th>
+          //           </tr>
+          //         </thead>
+          //         <tbody>
+          //           <tr>
+          //             <td style="padding: 8px; border: 1px solid #ccc;">${label}</td>
+          //             <td style="padding: 8px; border: 1px solid #ccc;">${value}</td>
+          //           </tr>
+          //         </tbody>
+          //       </table>
+          //     `;
+
+          //     // 👉 แสดง SweetAlert2 พร้อม Table
+          //     Swal.fire({
+          //       title: 'ข้อมูล Model',
+          //       html: tableHtml,
+          //       width: 600,
+          //       confirmButtonText: 'ตกลง',
+          //       confirmButtonColor: '#8b5cf6'
+          //     });
+          //   }
+          // },
           plugins: {
             legend: {
               position: 'bottom'
