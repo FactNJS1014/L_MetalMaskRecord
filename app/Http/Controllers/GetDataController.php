@@ -97,9 +97,8 @@ class GetDataController extends Controller
         $mdl = $request->mdl;
         $prcs = $request->prcs;
         $gethistory = DB::table('MMCHN_MDL_TBL')
-            ->join('MM_LISTMDL_TBL as mdl1', 'MMCHN_MDL_TBL.MMCHANGE_MDLCHN', '=', 'mdl1.LISTMDL_MDLCD')
-            ->join('MM_MASTERMSK_TBL', 'mdl1.LISTMDL_QRID', '=', 'MM_MASTERMSK_TBL.MMST_QRID')
-
+            ->join('MM_LISTMDL2_TBL as mdl1', 'MMCHN_MDL_TBL.MMCHANGE_MDLCHN', '=', 'mdl1.LISTMDL_MDLCD')
+           
             ->where('mdl1.LISTMDL_MDLCD', $mdl)
             ->where('mdl1.LISTMDL_PROCS', $prcs)
             ->get();
