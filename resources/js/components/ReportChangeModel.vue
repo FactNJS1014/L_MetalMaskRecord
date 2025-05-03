@@ -62,6 +62,7 @@ import 'primeicons/primeicons.css'
 import DataChange from './DataChange.vue';
 
 export default {
+    name: 'report',
     components: {
         DataChange
     },
@@ -71,6 +72,7 @@ export default {
             selectedItem: [],
             IsShow: false,
             gethistory: [],
+            session: this.$session,
 
         };
     },
@@ -121,7 +123,7 @@ export default {
                     wono: cloneData.MMCHANGE_WONNO,
                     model: cloneData.MMCHANGE_MDLCHN,
                     cus: cloneData.MMCHANGE_CUS,
-
+                    empno: this.session.empno, 
                 }
             });
         },

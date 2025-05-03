@@ -40,6 +40,43 @@
                 </router-link>
 
             </li>
+            <!-- <p><strong>Username:</strong> {{ session.username }}</p> -->
         </ul>
     </div>
 </template>
+
+// <script>
+// import axios from 'axios';
+
+// export default {
+//     mounted() {
+//         const params = new URLSearchParams(window.location.search);
+
+//         const sessionData = {
+//             username: params.get('username'),
+//             empno: params.get('empno'),
+//             department: params.get('department'),
+//             USE_PERMISSION: params.get('USE_PERMISSION'),
+//             sec: params.get('sec'),
+//             MSECT_ID: params.get('MSECT_ID'),
+//         };
+
+//         if (sessionData.empno) {
+//             this.setSession(sessionData);
+//         }
+       
+//     },
+//     methods: {
+//         setSession(data) {
+//             axios.post('/45_engmask/set-session', data)
+//                 .then(() => {
+//                     console.log('Session set successfully');
+//                     // Optionally redirect or load data
+//                 })
+//                 .catch(err => {
+//                     console.error('Session error:', err);
+//                 });
+//         }
+//     }
+// };
+// </script>

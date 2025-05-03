@@ -506,6 +506,7 @@ export default {
         this.mask.won = this.dataWon;
         this.mask.mdlcd = this.dataModel;
         this.mask.cus = this.dataCus;
+        this.mask.empid = this.dataEmpid;
         this.getLotsAndBs();
     },
     computed: {
@@ -517,6 +518,9 @@ export default {
         },
         dataCus() {
             return this.$route.query.cus;
+        },
+        dataEmpid() {
+            return this.$route.query.empno
         },
     },
 }

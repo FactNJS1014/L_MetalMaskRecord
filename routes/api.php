@@ -27,5 +27,14 @@ Route::get('/get-values',[GetDataController::class, 'GetValues']);
 
 Route::get('/get-list-models',[GetDataController::class, 'GetListModel']);
 Route::get('/get-list-mask',[GetDataController::class, 'GetListMask']);
-
+Route::get('/user/session', function () {
+    return response()->json([
+        'username' => session('username'),
+        'empno' => session('empno'),
+        'department' => session('department'),
+        'USER_PERMISSION' => session('USER_PERMISSION'),
+        'sec' => session('sec'),
+        'MSECT_ID' => session('MSECT_ID'),
+    ]);
+});
 

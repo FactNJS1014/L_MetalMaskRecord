@@ -5,6 +5,8 @@ use App\Http\Controllers\GetDataController;
 use App\Http\Controllers\InsertChangeModelController;
 use App\Http\Controllers\UpdateDataController;
 use App\Http\Controllers\InsertMetalMaskController;
+use App\Http\Controllers\loginController;
+use App\Http\Controllers\SessionController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -21,6 +23,7 @@ Route::get('/{any}', function () {
     return view('app');
 })->where('any', '.*');
 
+
 Route::post('/get-model-code', [GetDataController::class, 'getModelCode']);
 Route::post('/show-value', [GetDataController::class, 'showValueToInput']);
 Route::post('/search', [GetDataController::class, 'SearchWon']);
@@ -32,3 +35,4 @@ Route::put('/update-notify-status',[UpdateDataController::class, 'updateNotiStat
 Route::post('/search-list-models',[GetDataController::class, 'SearchlistModels']);
 Route::post('/search-list-masks',[GetDataController::class, 'SearchlistMasks']);
 Route::post('/get-change-history',[GetDataController::class, 'GetChangeHistory']);
+Route::post('/set-session', [LoginController::class, 'login']);

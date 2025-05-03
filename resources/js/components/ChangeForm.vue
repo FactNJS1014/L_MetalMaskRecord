@@ -2,7 +2,7 @@
     <div class="relative">
         <div class="flex justify-center items-center mt-5 w-full">
             <div class="card w-[45%] lg:w-[50%] bg-base-100 shadow-xl border border-cyan-600">
-               
+
                 <div class="card-body ">
                     <h5 class="card-title text-center font-bold text-2xl text-black bg-fuchsia-500 p-3 rounded-lg"><span
                             class="mr-3">&#128203;</span>Change Model Form</h5>
@@ -19,10 +19,10 @@
                             <div class="flex flex-col ">
                                 <label for="model" class="text-xl font-bold">Model ที่ต้องการเปลี่ยน :
                                     <span>&#128292;</span></label>
-                                <input type="text" class="input input-bordered mt-2" placeholder="ใส่ข้อมูล Model ที่ต้องการเปลี่ยน..."
-                                v-model="formChange.mdlch" />
+                                <input type="text" class="input input-bordered mt-2"
+                                    placeholder="ใส่ข้อมูล Model ที่ต้องการเปลี่ยน..." v-model="formChange.mdlch" />
                             </div>
-                            
+
                             <div class="flex flex-col">
                                 <label for="customer" class="text-xl font-bold">Customer <span
                                         class="text-sky-600">(Auto
@@ -36,8 +36,9 @@
                                 <label for="Line" class="text-xl font-bold">Line SMT : <span>&#128292;</span></label>
                                 <select class="select select-bordered mt-2" v-model="formChange.line">
                                     <option value="" disabled selected>Choose Line</option>
-                                    <option v-for="line in linelist" :key="line.LINE_ID" :value="line.LINE_NAME">{{line.LINE_NAME}}</option>
-                                    
+                                    <option v-for="line in linelist" :key="line.LINE_ID" :value="line.LINE_NAME">
+                                        {{ line.LINE_NAME }}</option>
+
                                 </select>
                             </div>
                             <div class="flex flex-col">
@@ -74,10 +75,10 @@
                     </form>
                 </div>
             </div>
-        </div>   
+        </div>
 
 
-        
+
         <div class="flex justify-center items-center">
             <div class="card w-[50%] mt-3 border border-cyan-600 absolute top-155 " v-if="isModalShow">
                 <div class="card-body">
@@ -120,6 +121,7 @@
     </div>
 
 
+
 </template>
 <script>
 import 'primeicons/primeicons.css'
@@ -132,6 +134,7 @@ import AutoComplete from 'primevue/autocomplete';
 import Swal from 'sweetalert2'
 import axios from 'axios';
 export default {
+    name: "ChangeForm",
     components: {
         QrcodeStream,
         AutoComplete,
@@ -142,40 +145,43 @@ export default {
     },
     data() {
         return {
-            formChange: {                
+            formChange: {
                 empID: '',
                 line: '',
                 customer: '',
-                process: '',                
+                process: '',
                 wonNo: '',
                 shift: '',
                 mdlch: '',
-            },        
-           
+            },
+
             items: [],
             mdlcode: "",
             linelist: [],
-                   
+            session: this.$session 
+
 
 
         }
     },
     validations() {
         return {
-            formChange: {               
+            formChange: {
                 empID: { required },
                 line: { required },
                 customer: { required },
-                process: { required },                
+                process: { required },
                 wonNo: { required },
                 shift: { required },
-                mdlch: {required}
+                mdlch: { required }
             },
 
         }
     },
     mounted() {
-        this.GetDataChange()
+        this.GetDataChange(),
+            this.GetSession()
+
     },
     methods: {
         async handleSubmit() {
@@ -211,11 +217,11 @@ export default {
                                     location.reload()
                                 }
                             })
-                            this.formChange = {                                
+                            this.formChange = {
                                 empID: '',
                                 line: '',
                                 customer: '',
-                                process: '',                                
+                                process: '',
                                 wonNo: '',
                                 shift: ''
                             }
@@ -235,8 +241,8 @@ export default {
 
             }
         },
-        
-        
+
+
         search(event) {
             const query = event.query;
             axios.post('/45_engmask/search', {
@@ -271,7 +277,7 @@ export default {
                 })
                     .then(response => {
                         this.mdlcode = response.data;
-                        this.mdlcode.map((item => {                            
+                        this.mdlcode.map((item => {
                             this.formChange.customer = item.BGCD;
                             this.formChange.mdlch = item.MDLCD;
                         }))
@@ -292,7 +298,10 @@ export default {
                     console.error('Error fetching change data:', error);
                 });
         },
-        
+        GetSession() {
+            this.formChange.empID = this.session.empno;
+        }
+
 
 
     },

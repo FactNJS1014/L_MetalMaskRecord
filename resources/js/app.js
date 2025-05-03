@@ -13,6 +13,8 @@ import { QrcodeStream } from "vue3-qrcode-reader";                  // optional
 
 
 const app = createApp(App);
+
+app.config.globalProperties.$session = window.sessionData;
 // app.use(PrimeVue);
 app.use(router);
 app.use(PrimeVue, {
