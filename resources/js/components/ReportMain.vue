@@ -89,7 +89,7 @@ export default {
   methods: {
     async fetchReportData() {
       try {
-        const res = await axios.get('/L_MetalMaskRecord/api/get-values');
+        const res = await axios.get('/45_engmask/api/get-values');
         const data = res.data;
 
         this.MaskData = data;

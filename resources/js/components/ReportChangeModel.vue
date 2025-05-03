@@ -80,7 +80,7 @@ export default {
     },
     methods: {
         fetchChangeHistory() {
-            axios.get('/L_MetalMaskRecord/api/get-change-model')
+            axios.get('/45_engmask/api/get-change-model')
                 .then(response => {
                     this.changeHistory = response.data;
                     console.log(this.changeHistory);
@@ -91,7 +91,7 @@ export default {
         },
         PageData(mdl, prcs) {
             this.IsShow = true;
-            axios.post('/L_MetalMaskRecord/get-change-history', {
+            axios.post('/45_engmask/get-change-history', {
                 mdl: mdl,
                 prcs: prcs,
                 headers: {

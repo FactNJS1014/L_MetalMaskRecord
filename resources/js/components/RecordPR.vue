@@ -250,7 +250,7 @@ export default {
             const ref_id = qrid[3];
             // console.log(ref_id)
 
-            axios.post('/L_MetalMaskRecord/get-model-code', {
+            axios.post('/45_engmask/get-model-code', {
                 ref_id: ref_id,
                 // mdlcd: this.mask.mdlcd,
             },
@@ -338,7 +338,7 @@ export default {
                 })
             } else {
                 console.log(this.mask);
-                axios.post('/L_MetalMaskRecord/save-data', {
+                axios.post('/45_engmask/save-data', {
                     mask: this.mask
                 }, {
                     headers: {
@@ -365,7 +365,7 @@ export default {
         },
         search(event) {
             const query = event.query;
-            axios.post('/L_MetalMaskRecord/search', {
+            axios.post('/45_engmask/search', {
                 query: query
             }, {
                 headers: {
@@ -413,7 +413,7 @@ export default {
             const won = this.dataWon;
             // console.log(won)
 
-            axios.post('/L_MetalMaskRecord/get-wono', {
+            axios.post('/45_engmask/get-wono', {
                 won: won
             }, {
                 headers: {
@@ -435,7 +435,7 @@ export default {
         },
         async fetchReportData() {
             try {
-                const res = await axios.get('/L_MetalMaskRecord/api/get-values');
+                const res = await axios.get('/45_engmask/api/get-values');
                 const data = res.data;
 
                 this.MaskData = data;
@@ -473,7 +473,7 @@ export default {
                         }).then((result) => {
                             if (result.isConfirmed) {
                                 // PUT เพื่อ update notify std
-                                axios.put('/L_MetalMaskRecord/update-notify-status', {
+                                axios.put('/45_engmask/update-notify-status', {
                                     mdl: mdl,
 
                                 }).then(response => {

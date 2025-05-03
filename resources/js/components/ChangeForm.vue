@@ -192,7 +192,7 @@ export default {
                 })
             } else {
                 //    console.log(this.formChange)
-                axios.post('/L_MetalMaskRecord/insert-change-model', {
+                axios.post('/45_engmask/insert-change-model', {
                     formChange: this.formChange
                 }, {
                     headers: {
@@ -239,7 +239,7 @@ export default {
         
         search(event) {
             const query = event.query;
-            axios.post('/L_MetalMaskRecord/search', {
+            axios.post('/45_engmask/search', {
                 query: query
             }, {
                 headers: {
@@ -262,7 +262,7 @@ export default {
             const won = this.formChange.wonNo;
             // console.log(this.mask.mdlcd)
             if (won.length >= 15) {
-                axios.post('/L_MetalMaskRecord/get-wono', {
+                axios.post('/45_engmask/get-wono', {
                     won: won
                 }, {
                     headers: {
@@ -283,7 +283,7 @@ export default {
 
         },
         GetDataChange() {
-            axios.get('/L_MetalMaskRecord/api/get-list-line')
+            axios.get('/45_engmask/api/get-list-line')
                 .then(res => {
                     this.linelist = res.data;
                     console.log(this.dataChange);
