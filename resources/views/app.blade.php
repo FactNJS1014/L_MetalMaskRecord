@@ -6,6 +6,8 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="shortcut icon" href="{{asset('public/favicon/Metal_Mask.svg')}}" type="image/x-icon">
     <title>Metal Mask</title>
+    <link rel="stylesheet" href="{{ asset('primeicons/primeicons.css')}}">
+    
     @vite('resources/css/app.css')
     @vite('resources/js/app.js')
     <style>
