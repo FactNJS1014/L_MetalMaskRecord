@@ -33,6 +33,8 @@
                 MSECT_ID: '{{ session("MSECT_ID") }}',
                 server: '{{ $_SERVER["HTTP_HOST"] }}'
             };
+            console.log(sessionData);
+           
         </script>
       
 </body>

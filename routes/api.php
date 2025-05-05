@@ -37,4 +37,14 @@ Route::get('/user/session', function () {
         'MSECT_ID' => session('MSECT_ID'),
     ]);
 });
+Route::get('/session-data', function () {
+    return response()->json([
+        'username' => session('username'),
+        'empno' => session('empno'),
+        'department' => session('department'),
+        'USE_PERMISSION' => session('USE_PERMISSION'),
+        'sec' => session('sec'),
+        'MSECT_ID' => session('MSECT_ID'),
+    ]);
+});
 

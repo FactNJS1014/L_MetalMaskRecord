@@ -32,9 +32,9 @@ class GetDataController extends Controller
         $query = $request->input('query');
 
         // Query the database table using a LIKE clause
-        $get_won_code = DB::table('VWORLIST_1Y')
-            ->where('WONO', 'LIKE', '%' . $query . '%')
-            ->pluck('WONO');
+        $get_won_code = DB::table('VWORLIST')
+            ->where('WON', 'LIKE', '%' . $query . '%')
+            ->pluck('WON');
 
         // Return the result as JSON
         return response()->json($get_won_code);

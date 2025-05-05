@@ -17,7 +17,8 @@ class StoreSession
      */
     public function handle(Request $request, Closure $next)
     {
-        if ($request->has(['username', 'empno', 'department', 'USE_PERMISSION', 'sec', 'MSECT_ID'])) {
+        // Example: Store session data from query parameters
+        if ($request->has('username')) {
             session([
                 'username' => $request->query('username'),
                 'empno' => $request->query('empno'),
@@ -27,6 +28,7 @@ class StoreSession
                 'MSECT_ID' => $request->query('MSECT_ID'),
             ]);
         }
+
         return $next($request);
     }
 }

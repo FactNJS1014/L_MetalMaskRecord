@@ -180,7 +180,7 @@ export default {
     },
     mounted() {
         this.GetDataChange(),
-            this.GetSession()
+        this.GetSession()
 
     },
     methods: {

@@ -6,7 +6,7 @@
                 <div class="flex flex-col">
                     <div class="card bg-yellow-300">
                         <div class="flex justify-center items-center">
-                            <img src="../../../public/pictures/Setting Model-new.svg" alt="" class="w-3/4">
+                            <img src="/public/pictures/Setting Model-new.svg" alt="" class="w-3/4">
                         </div>
                         <div class="card-title text-center py-6 bg-blue-800 rounded-b-lg">
                             <h5 class="font-bold text-[25px] text-white">Setting Models</h5>

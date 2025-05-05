@@ -14,12 +14,14 @@ class InsertMetalMaskController extends Controller
         $bsheet = floor($mask['blocksheet']);
         // return response()->json($lotsize/$bsheet);
         $shots = $lotsize/$bsheet;
+
+        $result = intval($shots);
         
-        if (is_numeric($bsheet) && $bsheet != 0) {
-            $result = $lotsize / $bsheet;
-        } else {
-            $result = 0; // or handle error appropriately
-        }
+        // if (is_numeric($bsheet) && $bsheet != 0) {
+        //     $result = $lotsize / $bsheet;
+        // } else {
+        //     $result = 0; // or handle error appropriately
+        // }
 
         $YM = date('Ym');
         $maskrec = '';
@@ -45,7 +47,7 @@ class InsertMetalMaskController extends Controller
         $insertMask->MSKREC_CUS = $mask['cus'];
         $insertMask->MSKREC_LOTS = $lotsize;
         $insertMask->MSKREC_BLOCKSHEET = $bsheet;
-        $insertMask->MSKREC_SHOTS = $shots;
+        $insertMask->MSKREC_SHOTS = $result;
         $insertMask->MSKREC_STD = 1;
         $insertMask->MSKREC_LSTDT = date('Y-m-d H:i:s');
         $insertMask->MSKREC_PCBNO = $mask['pcbno'];

@@ -94,45 +94,10 @@ export default {
               });
             }
           },
-
-
-          // onClick: (evt, elements) => {
-          //   if (elements.length > 0) {
-          //     const index = elements[0].index;
-          //     const label = chart.data.labels[index];
-          //     const value = chart.data.datasets[0].data[index];
-
-          //     // 👉 เตรียม table HTML
-          //     const tableHtml = `
-          //       <table style="width:100%; border-collapse: collapse; text-align: center;">
-          //         <thead>
-          //           <tr style="background-color: #f3f4f6;">
-          //             <th style="padding: 8px; border: 1px solid #ccc;">Model</th>
-          //             <th style="padding: 8px; border: 1px solid #ccc;">Total Shots</th>
-          //           </tr>
-          //         </thead>
-          //         <tbody>
-          //           <tr>
-          //             <td style="padding: 8px; border: 1px solid #ccc;">${label}</td>
-          //             <td style="padding: 8px; border: 1px solid #ccc;">${value}</td>
-          //           </tr>
-          //         </tbody>
-          //       </table>
-          //     `;
-
-          //     // 👉 แสดง SweetAlert2 พร้อม Table
-          //     Swal.fire({
-          //       title: 'ข้อมูล Model',
-          //       html: tableHtml,
-          //       width: 600,
-          //       confirmButtonText: 'ตกลง',
-          //       confirmButtonColor: '#8b5cf6'
-          //     });
-          //   }
-          // },
+          
           plugins: {
             legend: {
-              position: 'bottom'
+              position: 'top'
             }
           }
         }
