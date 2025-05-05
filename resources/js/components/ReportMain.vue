@@ -7,11 +7,14 @@
         </div>
         <div class="card-body mt-4">
           <!-- ตารางรวมผล Shots ตาม QRID -->
-            <!-- <h5 class="text-center font-bold text-purple-700 text-xl">รวม Shots แต่ละ Model</h5> -->
+          <!-- <h5 class="text-center font-bold text-purple-700 text-xl">รวม Shots แต่ละ Model</h5> -->
           <div class="mt-3 flex items-center justify-center">
             <MaskChart v-if="runningSums" :chartData="runningSums" :rawData="MaskData" />
           </div>
           <h5 class="text-center font-bold text-purple-700 text-xl mt-6">รายการใช้งาน Metal Mask ทั้งหมด</h5>
+          <div class="flex justify-end items-center">
+            <button class="btn btn-success">Export Excel</button>
+          </div>
           <div class="overflow-auto mt-4 h-[60%]">
             <table class="table">
               <thead>
@@ -70,14 +73,13 @@
 </template>
 
 <script>
-import "vue3-toastify/dist/index.css"
-import { toast } from "vue3-toastify";
-import Swal from 'sweetalert2'
 import axios from 'axios';
 import MaskChart from "../Chartjs/MaskChart.vue";
+import * as XLSX from 'xlsx';
 export default {
   components: {
-    MaskChart
+    MaskChart,
+    // downloadExcel: JsonExcel,
   },
   data() {
     return {
@@ -98,7 +100,7 @@ export default {
         const notifyStatus = {};
         // รวม Shots และจำ Notify STD
         data.forEach(item => {
-          const mdl = item.MSKREC_MDLCD;
+          const mdl = item.MSKREC_QRID;
           const shots = parseInt(item.MSKREC_SHOTS) || 0;
 
           grouped[mdl] = (grouped[mdl] || 0) + shots;

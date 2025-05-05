@@ -54,7 +54,7 @@ export default {
 
               // 👉 Filter ข้อมูลของ Model ที่คลิก และเอาแค่ 5 รายการล่าสุด
               const relatedData = this.rawData
-                .filter(item => item.MSKREC_MDLCD === label)
+                .filter(item => item.MSKREC_QRID === label)
                 .sort((a, b) => new Date(b.MSKREC_PRODDATE) - new Date(a.MSKREC_PRODDATE))
                 .slice(0, 5);
 
@@ -69,7 +69,7 @@ export default {
     `).join('');
 
               const tableHtml = `
-      <h4 style="margin-bottom: 10px;" class="text-[22px] font-semibold text-blue-600">Model: ${label} | Total Mask Shots: ${value}</h4>
+      <h4 style="margin-bottom: 10px;" class="text-[19px] font-semibold text-blue-600">QR Code ID: ${label} | Total Mask Shots: ${value}</h4>
       <table style="width:100%; border-collapse: collapse; text-align: center;">
         <thead style="background-color: #f3f4f6;">
           <tr>

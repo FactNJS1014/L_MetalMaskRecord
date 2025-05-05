@@ -36,7 +36,7 @@
     "src": "public/pictures/SettingMask.svg"
   },
   "resources/css/app.css": {
-    "file": "assets/app-f870f8a0.css",
+    "file": "assets/app-0bed1d9b.css",
     "isEntry": true,
     "src": "resources/css/app.css"
   },
@@ -59,7 +59,7 @@
     "css": [
       "assets/app-6fefc077.css"
     ],
-    "file": "assets/app-815c2aef.js",
+    "file": "assets/app-0557e5a1.js",
     "isEntry": true,
     "src": "resources/js/app.js"
   }
