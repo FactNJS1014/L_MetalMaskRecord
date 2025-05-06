@@ -58,11 +58,13 @@
                             <div class="flex flex-col">
                                 <label for="shift" class="text-xl font-bold">Shift : <span>&#127747; or
                                         &#127751;</span></label>
-                                <select class="select select-bordered mt-2" v-model="formChange.shift">
+                                <input type="text" class="input input-bordered mt-2" v-model="formChange.shift"
+                                    placeholder="Shift Day or Night">
+                                <!-- <select class="select select-bordered mt-2" v-model="formChange.shift">
                                     <option value="" disabled selected>Choose Shift</option>
                                     <option value="Day">Day</option>
                                     <option value="Night">Night</option>
-                                </select>
+                                </select> -->
                             </div>
                         </div>
                         <div class="card-actions mt-5 justify-between">
@@ -158,8 +160,8 @@ export default {
             items: [],
             mdlcode: "",
             linelist: [],
-            session: this.$session 
-
+            session: this.$session,
+            curtime: '',
 
 
         }
@@ -180,7 +182,8 @@ export default {
     },
     mounted() {
         this.GetDataChange(),
-        this.GetSession()
+            this.GetSession(),
+            this.GetTime()
 
     },
     methods: {
@@ -300,7 +303,26 @@ export default {
         },
         GetSession() {
             this.formChange.empID = this.session.empno;
+        },
+        GetTime() {
+            const now = new Date();
+            const time = now.toLocaleTimeString();
+            console.log(time);
+
+            const shiftTime = new Date(
+                now.getFullYear(),
+                now.getMonth(),
+                now.getDate(),
+                19, 59, 59
+            );
+
+            if (now > shiftTime) {
+                this.formChange.shift = 'Night';
+            } else {
+                this.formChange.shift = 'Day';
+            }
         }
+
 
 
 

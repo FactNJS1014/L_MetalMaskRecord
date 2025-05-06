@@ -178,7 +178,7 @@ export default {
             scanRegionSize: 3.1, // Adjust this value as needed
             cameraConstraints: {
                 video: {
-                    facingMode: "environment",
+                    facingMode: { exact: "environment" },
                     width: { ideal: 1920, min: 1280 },
                     height: { ideal: 1080, min: 720 },
                     focusMode: "continuous",

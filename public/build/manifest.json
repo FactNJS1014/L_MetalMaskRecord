@@ -19,24 +19,8 @@
     "file": "assets/primeicons-9eea6e0b.woff2",
     "src": "node_modules/primeicons/fonts/primeicons.woff2"
   },
-  "public/pictures/RP Mask.svg": {
-    "file": "assets/RP Mask-d508a7af.svg",
-    "src": "public/pictures/RP Mask.svg"
-  },
-  "public/pictures/RP Model.svg": {
-    "file": "assets/RP Model-a7caace2.svg",
-    "src": "public/pictures/RP Model.svg"
-  },
-  "public/pictures/Setting Model-new.svg": {
-    "file": "assets/Setting Model-new-cf876478.svg",
-    "src": "public/pictures/Setting Model-new.svg"
-  },
-  "public/pictures/SettingMask.svg": {
-    "file": "assets/SettingMask-3259b487.svg",
-    "src": "public/pictures/SettingMask.svg"
-  },
   "resources/css/app.css": {
-    "file": "assets/app-08b10cf7.css",
+    "file": "assets/app-f288469a.css",
     "isEntry": true,
     "src": "resources/css/app.css"
   },
@@ -46,10 +30,6 @@
   },
   "resources/js/app.js": {
     "assets": [
-      "assets/Setting Model-new-cf876478.svg",
-      "assets/SettingMask-3259b487.svg",
-      "assets/RP Model-a7caace2.svg",
-      "assets/RP Mask-d508a7af.svg",
       "assets/primeicons-987f23ea.eot",
       "assets/primeicons-9eea6e0b.woff2",
       "assets/primeicons-f5d1d219.woff",
@@ -59,7 +39,7 @@
     "css": [
       "assets/app-6fefc077.css"
     ],
-    "file": "assets/app-7f84d281.js",
+    "file": "assets/app-d13461ce.js",
     "isEntry": true,
     "src": "resources/js/app.js"
   }

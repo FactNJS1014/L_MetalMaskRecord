@@ -1,7 +1,7 @@
 <template>
     <div class="flex justify-center ">
         <ul class="space-x-10 menu lg:menu-horizontal menu-horizontal mt-3 bg-gray-100 rounded-box shadow-lg">
-            <li v-if="permission == 1">
+            <li>
                 <router-link to="/" active-class="text-xl font-bold text-white bg-blue-500 hover:bg-slate-200 hover:text-blue-500">
                     <!-- <span class="icon-[material-symbols--counter-1] size-8"></span> -->
                     <span class="icon-[material-symbols--change-circle] size-8"></span>

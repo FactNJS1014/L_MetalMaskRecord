@@ -21,8 +21,7 @@
 </head>
 
 <body>
-    <div id="app"
-        </div>
+    <div id="app"></div>
         <script>
             window.sessionData = {
                 empno: '{{ session("empno") }}',
@@ -34,6 +33,13 @@
                 server: '{{ $_SERVER["HTTP_HOST"] }}'
             };
             console.log(sessionData);
+            window.imagePath1 = '{{ asset("public/pictures/Setting Model-new.svg") }}';
+            window.imagePath2 = '{{ asset("public/pictures/SettingMask.svg") }}';
+            window.imagePath3 = '{{ asset("public/pictures/RP Model.svg") }}';
+            window.imagePath4 = '{{ asset("public/pictures/RP Mask.svg") }}';
+            
+
+            
            
         </script>
       
