@@ -1,6 +1,6 @@
 <template>
     <div class="flex items-center justify-center">
-        <div class="bg-base-100 w-[50%] rounded-2xl shadow-2xl p-5 mt-5 mb-5 border border-sky-600">
+        <div class="bg-white w-[50%] rounded-2xl shadow-2xl p-5 mt-5 mb-5 border border-sky-600">
             <div class="flex flex-col justify-center items-center">
                 <button @click="toggleCamera" class="btn btn-primary w-[10%] h-10">
                     <span

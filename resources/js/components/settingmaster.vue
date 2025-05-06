@@ -174,7 +174,7 @@
                                     class="join-item rounded-s-lg bg-emerald-100 w-44 text-lg font-semibold flex justify-start items-center">QR
                                     Code ID:</label>
                                 <input type="text" class="input input-bordered join-item rounded-e-lg"
-                                    placeholder="QR Code ID..." />
+                                    placeholder="QR Code ID..." v-model="forms.qrid" />
                             </div>
 
                         </div>
@@ -184,7 +184,7 @@
                                     class="join-item rounded-s-lg bg-emerald-100 w-44 text-lg font-semibold flex justify-start items-center">List
                                     No.</label>
                                 <input type="text" class="input input-bordered join-item rounded-e-lg"
-                                    placeholder="List Number Sequence..." />
+                                    placeholder="List Number Sequence..." v-model="forms.listno" />
                             </div>
 
                         </div>
@@ -193,7 +193,7 @@
                                 <label for="customer"
                                     class="join-item rounded-s-lg bg-emerald-100 w-44 text-lg font-semibold flex justify-start items-center">Customer:</label>
                                 <input type="text" class="input input-bordered join-item rounded-e-lg"
-                                    placeholder="Customer..." />
+                                    placeholder="Customer..." v-model="forms.cus" />
                             </div>
 
                         </div>
@@ -203,7 +203,7 @@
                                     class="join-item rounded-s-lg bg-emerald-100 w-44 text-lg font-semibold flex justify-start items-center">PCB
                                     No.</label>
                                 <input type="text" class="input input-bordered join-item rounded-e-lg"
-                                    placeholder="PCB Number..." />
+                                    placeholder="PCB Number..." v-model="forms.pcbnum" />
                             </div>
 
                         </div>
@@ -213,7 +213,7 @@
                                     class="join-item rounded-s-lg bg-emerald-100 w-56 text-lg font-semibold flex justify-start items-center">
                                     Mask Name:</label>
                                 <input type="text" class="input input-bordered join-item rounded-e-lg"
-                                    placeholder="Metal Mask Name..." />
+                                    placeholder="Metal Mask Name..." v-model="forms.maskname" />
                             </div>
 
                         </div>
@@ -222,7 +222,7 @@
                                 <label for="process"
                                     class="join-item rounded-s-lg bg-emerald-100 w-44 text-lg font-semibold flex justify-start items-center">Process:</label>
                                 <input type="text" class="input input-bordered join-item rounded-e-lg"
-                                    placeholder="Process..." />
+                                    placeholder="Process..." v-model="forms.process" />
                             </div>
 
                         </div>
@@ -231,7 +231,7 @@
                                 <label for="revision"
                                     class="join-item rounded-s-lg bg-emerald-100 w-44 text-lg font-semibold flex justify-start items-center">Revision:</label>
                                 <input type="number" class="input input-bordered join-item rounded-e-lg"
-                                    placeholder="Revision..." />
+                                    placeholder="Revision..." v-model="forms.revision" />
                             </div>
 
                         </div>
@@ -241,7 +241,7 @@
                                     class="join-item rounded-s-lg bg-emerald-100 w-44 text-lg font-semibold flex justify-start items-center">Ref.
                                     No.</label>
                                 <input type="text" class="input input-bordered join-item rounded-e-lg"
-                                    placeholder="Reference Number..." />
+                                    placeholder="Reference Number..." v-model="forms.ref" />
                             </div>
 
                         </div>
@@ -250,7 +250,7 @@
                                 <label for="productdate"
                                     class="join-item rounded-s-lg bg-emerald-100 w-44 text-lg font-semibold flex justify-start items-center">Product
                                     Date:</label>
-                                <input type="date" class="input input-bordered join-item rounded-e-lg" />
+                                <input type="date" class="input input-bordered join-item rounded-e-lg" v-model="forms.productdate" />
                             </div>
 
                         </div>
@@ -259,7 +259,7 @@
                                 <label for="vendor"
                                     class="join-item rounded-s-lg bg-emerald-100 w-44 text-lg font-semibold flex justify-start items-center">Vendor/Maker:</label>
                                 <input type="text" class="input input-bordered join-item rounded-e-lg"
-                                    placeholder="Vendor/Maker..." />
+                                    placeholder="Vendor/Maker..." v-model="forms.vendor" />
                             </div>
 
                         </div>
@@ -268,7 +268,7 @@
                                 <label for="remark"
                                     class="join-item rounded-s-lg bg-emerald-100 w-44 text-lg font-semibold flex justify-start items-center">Remark:</label>
                                 <input type="text" class="input input-bordered join-item rounded-e-lg"
-                                    placeholder="Remark..." />
+                                    placeholder="Remark..." v-model="forms.remark" />
                             </div>
 
                         </div>
@@ -358,6 +358,19 @@ export default {
                 nosecond: '',
                 nothird: '',
                 nofourth: '',
+            },
+            forms:{
+                qrid: '',
+                listno: '',
+                customer: '',
+                pcbnum: '',
+                maskname: '',
+                process: '',
+                revision: '',
+                ref: '',
+                productdate: '',
+                vendor: '',
+                remark: '',
             },
             Menu: true,
             btnback: false,

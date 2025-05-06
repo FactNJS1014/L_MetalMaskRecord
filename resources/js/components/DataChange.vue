@@ -14,7 +14,7 @@
                                 <th colspan="4" class="border">MASK NO.</th>
                                 
                             </tr>
-                            <tr>
+                            <tr class="bg-sky-200 text-lg">
                                 <th class="border">1</th>
                                 <th class="border">2</th>
                                 <th class="border">3</th>

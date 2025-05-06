@@ -1,7 +1,7 @@
 <template>
   <div class="p-4">
     <div class="flex justify-center items-center">
-      <div class="card w-[65%]">
+      <div class="card w-[65%] bg-white">
         <div class="card-header bg-violet-200">
           <h5 class="card-title text-center text-sky-700 font-bold">ข้อมูลการใช้งาน Metal Mask </h5>
         </div>
@@ -34,7 +34,7 @@
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="(item, index) in MaskData" :key="index" class="text-[16px] font-semibold">
+                <tr v-for="(item, index) in MaskData" :key="index" class="text-[16px] font-semibold text-black">
                   <td class="text-center">{{ item.MSKREC_QRID }}</td>
                   <td class="text-center">{{ item.MSKREC_MDLCD }}</td>
                   <td class="text-center">{{ item.MSKREC_WON }}</td>

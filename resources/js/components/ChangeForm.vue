@@ -1,7 +1,7 @@
 <template>
     <div class="relative">
         <div class="flex justify-center items-center mt-5 w-full">
-            <div class="card w-[45%] lg:w-[50%] bg-base-100 shadow-xl border border-cyan-600">
+            <div class="card w-[45%] lg:w-[50%] bg-white shadow-xl border border-cyan-600">
 
                 <div class="card-body ">
                     <h5 class="card-title text-center font-bold text-2xl text-black bg-fuchsia-500 p-3 rounded-lg"><span
@@ -13,7 +13,7 @@
                                     <span>&#128292;</span></label>
                                 <AutoComplete v-model="formChange.wonNo" :suggestions="items" field="label"
                                     @complete="search" @change="checkModel" placeholder="Search WONO..."
-                                    class="input input-bordered w-full mt-2" />
+                                    class="input input-bordered w-full mt-2 text-white" />
 
                             </div>
                             <div class="flex flex-col ">
@@ -42,9 +42,7 @@
                                 </select>
                             </div>
                             <div class="flex flex-col">
-                                <label for="process" class="text-xl font-bold">Process <span class="text-sky-600">(Auto
-                                        Show
-                                        value)</span> : <span>&#128292;</span></label>
+                                <label for="process" class="text-xl font-bold">Process <span class="text-sky-600">(Ex. RF1 or RF2)</span> : <span>&#128292;</span></label>
                                 <input type="text" class="input input-bordered mt-2" placeholder="Process"
                                     v-model="formChange.process" />
                             </div>

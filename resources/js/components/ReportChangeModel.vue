@@ -1,6 +1,6 @@
 <template>
     <div class="flex justify-center items-center mt-5 w-full relative">
-        <div class="card w-[95%]">
+        <div class="card w-[95%] bg-white">
             <div class="card-body">
                 <h5 class="card-title text-center font-bold text-2xl text-black bg-pink-200 p-3 rounded-lg">
                     การแจ้งเปลี่ยนโมเดล</h5>
