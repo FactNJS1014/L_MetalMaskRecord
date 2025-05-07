@@ -5,11 +5,17 @@ import RecordPR from "./components/RecordPR.vue";
 import ReportMain from "./components/ReportMain.vue";
 import Settingmaster from "./components/settingmaster.vue";
 import DataChange from "./components/DataChange.vue";
+import Manual from "./components/Manual.vue";
 
 const routes = [
     {
         path: "/",
         name: "index",
+        component: Manual,
+    },
+    {
+        path: "/changeform",
+        name: "changeform",
         component: ChangeForm,
     },
     {

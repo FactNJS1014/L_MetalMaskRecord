@@ -20,8 +20,9 @@ use App\Http\Controllers\SessionController;
 
 
 Route::get('/{any}', function () {
-    return view('app');
+    return view('app'); // or whatever your main blade view is
 })->where('any', '.*');
+
 
 
 Route::post('/get-model-code', [GetDataController::class, 'getModelCode']);

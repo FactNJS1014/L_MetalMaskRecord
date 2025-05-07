@@ -342,7 +342,7 @@
 import axios from 'axios'
 
 export default {
-    name: 'SettingMaster',
+    name: 'Settingmaster',
     data() {
         return {
             settingModel: false,

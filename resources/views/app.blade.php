@@ -21,6 +21,7 @@
 </head>
 
 <body>
+    <base href="/45_engmask/">
     <div id="app"></div>
         <script>
             window.sessionData = {
@@ -37,6 +38,9 @@
             window.imagePath2 = '{{ asset("public/pictures/SettingMask.svg") }}';
             window.imagePath3 = '{{ asset("public/pictures/RP Model.svg") }}';
             window.imagePath4 = '{{ asset("public/pictures/RP Mask.svg") }}';
+            window.documentPath = '{{ asset("public/document/Manual-Program.pdf") }}';
+            window.videoPath = '{{ asset("public/video/manual-mask.mp4") }}';
+            
             
 
             
