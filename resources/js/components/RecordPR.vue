@@ -504,7 +504,7 @@ export default {
     mounted() {
         this.fetchReportData();
         this.mask.won = this.dataWon;
-        this.mask.mdlcd = this.dataModel;9999999999
+        this.mask.mdlcd = this.dataModel;
         this.mask.cus = this.dataCus;
         this.mask.empid = this.dataEmpid;
         this.getLotsAndBs();
