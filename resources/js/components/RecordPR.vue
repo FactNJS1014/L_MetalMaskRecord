@@ -130,7 +130,7 @@
                             class="input input-bordered w-full focus:outline-none" />
 
                     </div>
-                   
+
                     <input type="hidden" v-model="mask.blocksheet">
 
 
@@ -182,7 +182,7 @@ export default {
                     width: { ideal: 1920, min: 1280 },
                     height: { ideal: 1080, min: 720 },
                     focusMode: "continuous",
-                    zoom: 2, // Try adding zoom (may not be supported on all devices)
+                    zoom: 1, // Try adding zoom (may not be supported on all devices)
                 },
             },
             mask: {
@@ -194,7 +194,7 @@ export default {
                 lot: "",
                 rev: "",
                 mskname: "",
-                vendor: "",               
+                vendor: "",
                 listno: "",
                 mdlcd: "",
                 blocksheet: "",
@@ -224,7 +224,7 @@ export default {
                 rev: { required },
                 mskname: { required },
                 vendor: { required },
-               
+
                 listno: { required },
                 mdlcd: { required },
                 won: { required },
@@ -267,13 +267,13 @@ export default {
                     for (let i = 0; i < this.listModel.length; i++) {
                         if (this.mask.mdlcd === this.listModel[i].LISTMDL_MDLCD) {
                             this.found = true;
-                            
+
                             toast.success('Model Code is match!', {
                                 position: "top-center",
                                 duration: 5000,
                                 theme: "colored",
                                 autoClose: 2000,
-                               
+
                             });
                             break; // stop checking after a match
                         }
@@ -397,7 +397,7 @@ export default {
         //         })
         //             .then(response => {
         //                 this.mdlcode = response.data;
-        //                 this.mdlcode.map((item => {                           
+        //                 this.mdlcode.map((item => {
         //                     this.mask.cus = item.BGCD;
         //                     this.mask.lot = item.WONQT;
         //                     this.mask.blocksheet = item.MDLQTY;

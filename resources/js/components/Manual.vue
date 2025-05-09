@@ -1,6 +1,6 @@
 <template>
     <div class="flex justify-center items-center mt-3">
-        <div class="card w-[45%] lg:w-[50%] bg-white shadow-xl border border-cyan-600">
+        <div class="card w-[60%] lg:w-[70%] bg-white shadow-xl border border-cyan-600">
             <div class="card-body">
                 <div class="card-header bg-sky-300 text-black">
                     <h2 class="card-title">Welcome, {{ session.username }} &nbsp; {{ session.empno }}</h2>
@@ -16,7 +16,7 @@
                         <th class="border text-xl">View Video <br> ( ตัวอย่างสาธิตการใช้งาน )</th>
                         <td class="border">
                             <VideoPlayer ref="player" class="video-js vjs-default-skin" :options="playerOptions"
-                                @ready="onPlayerReady" />
+                                @ready="onPlayerReady" style="width: 400px; height: 300px;" />
                         </td>
                     </tr>
                 </table>

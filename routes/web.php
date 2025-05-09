@@ -37,5 +37,7 @@ Route::post('/search-list-models',[GetDataController::class, 'SearchlistModels']
 Route::post('/search-list-masks',[GetDataController::class, 'SearchlistMasks']);
 Route::post('/get-change-history',[GetDataController::class, 'GetChangeHistory']);
 Route::post('/set-session', [LoginController::class, 'login']);
+Route::post('/add-setting-models',[InsertChangeModelController::class, 'addSettingModels']);
+Route::post('/add-setting-mask',[InsertMetalMaskController::class, 'addSettingMasks']);
 
 

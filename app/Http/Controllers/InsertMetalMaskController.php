@@ -16,7 +16,7 @@ class InsertMetalMaskController extends Controller
         $shots = $lotsize/$bsheet;
 
         $result = intval($shots);
-        
+
         // if (is_numeric($bsheet) && $bsheet != 0) {
         //     $result = $lotsize / $bsheet;
         // } else {
@@ -61,10 +61,74 @@ class InsertMetalMaskController extends Controller
         // $insertMask->MSKREC_DETAILS = $mask['details'];
         // $insertMask->MSKREC_TYPES = $mask['types'];
         // $insertMask->MSKREC_REMARK = $mask['remark'];
-        
+
         $insertMask->save();
 
-        
+
         return response()->json($insertMask);
+    }
+
+    public function addSettingMasks(Request $request){
+        $data = $request->input('forms');
+        // return response()->json($data);
+        $havemask = DB::table('MM_MASTERMSK_TBL')
+            ->where('MMST_QRID', $data['qrid'])
+            ->first();
+
+        if ($havemask) {
+            $update = DB::table('MM_MASTERMSK_TBL')
+                ->where('MMST_QRID', $data['qrid'])
+                ->update([
+                    'MMST_QRID' => $data['qrid'],
+                    'MMST_NO' => $data['listno'],
+                    'MMST_CUS' => $data['cus'],
+                    'MMST_PCBNO' => $data['pcbnum'],
+                    'MMST_MSKNAME' => $data['mskname'],
+                    'MMST_PROCS' => $data['process'],
+                    'MMST_REVS' => $data['revision'],
+                    'MMST_REFNO' => $data['ref'],
+                    'MMST_PRDDATE' => $data['productdate'],
+                    'MMST_VENDOR' => $data['vendor'],
+                    'MMST_REMARK' => $data['remark'],
+                ]);
+            if ($update) {
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Update Success'
+                ]);
+            } else {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Update Failed'
+                ]);
+            }
+
+        }else{
+            $insert = DB::table('MM_MASTERMSK_TBL')
+                ->insert([
+                    'MMST_QRID' => $data['qrid'],
+                    'MMST_NO' => $data['listno'],
+                    'MMST_CUS' => $data['cus'],
+                    'MMST_PCBNO' => $data['pcbnum'],
+                    'MMST_MSKNAME' => $data['mskname'],
+                    'MMST_PROCS' => $data['process'],
+                    'MMST_REVS' => $data['revision'],
+                    'MMST_REFNO' => $data['ref'],
+                    'MMST_PRDDATE' => $data['productdate'],
+                    'MMST_VENDOR' => $data['vendor'],
+                    'MMST_REMARK' => $data['remark'],
+                ]);
+            if ($insert) {
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Insert Success'
+                ]);
+            } else {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Insert Failed'
+                ]);
+            }
+        }
     }
 }

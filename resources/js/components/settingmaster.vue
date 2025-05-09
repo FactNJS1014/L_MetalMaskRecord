@@ -50,7 +50,7 @@
                             <img :src="imagePath04" alt="" class="w-3/4">
                         </div>
                         <div class="card-title text-center py-6 bg-blue-800 rounded-b-lg">
-                            <h5 class="font-bold text-[25px] text-white">ข้อมูลตั้งค่า Metal Mask</h5>
+                            <h5 class="font-bold text-[20px] text-white lg:text-[25px]">ข้อมูลตั้งค่า Metal Mask</h5>
                         </div>
                     </div>
                 </div>
@@ -67,7 +67,7 @@
                 <h5 class="card-title mb-0 text-center bg-emerald-300 p-5 rounded-lg text-black font-bold text-2xl">
                     Setting Model Form</h5>
 
-                <form @submit.prevent="SubmitChange">
+                <form @submit.prevent="SubmitAddModel">
                     <div class="grid grid-cols-2 mt-5">
                         <div class="flex flex-col col-span-2 w-full">
                             <div class="join mb-3">
@@ -166,12 +166,12 @@
                     Setting Metal Mask Form</h5>
 
 
-                <form>
+                <form @submit.prevent="SubmitAddMask">
                     <div class="grid grid-cols-2 mt-5">
                         <div class="flex flex-col col-span-2">
                             <div class="join mb-3">
                                 <label for="qrid"
-                                    class="join-item rounded-s-lg bg-emerald-100 w-44 text-lg font-semibold flex justify-start items-center">QR
+                                    class="join-item rounded-s-lg bg-emerald-100 w-37 text-lg font-semibold flex justify-start items-center">QR
                                     Code ID:</label>
                                 <input type="text" class="input input-bordered join-item rounded-e-lg"
                                     placeholder="QR Code ID..." v-model="forms.qrid" />
@@ -210,7 +210,7 @@
                         <div class="flex flex-col ms-2">
                             <div class="join mb-3">
                                 <label for="maskname"
-                                    class="join-item rounded-s-lg bg-emerald-100 w-56 text-lg font-semibold flex justify-start items-center">
+                                    class="join-item rounded-s-lg bg-emerald-100 w-44 text-lg font-semibold flex justify-start items-center">
                                     Mask Name:</label>
                                 <input type="text" class="input input-bordered join-item rounded-e-lg"
                                     placeholder="Metal Mask Name..." v-model="forms.maskname" />
@@ -292,14 +292,21 @@
                     <div class="flex justify-end mb-4 mt-3 items-center">
                         <input type="text" placeholder="Search..." class="input input-bordered w-full max-w-xs"
                             v-model="searchModels" @input="SearchFilterModels" />
+
                     </div>
                     <DataTable :value="listModels" tableStyle="min-width: 50rem" showGridlines paginator :rows="10"
-                        :rowsPerPageOptions="[5, 10, 20, 50]">
-                        <Column field="LISTMDL_MDLCD" header="Model Code"></Column>
-                        <Column field="LISTMDL_GRPPCB" header="Group PCB"></Column>
-                        <Column field="LISTMDL_PROCS" header="Process"></Column>
-                        <Column field="LISTMDL_QRID" header="QR Code ID"></Column>
-                        <Column field="LISTMDL_STD" header="Status"></Column>
+                        :rowsPerPageOptions="[5, 10, 20, 50]"
+                       >
+                        <Column field="LISTMDL_MDLCD" header="Model Code" style="min-width: 250px;"></Column>
+                        <Column field="LISTMDL_GRPPCB" header="Group PCB" style="min-width: 250px;"></Column>
+                        <Column field="LISTMDL_PROCS" header="Process" style="min-width: 150px;"></Column>
+                        <Column field="LISTMDL_MSKNO1" header="Mask No.1" style="min-width: 150px;"></Column>
+                        <Column field="LISTMDL_MSKNO2" header="Mask No.2" style="min-width: 150px;"></Column>
+                        <Column field="LISTMDL_MSKNO3" header="Mask No.3" style="min-width: 150px;"></Column>
+                        <Column field="LISTMDL_MSKNO4" header="Mask No.4" style="min-width: 150px;"></Column>
+                        <Column field="LISTMDL_QRID" header="QR Code ID" style="min-width: 300px;"></Column>
+                        <Column field="LISTMDL_STD" header="Status" style="min-width: 100px;"></Column>
+
                     </DataTable>
                 </div>
             </div>
@@ -340,6 +347,7 @@
 </template>
 <script>
 import axios from 'axios'
+import Swal from 'sweetalert2'
 
 export default {
     name: 'Settingmaster',
@@ -390,7 +398,7 @@ export default {
         this.settingModel = false
         this.settingMsk = false
         this.reportSettingModels = false
-        this.GetDataModelChange()
+
         this.GetlistModels()
         this.reportSettingMask = false
         this.GetlistMask()
@@ -401,17 +409,9 @@ export default {
         this.imagePath04 = window.imagePath4
     },
     methods: {
-        GetDataModelChange() {
-            axios.get('/L_MetalMaskRecord/api/get-change-model')
-                .then(res => {
-                    this.DataModelChange = res.data
-                    this.DataModelChange.map((g) => {
-                        this.formf.codeid = g.MMCHANGE_BARCODE
-                    })
-                })
-        },
+
         PullData(code) {
-            axios.get('/L_MetalMaskRecord/api/get-pull-data', {
+            axios.get('/45_engmask/api/get-pull-data', {
                 params: {
                     code: code
                 }
@@ -462,7 +462,7 @@ export default {
             this.reportSettingMask = false
         },
         GetlistModels() {
-            axios.get('/L_MetalMaskRecord/api/get-list-models')
+            axios.get('/45_engmask/api/get-list-models')
                 .then(res => {
                     this.listModels = res.data
                 })
@@ -476,7 +476,7 @@ export default {
             this.reportSettingMask = true
         },
         GetlistMask() {
-            axios.get('/L_MetalMaskRecord/api/get-list-mask')
+            axios.get('/45_engmask/api/get-list-mask')
                 .then(res => {
                     this.listMask = res.data
                 })
@@ -489,7 +489,7 @@ export default {
             if (searchValue === "") {
                 this.GetlistModels()
             } else {
-                axios.post('/L_MetalMaskRecord/search-list-models', {
+                axios.post('/45_engmask/search-list-models', {
                     search: searchValue
                 }, {
                     headers: {
@@ -507,7 +507,7 @@ export default {
             if (searchValue === "") {
                 this.GetlistMask()
             } else {
-                axios.post('/L_MetalMaskRecord/search-list-masks', {
+                axios.post('/45_engmask/search-list-masks', {
                     search: searchValue
                 }).then(res => {
                     this.listMask = res.data
@@ -515,7 +515,79 @@ export default {
                     console.log(err)
                 })
             }
-        }
+        },
+        SubmitAddModel(){
+            console.log(this.formf)
+            if(this.formf.nosecond == '' || this.formf.nothird == '' || this.formf.nofourth == ''){
+                this.formf.nosecond = 0
+                this.formf.nothird = 0
+                this.formf.nofourth = 0
+            }
+            axios.post('/45_engmask/add-setting-models', {
+                formf: this.formf
+            }).then(res => {
+                console.log(res.data)
+                if(res.data == 'success'){
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Insert or Update Data Successfully',
+                        text: 'บันทึกข้อมูลเรียบร้อยแล้ว',
+                        showConfirmButton: false,
+                        timer: 1500
+                    })
+                    this.formf = {
+                        model: '',
+                        pcbno: '',
+                        procs: '',
+                        codeid: '',
+                        nofirst: '',
+                        nosecond: '',
+                        nothird: '',
+                        nofourth: '',
+                    }
+                }
+            }).catch(err => {
+                console.log(err)
+            })
+        },
+        EditData(data){
+            const cloneData = data;
+            console.log(cloneData)
+
+        },
+        SubmitAddMask(){
+            console.log(this.forms)
+            axios.post('/45_engmask/add-setting-mask', {
+                forms: this.forms
+            }).then(res => {
+                console.log(res.data)
+                if(res.data == 'success'){
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Insert or Update Data Successfully',
+                        text: 'บันทึกข้อมูลเรียบร้อยแล้ว',
+                        showConfirmButton: false,
+                        timer: 1500
+                    })
+                    this.forms = {
+                        qrid: '',
+                        listno: '',
+                        customer: '',
+                        pcbnum: '',
+                        maskname: '',
+                        process: '',
+                        revision: '',
+                        ref: '',
+                        productdate: '',
+                        vendor: '',
+                        remark: '',
+                    }
+                }
+            }).catch(err => {
+                console.log(err)
+            })
+        },
     }
 }
 </script>
+

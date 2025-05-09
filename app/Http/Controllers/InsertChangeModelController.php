@@ -61,4 +61,67 @@ class InsertChangeModelController extends Controller
             ], 500);
         }
     }
+    public function addSettingModels(Request $request)
+    {
+        $data = $request->input('formf');
+        // return response()->json($data);
+
+        $havemodel = DB::table('MM_LISTMDL2_TBL')
+            ->where('LISTMDL_MDLCD', $data['model'])
+            ->first();
+        if ($havemodel) {
+            $update = DB::table('MM_LISTMDL2_TBL')
+                ->where('LISTMDL_MDLCD', $data['model'])
+                ->update([
+                    'LISTMDL_MDLCD' => $data['model'],
+                    'LISTMDL_GRPPCB' => $data['pcbno'],
+                    'LISTMDL_PROCS' => $data['procs'],
+                    'LISTMDL_MSKNO1' => $data['nofirst'],
+                    'LISTMDL_MSKNO2' => $data['nosecond'],
+                    'LISTMDL_MSKNO3' => $data['nothird'],
+                    'LISTMDL_MSKNO4' => $data['nofourth'],
+                    'LISTMDL_QRID' => $data['codeid'],
+                    'LISTMDL_STD' => 1,
+                    'LISTMDL_LSTDT' => date('Y-m-d H:i:s'),
+
+                ]);
+            if ($update) {
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Update Success'
+                ]);
+            } else {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Update Failed'
+                ]);
+            }
+        } else {
+            $insert = DB::table('MM_LISTMDL2_TBL')
+                ->insert([
+                    'LISTMDL_MDLCD' => $data['model'],
+                    'LISTMDL_GRPPCB' => $data['pcbno'],
+                    'LISTMDL_PROCS' => $data['procs'],
+                    'LISTMDL_MSKNO1' => $data['nofirst'],
+                    'LISTMDL_MSKNO2' => $data['nosecond'],
+                    'LISTMDL_MSKNO3' => $data['nothird'],
+                    'LISTMDL_MSKNO4' => $data['nofourth'],
+                    'LISTMDL_QRID' => $data['codeid'],
+                    'LISTMDL_STD' => 1,
+                    'LISTMDL_LSTDT' => date('Y-m-d H:i:s'),
+                ]);
+            if ($insert) {
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Insert Success'
+                ]);
+            } else {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Insert Failed'
+                ]);
+            }
+        }
+
+    }
 }

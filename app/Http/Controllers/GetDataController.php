@@ -91,9 +91,9 @@ class GetDataController extends Controller
     public function GetValues()
     {
         $getval = DB::table('MM_MSKREC_TBL')
-        
-        // ->join('MM_LISTMDL2_TBL as mdl1', 'MM_MSKREC_TBL.MSKREC_MDLCD', '=','mdl1.LISTMDL_MDLCD')    
-         
+
+        // ->join('MM_LISTMDL2_TBL as mdl1', 'MM_MSKREC_TBL.MSKREC_MDLCD', '=','mdl1.LISTMDL_MDLCD')
+
         ->get()
         ;
         return response()->json($getval);
@@ -105,7 +105,7 @@ class GetDataController extends Controller
         $prcs = $request->prcs;
         $gethistory = DB::table('MMCHN_MDL_TBL')
             ->join('MM_LISTMDL2_TBL as mdl1', 'MMCHN_MDL_TBL.MMCHANGE_MDLCHN', '=', 'mdl1.LISTMDL_MDLCD')
-           
+
             ->where('mdl1.LISTMDL_MDLCD', $mdl)
             ->where('mdl1.LISTMDL_PROCS', $prcs)
             ->get();
@@ -114,7 +114,7 @@ class GetDataController extends Controller
 
     public function GetListModel()
     {
-        $getlistmodel = DB::table('MM_LISTMDL_TBL')->get();
+        $getlistmodel = DB::table('MM_LISTMDL2_TBL')->get();
         return response()->json($getlistmodel);
     }
 
@@ -129,8 +129,8 @@ class GetDataController extends Controller
     public function SearchlistModels(Request $request)
     {
         $search = $request->input('search');
-        $getlistmodel = DB::table('MM_LISTMDL_TBL')
-            ->where('LISTMDL_QRID', 'LIKE', '%' . $search . '%')
+        $getlistmodel = DB::table('MM_LISTMDL2_TBL')
+            ->where('LISTMDL_MDLCD', 'LIKE', '%' . $search . '%')
             ->get();
         return response()->json($getlistmodel);
     }
