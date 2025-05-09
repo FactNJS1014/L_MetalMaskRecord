@@ -17,7 +17,7 @@
 
                     <div class="modal-content">
                         <qrcode-stream @decode="onDecode" @init="onInit" :constraints="cameraConstraints"
-                            v-if="isCameraOpen" :scan-region-size="scanRegionSize" :paused="!isCameraOpen">
+                            v-if="isCameraOpen" :scan-region-size="scanRegionSize" :paused="!isCameraOpen" :track="true">
                             <template #default="{ decodedString }">
                                 <div class="text-center">
                                     <p class="text-lg font-bold">{{ decodedString }}</p>
@@ -175,14 +175,16 @@ export default {
         return {
             isCameraOpen: false,
 
-            scanRegionSize: 3.1, // Adjust this value as needed
+            scanRegionSize: 1.0, // Adjust this value as needed
             cameraConstraints: {
                 video: {
                     facingMode: { exact: "environment" },
                     width: { ideal: 1920, min: 1280 },
                     height: { ideal: 1080, min: 720 },
-                    focusMode: "continuous",
-                    zoom: 1, // Try adding zoom (may not be supported on all devices)
+                    advanced: [
+                        { focusMode: "continuous" },
+
+                    ]
                 },
             },
             mask: {
@@ -355,9 +357,9 @@ export default {
                             showConfirmButton: false,
                             timer: 1500,
                         })
-                        .then(() => {
-                            location.reload();
-                        })
+                            .then(() => {
+                                location.reload();
+                            })
                     }
                 })
             }
@@ -508,6 +510,25 @@ export default {
         this.mask.cus = this.dataCus;
         this.mask.empid = this.dataEmpid;
         this.getLotsAndBs();
+
+        // navigator.mediaDevices.getUserMedia({
+        //     video: { facingMode: 'environment' }
+        // }).then(stream => {
+        //     const track = stream.getVideoTracks()[0]
+        //     const capabilities = track.getCapabilities()
+
+        //     if ('zoom' in capabilities) {
+        //         alert('✅ Zoom supported')
+        //         alert('Zoom range:', capabilities.zoom)
+        //     } else {
+        //         alert('❌ Zoom not supported')
+        //     }
+
+        //     // ปิด stream หลังเช็คเสร็จ
+        //     track.stop()
+        // }).catch(error => {
+        //     console.error('Error accessing camera:', error)
+        // })
     },
     computed: {
         dataWon() {
