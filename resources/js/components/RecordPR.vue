@@ -14,7 +14,11 @@
 
                 <div class="modal-dialog bg-white p-6 rounded-lg shadow-lg w-96 transition-transform duration-300 mt-10"
                     :class="{ 'opacity-100 scale-100': isModalOpen, 'opacity-0 scale-90': !isModalOpen }">
+                    <div class="modal-header flex justify-between items-center">
+                        <h5 class="text-lg font-bold text-gray-800">{{ scannedResult }}</h5>
 
+
+                    </div>
                     <div class="modal-content">
                         <qrcode-stream @decode="onDecode" @init="onInit" :constraints="cameraConstraints"
                             v-if="isCameraOpen" :scan-region-size="scanRegionSize" :paused="!isCameraOpen"
@@ -180,11 +184,12 @@ export default {
             cameraConstraints: {
                 video: {
                     facingMode: { ideal: 'environment' },
-                    width: { ideal: 1280 },
-                    height: { ideal: 720 },
+                    width: { ideal: 640 },
+                    height: { ideal: 480 },
                     advanced: [
                         { focusMode: 'continuous' } // Hint to use autofocus (if supported)
                         , { zoom: 2 } // Adjust zoom level (if supported)
+                        , { torch: true } // Enable torch (if supported)
                     ]
                 }
             },
