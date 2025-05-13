@@ -184,6 +184,7 @@ export default {
                     height: { ideal: 720 },
                     advanced: [
                         { focusMode: 'continuous' } // Hint to use autofocus (if supported)
+                        , { zoom: 2 } // Adjust zoom level (if supported)
                     ]
                 }
             },
@@ -242,7 +243,7 @@ export default {
                 this.mask.scannedResult = "";
                 this.isModalOpen = true;
             }
-            alert("Camera is " + (this.isCameraOpen ? "open" : "closed"));
+            // alert("Camera is " + (this.isCameraOpen ? "open" : "closed"));
         },
         onDecode(result) {
 
@@ -331,6 +332,21 @@ export default {
                 this.isCameraOpen = false;
                 this.isModalOpen = false;
             });
+            promise.then(() => {
+                // ขอสิทธิ์และเข้าถึงกล้อง
+                navigator.mediaDevices.getUserMedia({ video: true }).then(stream => {
+                    const track = stream.getVideoTracks()[0];
+                    const capabilities = track.getCapabilities();
+                    alert('✅ Camera capabilities:', capabilities);
+
+                    // ปิด stream เพื่อไม่ให้กินทรัพยากร
+                    track.stop();
+                });
+            })
+                .catch(err => {
+                    console.error('❌ กล้องเปิดไม่สำเร็จ:', err);
+                });
+
 
         },
         async savedData() {
@@ -392,31 +408,7 @@ export default {
 
 
         },
-        // checkModel() {
-        //     const won = this.dataWon;
-        //     console.log(won)
-        //     if (won.length >= 15) {
-        //         axios.post('/L_MetalMaskRecord/get-wono', {
-        //             won: won
-        //         }, {
-        //             headers: {
-        //                 'Content-Type': 'application/json'
-        //             }
-        //         })
-        //             .then(response => {
-        //                 this.mdlcode = response.data;
-        //                 this.mdlcode.map((item => {
-        //                     this.mask.cus = item.BGCD;
-        //                     this.mask.lot = item.WONQT;
-        //                     this.mask.blocksheet = item.MDLQTY;
-        //                 }))
-        //             })
-        //             .catch(error => {
-        //                 console.error('Error:', error);
-        //             });
-        //     }
 
-        // },
         getLotsAndBs() {
             const won = this.dataWon;
             // console.log(won)
@@ -505,7 +497,9 @@ export default {
 
 
 
+
         },
+
 
 
     },
@@ -517,24 +511,7 @@ export default {
         this.mask.empid = this.dataEmpid;
         this.getLotsAndBs();
 
-        // navigator.mediaDevices.getUserMedia({
-        //     video: { facingMode: 'environment' }
-        // }).then(stream => {
-        //     const track = stream.getVideoTracks()[0]
-        //     const capabilities = track.getCapabilities()
 
-        //     if ('zoom' in capabilities) {
-        //         alert('✅ Zoom supported')
-        //         alert('Zoom range:', capabilities.zoom)
-        //     } else {
-        //         alert('❌ Zoom not supported')
-        //     }
-
-        //     // ปิด stream หลังเช็คเสร็จ
-        //     track.stop()
-        // }).catch(error => {
-        //     console.error('Error accessing camera:', error)
-        // })
     },
     computed: {
         dataWon() {
@@ -549,8 +526,13 @@ export default {
         dataEmpid() {
             return this.$route.query.empno
         },
-    },
+    }
+
+
+
 }
+
+
 </script>
 
 <style>
