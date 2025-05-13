@@ -17,7 +17,8 @@
 
                     <div class="modal-content">
                         <qrcode-stream @decode="onDecode" @init="onInit" :constraints="cameraConstraints"
-                            v-if="isCameraOpen" :scan-region-size="scanRegionSize" :paused="!isCameraOpen" :track="true">
+                            v-if="isCameraOpen" :scan-region-size="scanRegionSize" :paused="!isCameraOpen"
+                            :track="true">
                             <template #default="{ decodedString }">
                                 <div class="text-center">
                                     <p class="text-lg font-bold">{{ decodedString }}</p>
@@ -178,14 +179,13 @@ export default {
             scanRegionSize: 1.0, // Adjust this value as needed
             cameraConstraints: {
                 video: {
-                    facingMode: { exact: "environment" },
-                    width: { ideal: 1920, min: 1280 },
-                    height: { ideal: 1080, min: 720 },
+                    facingMode: { ideal: 'environment' },
+                    width: { ideal: 1280 },
+                    height: { ideal: 720 },
                     advanced: [
-                        { focusMode: "continuous" },
-
+                        { focusMode: 'continuous' } // Hint to use autofocus (if supported)
                     ]
-                },
+                }
             },
             mask: {
                 pcbno: "",
@@ -242,8 +242,10 @@ export default {
                 this.mask.scannedResult = "";
                 this.isModalOpen = true;
             }
+            alert("Camera is " + (this.isCameraOpen ? "open" : "closed"));
         },
         onDecode(result) {
+
             this.mask.scannedResult = result;
             this.isCameraOpen = false;
             this.isModalOpen = false;
@@ -324,7 +326,11 @@ export default {
 
         },
         onInit(promise) {
-            promise.catch(console.error);
+            // promise.catch(console.error);
+            promise.catch(() => {
+                this.isCameraOpen = false;
+                this.isModalOpen = false;
+            });
 
         },
         async savedData() {
