@@ -20,20 +20,10 @@
 
                     </div>
                     <div class="modal-content">
-                        <qrcode-stream @decode="onDecode" @init="onInit" :constraints="cameraConstraints"
-                            v-if="isCameraOpen" :scan-region-size="scanRegionSize" :paused="!isCameraOpen"
-                            :track="true">
-                            <template #default="{ decodedString }">
-                                <div class="text-center">
-                                    <p class="text-lg font-bold">{{ decodedString }}</p>
-                                </div>
-                            </template>
-                            <template #error="{ error }">
-                                <div class="text-red-500 text-center">
-                                    <p>Error: {{ error }}</p>
-                                </div>
-                            </template>
-                        </qrcode-stream>
+                        <video ref="videoRef" style="width: 100%; height: auto;"></video>
+                        <div class="text-center mt-4" v-if="decodedResult">
+                            <p class="text-lg font-bold">{{ decodedResult }}</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -154,7 +144,7 @@
 </template>
 
 <script>
-import { QrcodeStream } from "vue3-qrcode-reader";
+import { BrowserMultiFormatReader } from '@zxing/browser'
 import { useVuelidate } from '@vuelidate/core'
 import { required } from '@vuelidate/validators'
 import "vue3-toastify/dist/index.css"
@@ -167,7 +157,7 @@ import AutoComplete from 'primevue/autocomplete';
 
 export default {
     components: {
-        QrcodeStream,
+        BrowserMultiFormatReader,
         AutoComplete,
 
     },
@@ -179,20 +169,6 @@ export default {
     data() {
         return {
             isCameraOpen: false,
-
-            scanRegionSize: 1.0, // Adjust this value as needed
-            cameraConstraints: {
-                video: {
-                    facingMode: { ideal: 'environment' },
-                    width: { ideal: 640 },
-                    height: { ideal: 480 },
-                    advanced: [
-                        { focusMode: 'continuous' } // Hint to use autofocus (if supported)
-                        , { zoom: 2 } // Adjust zoom level (if supported)
-                        , { torch: true } // Enable torch (if supported)
-                    ]
-                }
-            },
             mask: {
                 pcbno: "",
                 ref: "",
@@ -250,110 +226,7 @@ export default {
             }
             // alert("Camera is " + (this.isCameraOpen ? "open" : "closed"));
         },
-        onDecode(result) {
 
-            this.mask.scannedResult = result;
-            this.isCameraOpen = false;
-            this.isModalOpen = false;
-            let id = result;
-            const qrid = id.split('_');
-            const ref_id = qrid[3];
-            // console.log(ref_id)
-
-            axios.post('/45_engmask/get-model-code', {
-                ref_id: ref_id,
-                // mdlcd: this.mask.mdlcd,
-            },
-                {
-                    headers: {
-                        'Content-Type': 'application/json',
-
-                    }
-                })
-                .then(response => {
-                    // console.log(response.data);
-                    this.listModel = response.data;
-                    console.log(this.listModel)
-                    for (let i = 0; i < this.listModel.length; i++) {
-                        if (this.mask.mdlcd === this.listModel[i].LISTMDL_MDLCD) {
-                            this.found = true;
-
-                            toast.success('Model Code is match!', {
-                                position: "top-center",
-                                duration: 5000,
-                                theme: "colored",
-                                autoClose: 2000,
-
-                            });
-                            break; // stop checking after a match
-                        }
-                    }
-
-                    // Show error only if not found after loop
-                    if (!this.found) {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Oops...',
-                            text: 'Model Code is not found!',
-                            showConfirmButton: false,
-                            timer: 1500
-                        }).then(() => {
-                            location.reload();
-                        });
-                    }
-                    this.listModel.map((value) => {
-                        this.mask.listno = value.MMST_NO;
-                        this.mask.pcbno = value.MMST_PCBNO;
-                        this.mask.procs = value.MMST_PROCS;
-                        this.mask.expire_d = value.MMST_PRDDATE;
-                        this.mask.vendor = value.MMST_VENDOR;
-                        if (value.MMST_REMARK === "") {
-                            this.mask.remark = "-";
-                        } else {
-                            this.mask.remark = value.MMST_REMARK;
-                        }
-                        this.mask.rev = value.MMST_REVS;
-                        this.mask.mskname = value.MMST_MSKNAME;
-                        this.mask.ref = value.MMST_REFNO;
-
-
-
-                    })
-
-
-                    // Do something with response
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
-
-
-
-
-        },
-        onInit(promise) {
-            // promise.catch(console.error);
-            promise.catch(() => {
-                this.isCameraOpen = false;
-                this.isModalOpen = false;
-            });
-            promise.then(() => {
-                // ขอสิทธิ์และเข้าถึงกล้อง
-                navigator.mediaDevices.getUserMedia({ video: true }).then(stream => {
-                    const track = stream.getVideoTracks()[0];
-                    const capabilities = track.getCapabilities();
-                    alert('✅ Camera capabilities:', capabilities);
-
-                    // ปิด stream เพื่อไม่ให้กินทรัพยากร
-                    track.stop();
-                });
-            })
-                .catch(err => {
-                    console.error('❌ กล้องเปิดไม่สำเร็จ:', err);
-                });
-
-
-        },
         async savedData() {
             const isValid = await this.v$.$validate()
             if (!isValid) {
@@ -508,6 +381,11 @@ export default {
 
 
     },
+    beforeUnmount() {
+        if (this.codeReader) {
+            this.codeReader.reset()
+        }
+    },
     mounted() {
         this.fetchReportData();
         this.mask.won = this.dataWon;
@@ -516,7 +394,77 @@ export default {
         this.mask.empid = this.dataEmpid;
         this.getLotsAndBs();
 
+        this.codeReader = new BrowserMultiFormatReader()
 
+        BrowserMultiFormatReader.listVideoInputDevices()
+            .then(devices => {
+                const backCamera = devices.find(d => d.label.toLowerCase().includes('back')) || devices[0]
+
+                this.codeReader.decodeFromVideoDevice(backCamera.deviceId, this.$refs.videoRef, async (result, err) => {
+                    if (result) {
+                        this.decodedResult = result.getText()
+                        this.mask.scannedResult = result.getText()
+                        this.isCameraOpen = false
+                        this.codeReader.reset()
+
+                        const id = result.getText()
+                        const qrid = id.split('_')
+                        const ref_id = qrid[3]
+
+                        try {
+                            const response = await axios.post('/45_engmask/get-model-code', {
+                                ref_id: ref_id
+                            }, {
+                                headers: { 'Content-Type': 'application/json' }
+                            })
+
+                            this.listModel = response.data
+
+                            for (let i = 0; i < this.listModel.length; i++) {
+                                if (this.mask.mdlcd === this.listModel[i].LISTMDL_MDLCD) {
+                                    this.found = true
+                                    toast.success('Model Code is match!', {
+                                        position: "top-center",
+                                        duration: 5000,
+                                        theme: "colored",
+                                        autoClose: 2000
+                                    })
+                                    break
+                                }
+                            }
+
+                            if (!this.found) {
+                                await Swal.fire({
+                                    icon: 'error',
+                                    title: 'Oops...',
+                                    text: 'Model Code is not found!',
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                })
+                                location.reload()
+                            }
+
+                            this.listModel.map(value => {
+                                this.mask.listno = value.MMST_NO
+                                this.mask.pcbno = value.MMST_PCBNO
+                                this.mask.procs = value.MMST_PROCS
+                                this.mask.expire_d = value.MMST_PRDDATE
+                                this.mask.vendor = value.MMST_VENDOR
+                                this.mask.remark = value.MMST_REMARK === "" ? "-" : value.MMST_REMARK
+                                this.mask.rev = value.MMST_REVS
+                                this.mask.mskname = value.MMST_MSKNAME
+                                this.mask.ref = value.MMST_REFNO
+                            })
+
+                        } catch (e) {
+                            console.error('API error:', e)
+                        }
+                    }
+                })
+            })
+            .catch(err => {
+                console.error('Camera error:', err)
+            })
     },
     computed: {
         dataWon() {
@@ -536,6 +484,12 @@ export default {
 
 
 }
+
+
+
+
+
+
 
 
 </script>
