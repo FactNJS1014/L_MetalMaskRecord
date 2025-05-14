@@ -5,9 +5,9 @@ import PrimeVue from 'primevue/config';
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 import ColumnGroup from 'primevue/columngroup';   // optional
-import Row from 'primevue/row'; 
+import Row from 'primevue/row';
 import Aura from '@primeuix/themes/aura'
-import { QrcodeStream } from "vue3-qrcode-reader";                  // optional
+                // optional
 // index.js
 
 
@@ -28,6 +28,6 @@ app.component('DataTable', DataTable);
 app.component('Column', Column);
 app.component('ColumnGroup', ColumnGroup);
 app.component('Row', Row);
-app.use(QrcodeStream);
+
 
 app.mount('#app');

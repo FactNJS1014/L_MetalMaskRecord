@@ -129,14 +129,14 @@ import { useVuelidate } from '@vuelidate/core'
 import { required } from '@vuelidate/validators'
 import "vue3-toastify/dist/index.css"
 import { toast } from "vue3-toastify";
-import { QrcodeStream } from "vue3-qrcode-reader";
+
 import AutoComplete from 'primevue/autocomplete';
 import Swal from 'sweetalert2'
 import axios from 'axios';
 export default {
     name: "ChangeForm",
     components: {
-        QrcodeStream,
+
         AutoComplete,
     },
     setup() {

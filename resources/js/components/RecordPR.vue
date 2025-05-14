@@ -20,10 +20,7 @@
 
                     </div>
                     <div class="modal-content">
-                        <video ref="videoRef" style="width: 100%; height: auto;"></video>
-                        <div class="text-center mt-4" v-if="decodedResult">
-                            <p class="text-lg font-bold">{{ decodedResult }}</p>
-                        </div>
+                        <div id="reader" style="width: 100%; max-width: 500px; margin: auto;"></div>
                     </div>
                 </div>
             </div>
@@ -144,7 +141,7 @@
 </template>
 
 <script>
-import { BrowserMultiFormatReader } from '@zxing/browser'
+
 import { useVuelidate } from '@vuelidate/core'
 import { required } from '@vuelidate/validators'
 import "vue3-toastify/dist/index.css"
@@ -154,11 +151,11 @@ import axios from "axios";
 import Swal from 'sweetalert2'
 
 import AutoComplete from 'primevue/autocomplete';
-
+import { Html5Qrcode } from "html5-qrcode";
 export default {
     components: {
-        BrowserMultiFormatReader,
         AutoComplete,
+        Html5Qrcode
 
     },
     setup() {
@@ -193,6 +190,8 @@ export default {
             runningSums: {},
             statusMap: {},
             found: false,
+            html5QrCode: null,
+            // decodedResult: "",
 
         };
     },
@@ -218,15 +217,57 @@ export default {
         };
     },
     methods: {
-        toggleCamera() {
-            this.isCameraOpen = !this.isCameraOpen;
-            if (this.isCameraOpen) {
-                this.mask.scannedResult = "";
-                this.isModalOpen = true;
-            }
-            // alert("Camera is " + (this.isCameraOpen ? "open" : "closed"));
+        async toggleCamera() {
+            this.isModalOpen = !this.isModalOpen;
+            this.isModalOpen = true;
+            await this.$nextTick(); // รอให้ DOM render ก่อนเริ่มกล้อง
+            this.startScanner();
         },
 
+
+        async startScanner() {
+            const qrRegionId = "reader";
+
+            if (!this.html5QrCode) {
+                this.html5QrCode = new Html5Qrcode(qrRegionId);
+            }
+
+            const devices = await Html5Qrcode.getCameras();
+            if (devices && devices.length) {
+                const cameraId = devices[0].id; // กล้องตัวแรก (หรือเลือกจากรายการ)
+
+                const config = { fps: 10, qrbox: 250 };
+
+                try {
+                    await this.html5QrCode.start(
+                        cameraId,
+                        config,
+                        (decodedText) => {
+                            this.mask.scannedResult = decodedText;
+                            this.stopScanner();
+                        },
+                        (errorMessage) => {
+                            // เงียบ error
+                        }
+                    );
+                } catch (err) {
+                    console.error("Camera start error:", err);
+                    alert("ไม่สามารถเปิดกล้องได้: " + err.message);
+                    this.stopScanner();
+                }
+            } else {
+                alert("ไม่พบกล้องในอุปกรณ์นี้");
+            }
+        },
+        async stopScanner() {
+            if (this.html5QrCode && this.html5QrCode.isScanning) {
+                await this.html5QrCode.stop();
+                await this.html5QrCode.clear();
+            }
+            this.isModalOpen = false;
+
+        },
+                                                                                                                                                                                                                                                                                                                                                                                        
         async savedData() {
             const isValid = await this.v$.$validate()
             if (!isValid) {
@@ -377,6 +418,166 @@ export default {
 
 
         },
+        startScanner() {
+            const html5QrCode = new Html5Qrcode("reader");
+            const config = { fps: 10, qrbox: 250 };
+
+            html5QrCode.start(
+                { facingMode: "environment" }, // กล้องหลัง
+                config,
+                (decodedText, decodedResult) => {
+                    this.mask.scannedResult = decodedText;
+                    this.isModalOpen = false;
+                    this.isCameraOpen = false;
+                    html5QrCode.stop().then(() => {
+
+                        axios.post('/45_engmask/get-model-code', {
+                            ref_id: this.mask.scannedResult,
+                            // mdlcd: this.mask.mdlcd,
+                        },
+                            {
+                                headers: {
+                                    'Content-Type': 'application/json',
+
+                                }
+                            })
+                            .then(response => {
+                                // console.log(response.data);
+                                this.listModel = response.data;
+                                console.log(this.listModel)
+                                for (let i = 0; i < this.listModel.length; i++) {
+                                    if (this.mask.mdlcd === this.listModel[i].LISTMDL_MDLCD) {
+                                        this.found = true;
+
+                                        toast.success('Model Code is match!', {
+                                            position: "top-center",
+                                            duration: 5000,
+                                            theme: "colored",
+                                            autoClose: 2000,
+
+                                        });
+                                        break; // stop checking after a match
+                                    }
+                                }
+
+                                // Show error only if not found after loop
+                                if (!this.found) {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Oops...',
+                                        text: 'Model Code is not found!',
+                                        showConfirmButton: false,
+                                        timer: 1500
+                                    }).then(() => {
+                                        location.reload();
+                                    });
+                                }
+                                this.listModel.map((value) => {
+                                    this.mask.listno = value.MMST_NO;
+                                    this.mask.pcbno = value.MMST_PCBNO;
+                                    this.mask.procs = value.MMST_PROCS;
+                                    this.mask.expire_d = value.MMST_PRDDATE;
+                                    this.mask.vendor = value.MMST_VENDOR;
+                                    if (value.MMST_REMARK === "") {
+                                        this.mask.remark = "-";
+                                    } else {
+                                        this.mask.remark = value.MMST_REMARK;
+                                    }
+                                    this.mask.rev = value.MMST_REVS;
+                                    this.mask.mskname = value.MMST_MSKNAME;
+                                    this.mask.ref = value.MMST_REFNO;
+
+
+
+                                })
+
+
+                                // Do something with response
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                            });
+                    }).catch(err => {
+                        console.error("Failed to stop camera", err);
+                    });
+                },
+                (errorMessage) => {
+                    // ignore scan errors
+                }
+            ).catch(err => {
+                console.error("Unable to start scanning.", err);
+            });
+        },
+        // dataRecord() {
+
+
+        //     axios.post('/45_engmask/get-model-code', {
+        //         ref_id: this.mask.scannedResult,
+        //         // mdlcd: this.mask.mdlcd,
+        //     },
+        //         {
+        //             headers: {
+        //                 'Content-Type': 'application/json',
+
+        //             }
+        //         })
+        //         .then(response => {
+        //             // console.log(response.data);
+        //             this.listModel = response.data;
+        //             console.log(this.listModel)
+        //             for (let i = 0; i < this.listModel.length; i++) {
+        //                 if (this.mask.mdlcd === this.listModel[i].LISTMDL_MDLCD) {
+        //                     this.found = true;
+
+        //                     toast.success('Model Code is match!', {
+        //                         position: "top-center",
+        //                         duration: 5000,
+        //                         theme: "colored",
+        //                         autoClose: 2000,
+
+        //                     });
+        //                     break; // stop checking after a match
+        //                 }
+        //             }
+
+        //             // Show error only if not found after loop
+        //             if (!this.found) {
+        //                 Swal.fire({
+        //                     icon: 'error',
+        //                     title: 'Oops...',
+        //                     text: 'Model Code is not found!',
+        //                     showConfirmButton: false,
+        //                     timer: 1500
+        //                 }).then(() => {
+        //                     location.reload();
+        //                 });
+        //             }
+        //             this.listModel.map((value) => {
+        //                 this.mask.listno = value.MMST_NO;
+        //                 this.mask.pcbno = value.MMST_PCBNO;
+        //                 this.mask.procs = value.MMST_PROCS;
+        //                 this.mask.expire_d = value.MMST_PRDDATE;
+        //                 this.mask.vendor = value.MMST_VENDOR;
+        //                 if (value.MMST_REMARK === "") {
+        //                     this.mask.remark = "-";
+        //                 } else {
+        //                     this.mask.remark = value.MMST_REMARK;
+        //                 }
+        //                 this.mask.rev = value.MMST_REVS;
+        //                 this.mask.mskname = value.MMST_MSKNAME;
+        //                 this.mask.ref = value.MMST_REFNO;
+
+
+
+        //             })
+
+
+        //             // Do something with response
+        //         })
+        //         .catch(error => {
+        //             console.error('Error:', error);
+        //         });
+        // }
 
 
 
@@ -394,77 +595,7 @@ export default {
         this.mask.empid = this.dataEmpid;
         this.getLotsAndBs();
 
-        this.codeReader = new BrowserMultiFormatReader()
 
-        BrowserMultiFormatReader.listVideoInputDevices()
-            .then(devices => {
-                const backCamera = devices.find(d => d.label.toLowerCase().includes('back')) || devices[0]
-
-                this.codeReader.decodeFromVideoDevice(backCamera.deviceId, this.$refs.videoRef, async (result, err) => {
-                    if (result) {
-                        this.decodedResult = result.getText()
-                        this.mask.scannedResult = result.getText()
-                        this.isCameraOpen = false
-                        this.codeReader.reset()
-
-                        const id = result.getText()
-                        const qrid = id.split('_')
-                        const ref_id = qrid[3]
-
-                        try {
-                            const response = await axios.post('/45_engmask/get-model-code', {
-                                ref_id: ref_id
-                            }, {
-                                headers: { 'Content-Type': 'application/json' }
-                            })
-
-                            this.listModel = response.data
-
-                            for (let i = 0; i < this.listModel.length; i++) {
-                                if (this.mask.mdlcd === this.listModel[i].LISTMDL_MDLCD) {
-                                    this.found = true
-                                    toast.success('Model Code is match!', {
-                                        position: "top-center",
-                                        duration: 5000,
-                                        theme: "colored",
-                                        autoClose: 2000
-                                    })
-                                    break
-                                }
-                            }
-
-                            if (!this.found) {
-                                await Swal.fire({
-                                    icon: 'error',
-                                    title: 'Oops...',
-                                    text: 'Model Code is not found!',
-                                    showConfirmButton: false,
-                                    timer: 1500
-                                })
-                                location.reload()
-                            }
-
-                            this.listModel.map(value => {
-                                this.mask.listno = value.MMST_NO
-                                this.mask.pcbno = value.MMST_PCBNO
-                                this.mask.procs = value.MMST_PROCS
-                                this.mask.expire_d = value.MMST_PRDDATE
-                                this.mask.vendor = value.MMST_VENDOR
-                                this.mask.remark = value.MMST_REMARK === "" ? "-" : value.MMST_REMARK
-                                this.mask.rev = value.MMST_REVS
-                                this.mask.mskname = value.MMST_MSKNAME
-                                this.mask.ref = value.MMST_REFNO
-                            })
-
-                        } catch (e) {
-                            console.error('API error:', e)
-                        }
-                    }
-                })
-            })
-            .catch(err => {
-                console.error('Camera error:', err)
-            })
     },
     computed: {
         dataWon() {
