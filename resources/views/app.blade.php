@@ -40,13 +40,15 @@
             window.imagePath4 = '{{ asset("public/pictures/RP Mask.svg") }}';
             window.documentPath = '{{ asset("public/document/Manual-Program.pdf") }}';
             window.videoPath = '{{ asset("public/video/manual-mask.mp4") }}';
-            
-            
 
-            
-           
+
+
+
+
         </script>
-      
+
 </body>
 
 </html>
+
+

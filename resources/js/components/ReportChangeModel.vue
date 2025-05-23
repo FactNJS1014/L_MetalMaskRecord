@@ -13,8 +13,6 @@
                                 <th>Customer</th>
                                 <th>Process</th>
                                 <th>SMT</th>
-                                <th>EmpID</th>
-                                <th>Status</th>
                                 <th>Action เปลี่ยนโมเดลใช้งาน</th>
                                 <th>Action View Data</th>
                             </tr>
@@ -29,8 +27,6 @@
                                 <td>{{ history.MMCHANGE_CUS }}</td>
                                 <td>{{ history.MMCHANGE_PRCS }}</td>
                                 <td>{{ history.MMCHANGE_LINE }}</td>
-                                <td>{{ history.MMCHANGE_EMPID }}</td>
-                                <td>{{ history.MMCHANGE_STD }}</td>
                                 <td><button class="btn btn-warning text-xl" @click="ToRecordPage(history)"
                                         type="button"><i class="pi pi-file-edit"></i>เปลี่ยนใช้งาน</button></td>
                                 <td><button type="button" class="btn btn-accent text-xl"
@@ -109,7 +105,7 @@ export default {
                 .catch(error => {
                     console.error('Error fetching change history:', error);
                 })
-           
+
             // console.log(prcs)
         },
         CloseComponent() {
@@ -123,7 +119,8 @@ export default {
                     wono: cloneData.MMCHANGE_WONNO,
                     model: cloneData.MMCHANGE_MDLCHN,
                     cus: cloneData.MMCHANGE_CUS,
-                    empno: this.session.empno, 
+                    empno: this.session.empno,
+                    prcs: cloneData.MMCHANGE_PRCS,
                 }
             });
         },

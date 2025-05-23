@@ -10,18 +10,29 @@ class GetDataController extends Controller
     //Get Data Model Code
     public function getModelCode(Request $request)
     {
-        // Get the input parameter named 'ref_id'
         $ref = $request->input('ref_id');
         $ref_ct = explode('_', $ref);
-        $rev = $ref_ct[3];
+        $rev = end($ref_ct); // จะได้ค่าตำแหน่งสุดท้ายของ array ไม่ว่าจะมีกี่ตำแหน่ง
+        // return response()->json($rev);
+        $prcs = $request->input('prcs');
+
+
 
         // Query the database table using a LIKE clause
-        $get_model_code = DB::table('MM_LISTMDL_TBL')
-            ->join('MM_MASTERMSK_TBL', 'MM_LISTMDL_TBL.LISTMDL_QRID', '=', 'MM_MASTERMSK_TBL.MMST_QRID')
-            ->where('LISTMDL_QRID', 'LIKE', '%' . $rev . '%')
-            // ->where('LISTMDL_MDLCD', 'LIKE', '%' . $mdl . '%')
-            ->select('MM_LISTMDL_TBL.*', 'MM_MASTERMSK_TBL.*')
+        $get_model_code = DB::table('MM_LISTMDL2_TBL')
+            ->join('MM_MASTERMSK_TBL', 'MM_LISTMDL2_TBL.LISTMDL_GRPPCB', '=', 'MM_MASTERMSK_TBL.MMST_PCBNO')
+            ->where('MMST_REFNO', 'LIKE', '%' . $rev . '%')
+            ->where(function ($query) use ($prcs) {
+                $query->where('MMST_PROCS', '=', $prcs)
+                    ->orWhere('MMST_PROCS', 'LIKE', $prcs . '/%')
+                    ->orWhere('MMST_PROCS', 'LIKE', '%/' . $prcs)
+                    ->orWhere('MMST_PROCS', 'LIKE', '%/' . $prcs . '/%');
+            })
+            ->select('MM_LISTMDL2_TBL.*', 'MM_MASTERMSK_TBL.*')
             ->get();
+
+
+
 
         // Return the result as JSON
         return response()->json($get_model_code);
@@ -68,9 +79,7 @@ class GetDataController extends Controller
     public function GetModelChange()
     {
         $data = DB::table('MMCHN_MDL_TBL')
-            // ->join('MM_LISTMDL_TBL as mdl1', 'MMCHN_MDL_TBL.MMCHANGE_MDLCHN', '=', 'mdl1.LISTMDL_MDLCD')
-            // ->join('MM_LISTMDL_TBL as mdl2', 'MMCHN_MDL_TBL.MMCHANGE_PRCS', '=', 'mdl2.LISTMDL_PROCS')
-            // ->join('MM_MASTERMSK_TBL', 'mdl1.LISTMDL_QRID', '=', 'MM_MASTERMSK_TBL.MMST_QRID')
+            ->where('MMCHANGE_STD', '=', '1')
             ->get();
 
         return response()->json($data);
@@ -93,10 +102,19 @@ class GetDataController extends Controller
     {
         $getval = DB::table('MM_MSKREC_TBL')
 
-        // ->join('MM_LISTMDL2_TBL as mdl1', 'MM_MSKREC_TBL.MSKREC_MDLCD', '=','mdl1.LISTMDL_MDLCD')
+            // ->join('MM_LISTMDL2_TBL as mdl1', 'MM_MSKREC_TBL.MSKREC_MDLCD', '=','mdl1.LISTMDL_MDLCD')
 
-        ->get()
-        ;
+            ->get();
+        return response()->json($getval);
+    }
+    public function GetValues2()
+    {
+        $getval = DB::table('MM_MSKREC_TBL')
+            ->join('MM_MASTERMSK_TBL', 'MM_MSKREC_TBL.MSKREC_LISTNO', '=', 'MM_MASTERMSK_TBL.MMST_NO')
+            ->select('MM_MASTERMSK_TBL.MMST_QRID', 'MM_MSKREC_TBL.*')
+            // ->join('MM_LISTMDL2_TBL as mdl1', 'MM_MSKREC_TBL.MSKREC_MDLCD', '=','mdl1.LISTMDL_MDLCD')
+
+            ->get();
         return response()->json($getval);
     }
 
@@ -140,8 +158,91 @@ class GetDataController extends Controller
     {
         $search = $request->input('search');
         $getlistmask = DB::table('MM_MASTERMSK_TBL')
-            ->where('MMST_QRID', 'LIKE', '%' . $search . '%')
+            ->where('MMST_NO', 'LIKE', '%' . $search . '%')
             ->get();
         return response()->json($getlistmask);
+    }
+
+    public function getShowCode(Request $request)
+    {
+        // Get the input parameter named 'ref_id'
+        $ref = $request->input('ref_id');
+        $prcs = $request->input('prcs');
+
+        // Query the database table using a LIKE clause
+        $get_model_code = DB::table('MM_LISTMDL2_TBL')
+            ->join('MM_MASTERMSK_TBL', 'MM_LISTMDL2_TBL.LISTMDL_GRPPCB', '=', 'MM_MASTERMSK_TBL.MMST_PCBNO')
+            ->where('MM_MASTERMSK_TBL.MMST_NO', $ref)
+             ->where(function ($query) use ($prcs) {
+                $query->where('MM_MASTERMSK_TBL.MMST_PROCS', '=', $prcs)
+                    ->orWhere('MM_MASTERMSK_TBL.MMST_PROCS', 'LIKE', $prcs . '/%')
+                    ->orWhere('MM_MASTERMSK_TBL.MMST_PROCS', 'LIKE', '%/' . $prcs)
+                    ->orWhere('MM_MASTERMSK_TBL.MMST_PROCS', 'LIKE', '%/' . $prcs . '/%');
+            })
+            // ->where('LISTMDL_MDLCD', 'LIKE', '%' . $mdl . '%')
+            ->select('MM_LISTMDL2_TBL.*', 'MM_MASTERMSK_TBL.*')
+            ->get();
+
+        // Return the result as JSON
+        return response()->json($get_model_code);
+    }
+
+    public function GetIssueNo()
+    {
+        $YM = date('Ym');
+        $issue_no = '';
+
+        $findPrevious = DB::table('MMCHN_MDL_TBL')
+            ->select('MMCHANGE_ID')
+            ->orderBy('MMCHANGE_ID', 'DESC')
+            ->get();
+
+        if (empty($findPrevious[0])) {
+            $issue_no = 'MTM-' . $YM . '-000001';
+        } else {
+            $issue_no = AutogenerateKey('MTM', $findPrevious[0]->MMCHANGE_ID);
+        }
+        return response()->json($issue_no);
+    }
+
+    public function GetListModel2(Request $request)
+    {
+        $get_model_code = DB::table('MM_LISTMDL2_TBL')
+            ->join('MM_MASTERMSK_TBL', 'MM_LISTMDL2_TBL.LISTMDL_GRPPCB', '=', 'MM_MASTERMSK_TBL.MMST_PCBNO')
+            // ->where('MMST_NO', $ref)
+            // ->where('LISTMDL_MDLCD', 'LIKE', '%' . $mdl . '%')
+            ->select('MM_LISTMDL2_TBL.*', 'MM_MASTERMSK_TBL.*')
+            ->get();
+        return response()->json($get_model_code);
+    }
+
+    public function GetEditData(Request $request)
+    {
+        $maskno = $request->code;
+        $getdata = DB::table('MM_MASTERMSK_TBL')
+            ->where('MMST_NO', $maskno)
+            ->get();
+
+        return response()->json($getdata);
+    }
+
+    public function GetProcess(Request $request)
+    {
+        $mdl = $request->input('mdl');
+        $getprocess = DB::table('MM_LISTMDL2_TBL')
+            ->where('LISTMDL_MDLCD', $mdl)
+            ->select('LISTMDL_PROCS')
+            ->get();
+
+        return response()->json($getprocess);
+    }
+    public function GetEditModel(Request $request)
+    {
+        $mdl = $request->input('code');
+        $getmodel = DB::table('MM_LISTMDL2_TBL')
+            ->where('LISTMDL_MDLCD', $mdl)
+            ->get();
+
+        return response()->json($getmodel);
     }
 }

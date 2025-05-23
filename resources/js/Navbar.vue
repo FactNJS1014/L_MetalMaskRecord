@@ -40,7 +40,8 @@
             </li>
             <li>
                 <router-link to="/setting"
-                    active-class="text-xl font-semibold text-white bg-blue-500 hover:bg-slate-200 hover:text-blue-500">
+                    active-class="text-xl font-semibold text-white bg-blue-500 hover:bg-slate-200 hover:text-blue-500"
+                    v-if="permission == 9">
                     <!-- <span class="icon-[material-symbols--counter-5-rounded] size-8"></span> -->
                     <span class="icon-[material-symbols--settings-alert-rounded] size-8"></span>
                     ตั้งค่า Master ข้อมูล
@@ -50,22 +51,22 @@
             <!-- <p><strong>Username:</strong> {{ session.username }}</p> -->
         </ul>
     </div>
-    
+
 </template>
 <script>
-export default {    
+export default {
     data() {
         return {
             session: this.$session,
             permission: '',
-            
+
         };
     },
     mounted() {
         this.permission = this.session.permission;
         console.log('permission:', this.permission);
-        
+
     },
-   
+
 };
 </script>

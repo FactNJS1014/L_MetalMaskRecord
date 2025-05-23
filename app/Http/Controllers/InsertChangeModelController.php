@@ -42,6 +42,7 @@ class InsertChangeModelController extends Controller
             $changeModel->MMCHANGE_LSTDT = date('Y-m-d H:i:s');
             $changeModel->MMCHANGE_STD = 1;
             $changeModel->MMCHANGE_MDLCHN = $data['mdlch'];
+            $changeModel->MMCHANGE_ISSUE = $data['issue'];
 
             $changeModel->save();
 
@@ -68,6 +69,7 @@ class InsertChangeModelController extends Controller
 
         $havemodel = DB::table('MM_LISTMDL2_TBL')
             ->where('LISTMDL_MDLCD', $data['model'])
+            ->where('LISTMDL_PROCS', $data['procs'])
             ->first();
         if ($havemodel) {
             $update = DB::table('MM_LISTMDL2_TBL')
@@ -124,4 +126,6 @@ class InsertChangeModelController extends Controller
         }
 
     }
+
+
 }

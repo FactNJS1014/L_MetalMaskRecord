@@ -1,13 +1,13 @@
 <template>
     <div class="relative">
         <div class="flex justify-center items-center mt-5 w-full">
-            <div class="card w-[45%] lg:w-[50%] bg-white shadow-xl border border-cyan-600">
+            <div class="card w-[90%] lg:w-[50%]  bg-white shadow-xl border border-cyan-600">
 
                 <div class="card-body ">
                     <h5 class="card-title text-center font-bold text-2xl text-black bg-fuchsia-500 p-3 rounded-lg"><span
                             class="mr-3">&#128203;</span>Change Model Form</h5>
                     <form @submit.prevent="handleSubmit">
-                        <div class="grid grid-cols-2  gap-4 text-black">
+                        <div class="grid lg:grid-cols-2 grid-cols-1 gap-2 lg:gap:4 text-black">
                             <div class="flex flex-col col-span-2">
                                 <label for="won" class="text-xl font-bold">Work Order No. :
                                     <span>&#128292;</span></label>
@@ -15,6 +15,9 @@
                                     @complete="search" @change="checkModel" placeholder="Search WONO..."
                                     class="input input-bordered w-full mt-2 text-white" />
 
+                                <!-- <autocomplete :search="search"
+                                    class="input input-bordered w-full mt-2 text-black" v-model="formChange.wonNo"
+                                    placeholder="Search for Work Order" /> -->
                             </div>
                             <div class="flex flex-col ">
                                 <label for="model" class="text-xl font-bold">Model ที่ต้องการเปลี่ยน :
@@ -42,9 +45,17 @@
                                 </select>
                             </div>
                             <div class="flex flex-col">
-                                <label for="process" class="text-xl font-bold">Process <span class="text-sky-600">(Ex. RF1 or RF2)</span> : <span>&#128292;</span></label>
-                                <input type="text" class="input input-bordered mt-2" placeholder="Process"
-                                    v-model="formChange.process" />
+                                <label for="process" class="text-xl font-bold">Process <span class="text-sky-600">(Ex.
+                                        RF1 or RF2)</span> : <span>&#128292;</span></label>
+                                <!-- <input type="text" class="input input-bordered mt-2" placeholder="Process"
+                                    v-model="formChange.process" /> -->
+                                <select class="select select-bordered mt-2" v-model="formChange.process">
+                                    <option value="" disabled selected>Choose Process</option>
+                                    <option v-for="process in getProcess" :key="process.LISTMDL_MDLCD"
+                                        :value="process.LISTMDL_PROCS">
+                                        {{ process.LISTMDL_PROCS }}</option>
+
+                                </select>
                             </div>
                             <div class="flex flex-col">
                                 <label for="empID" class="text-xl font-bold">EmpID : <span>&#128292;</span></label>
@@ -58,6 +69,16 @@
                                         &#127751;</span></label>
                                 <input type="text" class="input input-bordered mt-2" v-model="formChange.shift"
                                     placeholder="Shift Day or Night">
+                                <!-- <select class="select select-bordered mt-2" v-model="formChange.shift">
+                                    <option value="" disabled selected>Choose Shift</option>
+                                    <option value="Day">Day</option>
+                                    <option value="Night">Night</option>
+                                </select> -->
+                            </div>
+                            <div class="flex flex-col">
+                                <label for="issue" class="text-xl font-bold">Issue No.</label>
+                                <input type="text" class="input input-bordered mt-2" v-model="formChange.issue"
+                                    placeholder="Issue No." />
                                 <!-- <select class="select select-bordered mt-2" v-model="formChange.shift">
                                     <option value="" disabled selected>Choose Shift</option>
                                     <option value="Day">Day</option>
@@ -131,6 +152,7 @@ import "vue3-toastify/dist/index.css"
 import { toast } from "vue3-toastify";
 
 import AutoComplete from 'primevue/autocomplete';
+// import Autocomplete from '@trevoreyre/autocomplete-vue'
 import Swal from 'sweetalert2'
 import axios from 'axios';
 export default {
@@ -153,6 +175,7 @@ export default {
                 wonNo: '',
                 shift: '',
                 mdlch: '',
+                issue: '',
             },
 
             items: [],
@@ -160,6 +183,7 @@ export default {
             linelist: [],
             session: this.$session,
             curtime: '',
+            getProcess: [],
 
 
         }
@@ -181,13 +205,15 @@ export default {
     mounted() {
         this.GetDataChange(),
             this.GetSession(),
-            this.GetTime()
+            this.GetTime(),
+            this.genIssueNo()
 
     },
     methods: {
         async handleSubmit() {
             // Handle form submission logic here
             console.log("Form submitted");
+            console.log(this.formChange);
             const isValid = await this.v$.$validate()
             if (!isValid) {
                 toast.error("Please fill in all required fields.", {
@@ -246,29 +272,38 @@ export default {
 
         search(event) {
             const query = event.query;
-            axios.post('/45_engmask/search', {
-                query: query
-            }, {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-                .then(response => {
-                    this.items = response.data;
-
-
-
+            if (query.length >= 3) {
+                axios.post('/45_engmask/search', {
+                    query: query
+                }, {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
                 })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
+                    .then(response => {
+                        this.items = response.data;
+
+
+
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+
+            } else {
+                this.items = [];
+            }
 
 
         },
+        // getResultValue(result) {
+        //     // Return the string value to display in the input when a result is selected
+        //     return result.won || result; // Adjust based on your API response
+        // },
         checkModel() {
             const won = this.formChange.wonNo;
             // console.log(this.mask.mdlcd)
-            if (won.length >= 15) {
+            if (won.length >= 4) {
                 axios.post('/45_engmask/get-wono', {
                     won: won
                 }, {
@@ -282,6 +317,24 @@ export default {
                             this.formChange.customer = item.BGCD;
                             this.formChange.mdlch = item.MDLCD;
                         }))
+
+                        axios.post('/45_engmask/get-process', {
+                            mdl: this.formChange.mdlch
+                        }, {
+                            headers: {
+                                'Content-Type': 'application/json'
+                            }
+                        })
+                            .then(response => {
+                                console.log(response.data);
+                                this.getProcess = response.data;
+
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                            });
+
+
                     })
                     .catch(error => {
                         console.error('Error:', error);
@@ -319,7 +372,39 @@ export default {
             } else {
                 this.formChange.shift = 'Day';
             }
-        }
+        },
+        genIssueNo() {
+            axios.get('/45_engmask/api/gen-issue-no')
+                .then(res => {
+                    this.formChange.issue = res.data;
+                    console.log(res.data);
+                })
+                .catch(error => {
+                    console.error('Error fetching change data:', error);
+                });
+        },
+        // checkProcs() {
+
+        //     // console.log(this.mask.mdlcd)
+
+        //     axios.post('/45_engmask/get-process', {
+        //         mdl: this.formChange.mdlch
+        //     }, {
+        //         headers: {
+        //             'Content-Type': 'application/json'
+        //         }
+        //     })
+        //         .then(response => {
+        //             console.log(response.data);
+        //             this.getProcess = response.data;
+
+        //         })
+        //         .catch(error => {
+        //             console.error('Error:', error);
+        //         });
+
+
+        // },
 
 
 

@@ -64,8 +64,15 @@ class InsertMetalMaskController extends Controller
 
         $insertMask->save();
 
+        $insert_std_change = DB::table('MMCHN_MDL_TBL')
+        ->WHERE('MMCHANGE_WONNO', $mask['won'])
+        ->update([
+            'MMCHANGE_STD' => 2,
+            'MMCHANGE_LSTDT' => date('Y-m-d H:i:s'),
+        ]);
 
-        return response()->json($insertMask);
+
+        return response()->json([$insertMask, $insert_std_change]);
     }
 
     public function addSettingMasks(Request $request){
@@ -83,7 +90,7 @@ class InsertMetalMaskController extends Controller
                     'MMST_NO' => $data['listno'],
                     'MMST_CUS' => $data['cus'],
                     'MMST_PCBNO' => $data['pcbnum'],
-                    'MMST_MSKNAME' => $data['mskname'],
+                    'MMST_MSKNAME' => $data['maskname'],
                     'MMST_PROCS' => $data['process'],
                     'MMST_REVS' => $data['revision'],
                     'MMST_REFNO' => $data['ref'],
@@ -110,7 +117,7 @@ class InsertMetalMaskController extends Controller
                     'MMST_NO' => $data['listno'],
                     'MMST_CUS' => $data['cus'],
                     'MMST_PCBNO' => $data['pcbnum'],
-                    'MMST_MSKNAME' => $data['mskname'],
+                    'MMST_MSKNAME' => $data['maskname'],
                     'MMST_PROCS' => $data['process'],
                     'MMST_REVS' => $data['revision'],
                     'MMST_REFNO' => $data['ref'],

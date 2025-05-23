@@ -1,6 +1,6 @@
 <template>
     <div class="flex items-center justify-center">
-        <div class="bg-white w-[50%] rounded-2xl shadow-2xl p-5 mt-5 mb-5 border border-sky-600">
+        <div class="bg-white w-[90%] lg:w-[50%] rounded-2xl shadow-2xl p-5 mt-5 mb-5 border border-sky-600">
             <div class="flex flex-col justify-center items-center">
                 <button @click="toggleCamera" class="btn btn-primary w-[10%] h-10">
                     <span
@@ -32,9 +32,12 @@
             <form @submit.prevent="savedData" class="text-xl font-bold text-blue-600 ">
                 <div class="grid grid-cols-2 gap-4">
                     <div class="flex flex-col col-span-2">
-                        <label for="qrcode" class="label">QR Code ID: <span>&#128292;</span></label>
+                        <label for="qrcode" class="label">QR Code ID: <span class="text-[16px]">กรณีกรอกเอง ใส่เลข mask no. 3 หลัก เช่น 001 , 008 เป็นต้น</span><span>&#128292;</span></label>
+
                         <input type="text" id="qrcode" v-model="mask.scannedResult"
-                            class="input input-bordered w-full focus:outline-none" />
+                            class="input join-item input-bordered w-full focus:outline-none" @input="fetchRecData" />
+
+
                     </div>
                     <div class="flex flex-col col-span-2">
                         <label for="mdlcd" class="label">Employee ID: <span>&#128292;</span></label>
@@ -64,49 +67,49 @@
 
                     </div>
                     <div class="flex flex-col">
-                        <label for="listno" class="label">List No.: <span>&#128292;</span></label>
-                        <input type="text" id="name" v-model="mask.listno"
+                        <!-- <label for="listno" class="label">List No.: <span>&#128292;</span></label> -->
+                        <input type="hidden" id="name" v-model="mask.listno"
                             class="input input-bordered w-full focus:outline-none" />
                     </div>
                     <div class="flex flex-col">
-                        <label for="cus" class="label">Customer: <span>&#128292;</span></label>
-                        <input type="text" id="name" v-model="mask.cus"
+                        <!-- <label for="cus" class="label">Customer: <span>&#128292;</span></label> -->
+                        <input type="hidden" id="name" v-model="mask.cus"
                             class="input input-bordered w-full focus:outline-none" />
                     </div>
 
                     <div class="flex flex-col">
-                        <label for="pcbno" class="label">PCB No. <span>&#128292;</span></label>
-                        <input type="text" id="name" v-model="mask.pcbno"
+                        <!-- <label for="pcbno" class="label">PCB No. <span>&#128292;</span></label> -->
+                        <input type="hidden" id="name" v-model="mask.pcbno"
                             class="input input-bordered w-full focus:outline-none" />
 
                     </div>
                     <div class="flex flex-col">
-                        <label for="mskname" class="label">Metal Mask Name: <span>&#128292;</span></label>
-                        <input type="text" id="name" v-model="mask.mskname"
+                        <!-- <label for="mskname" class="label">Metal Mask Name: <span>&#128292;</span></label> -->
+                        <input type="hidden" id="name" v-model="mask.mskname"
                             class="input input-bordered w-full focus:outline-none" />
 
                     </div>
                     <div class="flex flex-col">
-                        <label for="process" class="label">Process: <span>&#128292;</span></label>
-                        <input type="text" id="name" v-model="mask.procs"
+                        <!-- <label for="process" class="label">Process: <span>&#128292;</span></label> -->
+                        <input type="hidden" id="name" v-model="mask.procs"
                             class="input input-bordered w-full focus:outline-none" />
                     </div>
                     <div class="flex flex-col">
-                        <label for="rev" class="label">Revision: <span>🔢</span></label>
-                        <input type="number" class="input input-bordered w-full focus:outline-none"
+                        <!-- <label for="rev" class="label">Revision: <span>🔢</span></label> -->
+                        <input type="hidden" class="input input-bordered w-full focus:outline-none"
                             v-model="mask.rev" />
                     </div>
                     <div class="flex flex-col">
-                        <label for="ref" class="label">Reference Number: <span>&#128292;</span></label>
-                        <input type="text" id="name" v-model="mask.ref"
+                        <!-- <label for="ref" class="label">Reference Number: <span>&#128292;</span></label> -->
+                        <input type="hidden" id="name" v-model="mask.ref"
                             class="input input-bordered w-full focus:outline-none" />
                     </div>
 
 
 
                     <div class="flex flex-col">
-                        <label for="dateexpire" class="label">Product Date: <span>📆</span></label>
-                        <input type="date" id="name" v-model="mask.expire_d"
+                        <!-- <label for="dateexpire" class="label">Product Date: <span>📆</span></label> -->
+                        <input type="hidden" id="name" v-model="mask.expire_d"
                             class="input input-bordered w-full focus:outline-none" />
 
                     </div>
@@ -117,8 +120,8 @@
                     </div> -->
                     <input type="hidden" v-model="mask.lot" class="input input-bordered w-full focus:outline-none" />
                     <div class="flex flex-col">
-                        <label for="vendor" class="label">Vendor/Maker: <span>&#128292;</span></label>
-                        <input type="text" id="name" v-model="mask.vendor"
+                        <!-- <label for="vendor" class="label">Vendor/Maker: <span>&#128292;</span></label> -->
+                        <input type="hidden" id="name" v-model="mask.vendor"
                             class="input input-bordered w-full focus:outline-none" />
 
                     </div>
@@ -164,6 +167,7 @@ export default {
         };
     },
     data() {
+
         return {
             isCameraOpen: false,
             mask: {
@@ -191,11 +195,16 @@ export default {
             statusMap: {},
             found: false,
             html5QrCode: null,
+            MaskData: [],
+            getProcs: "",
             // decodedResult: "",
 
         };
     },
     validations() {
+        if (this.getProcs === "CP") {
+            return {}
+        }
         return {
             mask: {
                 pcbno: { required },
@@ -267,9 +276,10 @@ export default {
             this.isModalOpen = false;
 
         },
-                                                                                                                                                                                                                                                                                                                                                                                        
+
         async savedData() {
             const isValid = await this.v$.$validate()
+            console.log(this.mask);
             if (!isValid) {
                 Swal.fire({
                     icon: 'error',
@@ -280,7 +290,6 @@ export default {
                     timer: 1500,
                 })
             } else {
-                console.log(this.mask);
                 axios.post('/45_engmask/save-data', {
                     mask: this.mask
                 }, {
@@ -300,6 +309,24 @@ export default {
                         })
                             .then(() => {
                                 location.reload();
+                                this.mask = {
+                                    pcbno: "",
+                                    ref: "",
+                                    cus: "",
+                                    procs: "",
+                                    expire_d: "",
+                                    lot: "",
+                                    rev: "",
+                                    mskname: "",
+                                    vendor: "",
+                                    listno: "",
+                                    mdlcd: "",
+                                    blocksheet: "",
+                                    won: "",
+                                    scannedResult: "",
+                                    empid: "",
+
+                                }
                             })
                     }
                 })
@@ -352,72 +379,7 @@ export default {
                 });
 
         },
-        async fetchReportData() {
-            try {
-                const res = await axios.get('/45_engmask/api/get-values');
-                const data = res.data;
 
-                this.MaskData = data;
-
-                const grouped = {}
-                const notifyStatus = {};
-                // รวม Shots และจำ Notify STD
-                data.forEach(item => {
-                    const mdl = item.MSKREC_MDLCD;
-                    const shots = parseInt(item.MSKREC_SHOTS) || 0;
-
-                    grouped[mdl] = (grouped[mdl] || 0) + shots;
-
-                    // Store status for each QRID (assumes the same QRID has same status)
-                    if (!(mdl in notifyStatus)) {
-                        notifyStatus[mdl] = item.MSKREC_NOTIFY_STD;
-                    }
-                });
-                // console.log(grouped)
-
-                this.runningSums = grouped;
-                // console.log(this.runningSums)
-                // console.log(notifyStatus)
-
-                Object.entries(grouped).forEach(([mdl, total]) => {
-                    const notified = notifyStatus[mdl] == 1;
-
-                    if (total >= 600 && !notified) {
-                        Swal.fire({
-                            title: 'แจ้งเตือน!',
-                            text: `Model: ${mdl} ครบ ${total} แล้ว!`,
-                            icon: 'warning',
-                            confirmButtonText: 'ตกลง',
-                            confirmButtonColor: '#8b5cf6'
-                        }).then((result) => {
-                            if (result.isConfirmed) {
-                                // PUT เพื่อ update notify std
-                                axios.put('/45_engmask/update-notify-status', {
-                                    mdl: mdl,
-
-                                }).then(response => {
-                                    console.log('Status updated successfully:', response.data);
-                                });
-                            }
-                        })
-
-
-
-                        // อัปเดต local statusMap เพื่อไม่แจ้งซ้ำ
-                        this.statusMap[mdl] = 1;
-                    }
-                });
-
-
-            } catch (error) {
-                console.error('เกิดข้อผิดพลาด:', error);
-
-            }
-
-
-
-
-        },
         startScanner() {
             const html5QrCode = new Html5Qrcode("reader");
             const config = { fps: 10, qrbox: 250 };
@@ -433,6 +395,7 @@ export default {
 
                         axios.post('/45_engmask/get-model-code', {
                             ref_id: this.mask.scannedResult,
+                            prcs: this.mask.procs,
                             // mdlcd: this.mask.mdlcd,
                         },
                             {
@@ -508,93 +471,28 @@ export default {
                 console.error("Unable to start scanning.", err);
             });
         },
-        // dataRecord() {
 
-
-        //     axios.post('/45_engmask/get-model-code', {
-        //         ref_id: this.mask.scannedResult,
-        //         // mdlcd: this.mask.mdlcd,
-        //     },
-        //         {
-        //             headers: {
-        //                 'Content-Type': 'application/json',
-
-        //             }
-        //         })
-        //         .then(response => {
-        //             // console.log(response.data);
-        //             this.listModel = response.data;
-        //             console.log(this.listModel)
-        //             for (let i = 0; i < this.listModel.length; i++) {
-        //                 if (this.mask.mdlcd === this.listModel[i].LISTMDL_MDLCD) {
-        //                     this.found = true;
-
-        //                     toast.success('Model Code is match!', {
-        //                         position: "top-center",
-        //                         duration: 5000,
-        //                         theme: "colored",
-        //                         autoClose: 2000,
-
-        //                     });
-        //                     break; // stop checking after a match
-        //                 }
-        //             }
-
-        //             // Show error only if not found after loop
-        //             if (!this.found) {
-        //                 Swal.fire({
-        //                     icon: 'error',
-        //                     title: 'Oops...',
-        //                     text: 'Model Code is not found!',
-        //                     showConfirmButton: false,
-        //                     timer: 1500
-        //                 }).then(() => {
-        //                     location.reload();
-        //                 });
-        //             }
-        //             this.listModel.map((value) => {
-        //                 this.mask.listno = value.MMST_NO;
-        //                 this.mask.pcbno = value.MMST_PCBNO;
-        //                 this.mask.procs = value.MMST_PROCS;
-        //                 this.mask.expire_d = value.MMST_PRDDATE;
-        //                 this.mask.vendor = value.MMST_VENDOR;
-        //                 if (value.MMST_REMARK === "") {
-        //                     this.mask.remark = "-";
-        //                 } else {
-        //                     this.mask.remark = value.MMST_REMARK;
-        //                 }
-        //                 this.mask.rev = value.MMST_REVS;
-        //                 this.mask.mskname = value.MMST_MSKNAME;
-        //                 this.mask.ref = value.MMST_REFNO;
-
-
-
-        //             })
-
-
-        //             // Do something with response
-        //         })
-        //         .catch(error => {
-        //             console.error('Error:', error);
-        //         });
-        // }
 
 
 
     },
+
     beforeUnmount() {
         if (this.codeReader) {
             this.codeReader.reset()
         }
     },
     mounted() {
-        this.fetchReportData();
+        // this.fetchReportData();
         this.mask.won = this.dataWon;
         this.mask.mdlcd = this.dataModel;
         this.mask.cus = this.dataCus;
-        this.mask.empid = this.dataEmpid;
+        this.mask.procs = this.dataProcess;
+        // this.mask.empid = this.dataEmpid;
         this.getLotsAndBs();
-
+        this.getProcs = this.dataProcess;
+        console.log(this.getProcs)
+        // this.fetchRecData()
 
     },
     computed: {
@@ -607,20 +505,82 @@ export default {
         dataCus() {
             return this.$route.query.cus;
         },
-        dataEmpid() {
-            return this.$route.query.empno
+        // dataEmpid() {
+        //     return this.$route.query.empno
+        // },
+        dataProcess() {
+            return this.$route.query.prcs;
         },
+    },
+   watch: {
+    'mask.scannedResult'(newVal) {
+        if (newVal.length == 3) {
+            axios.post('/45_engmask/get-show-code', {
+                ref_id: newVal,
+                prcs: this.mask.procs,
+            },
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            })
+            .then(response => {
+                this.listModel = response.data;
+                console.log(this.listModel)
+
+                this.found = false; // Reset before checking
+
+                for (let i = 0; i < this.listModel.length; i++) {
+                    if (this.mask.mdlcd === this.listModel[i].LISTMDL_MDLCD) {
+                        this.found = true;
+                        toast.success('Model Code is match!', {
+                            position: "top-center",
+                            duration: 5000,
+                            theme: "colored",
+                            autoClose: 2000,
+                        });
+                        break;
+                    }
+                }
+
+                if (!this.found) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Model Code is not found!',
+                        showConfirmButton: false,
+                        timer: 1500
+                    }).then(() => {
+                        location.reload();
+                    });
+                }
+
+                // Use the first model to fill form fields
+                if (this.listModel.length > 0) {
+                    const value = this.listModel[0];
+                    this.mask.listno = value.MMST_NO;
+                    this.mask.pcbno = value.MMST_PCBNO;
+                    this.mask.procs = value.MMST_PROCS;
+                    this.mask.expire_d = value.MMST_PRDDATE;
+                    this.mask.vendor = value.MMST_VENDOR;
+                    this.mask.remark = value.MMST_REMARK === "" ? "-" : value.MMST_REMARK;
+                    this.mask.rev = value.MMST_REVS;
+                    this.mask.mskname = value.MMST_MSKNAME;
+                    this.mask.ref = value.MMST_REFNO;
+                }
+
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
     }
-
-
-
 }
 
 
 
 
-
-
+}
 
 
 </script>

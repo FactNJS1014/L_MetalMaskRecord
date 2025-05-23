@@ -54,7 +54,7 @@ export default {
 
               // 👉 Filter ข้อมูลของ Model ที่คลิก และเอาแค่ 5 รายการล่าสุด
               const relatedData = this.rawData
-                .filter(item => item.MSKREC_QRID === label)
+                .filter(item => item.MMST_QRID === label)
                 .sort((a, b) => new Date(b.MSKREC_PRODDATE) - new Date(a.MSKREC_PRODDATE))
                 .slice(0, 5);
 
@@ -64,7 +64,7 @@ export default {
         <td style="padding: 8px; border: 1px solid #ccc;">${item.MSKREC_LISTNO}</td>
         <td style="padding: 8px; border: 1px solid #ccc;">${item.MSKREC_MMNAME}</td>
         <td style="padding: 8px; border: 1px solid #ccc;">${item.MSKREC_SHOTS}</td>
-        
+
       </tr>
     `).join('');
 
@@ -76,7 +76,7 @@ export default {
             <th style="padding: 8px; border: 1px solid #ccc;">Metal Mask No.</th>
             <th style="padding: 8px; border: 1px solid #ccc;">Metal Mask Name</th>
             <th style="padding: 8px; border: 1px solid #ccc;">Shots</th>
-            
+
           </tr>
         </thead>
         <tbody>
@@ -94,7 +94,7 @@ export default {
               });
             }
           },
-          
+
           plugins: {
             legend: {
               position: 'top'

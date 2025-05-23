@@ -250,7 +250,8 @@
                                 <label for="productdate"
                                     class="join-item rounded-s-lg bg-emerald-100 w-44 text-lg font-semibold flex justify-start items-center">Product
                                     Date:</label>
-                                <input type="date" class="input input-bordered join-item rounded-e-lg" v-model="forms.productdate" />
+                                <input type="date" class="input input-bordered join-item rounded-e-lg"
+                                    v-model="forms.productdate" />
                             </div>
 
                         </div>
@@ -294,9 +295,8 @@
                             v-model="searchModels" @input="SearchFilterModels" />
 
                     </div>
-                    <DataTable :value="listModels" tableStyle="min-width: 50rem" showGridlines paginator :rows="10"
-                        :rowsPerPageOptions="[5, 10, 20, 50]"
-                       >
+                    <DataTable :value="listModels" tableStyle="min-width: 50rem" showGridlines paginator :rows="5"
+                        :rowsPerPageOptions="[5, 10, 20, 50]">
                         <Column field="LISTMDL_MDLCD" header="Model Code" style="min-width: 250px;"></Column>
                         <Column field="LISTMDL_GRPPCB" header="Group PCB" style="min-width: 250px;"></Column>
                         <Column field="LISTMDL_PROCS" header="Process" style="min-width: 150px;"></Column>
@@ -306,6 +306,13 @@
                         <Column field="LISTMDL_MSKNO4" header="Mask No.4" style="min-width: 150px;"></Column>
                         <Column field="LISTMDL_QRID" header="QR Code ID" style="min-width: 300px;"></Column>
                         <Column field="LISTMDL_STD" header="Status" style="min-width: 100px;"></Column>
+                        <Column header="Action Edit" style="min-width: 200px">
+                            <template #body="{ data }">
+                                <button class="btn btn-warning" @click="EditModel(data.LISTMDL_MDLCD)">
+                                    Edit
+                                </button>
+                            </template>
+                        </Column>
 
                     </DataTable>
                 </div>
@@ -321,7 +328,7 @@
                         <input type="text" placeholder="Search..." class="input input-bordered w-full max-w-xs"
                             v-model="searchMask" @input="SearchFilterMask" />
                     </div>
-                    <DataTable :value="listMask" tableStyle="min-width: 50rem" showGridlines paginator :rows="10"
+                    <DataTable :value="listMask" tableStyle="min-width: 50rem" showGridlines paginator :rows="5"
                         :rowsPerPageOptions="[5, 10, 20, 50]" scrollable :scrollHeight="dynamicHeight">
                         <Column field="MMST_QRID" header="QR Code ID" style="min-width: 400px"></Column>
                         <Column field="MMST_NO" header="List Number" style="min-width: 200px"></Column>
@@ -333,6 +340,13 @@
                         <Column field="MMST_PRDDATE" header="Product Date" style="min-width: 300px"></Column>
                         <Column field="MMST_VENDOR" header="Vendor" style="min-width: 300px"></Column>
                         <Column field="MMST_REMARK" header="Remark" style="min-width: 400px"></Column>
+                        <Column header="Action Edit" style="min-width: 200px">
+                            <template #body="{ data }">
+                                <button class="btn btn-primary" @click="EditData(data.MMST_NO)">
+                                    Edit
+                                </button>
+                            </template>
+                        </Column>
 
                     </DataTable>
                 </div>
@@ -367,7 +381,7 @@ export default {
                 nothird: '',
                 nofourth: '',
             },
-            forms:{
+            forms: {
                 qrid: '',
                 listno: '',
                 customer: '',
@@ -392,6 +406,7 @@ export default {
             imagePath02: '',
             imagePath03: '',
             imagePath04: '',
+            getValueMask: [],
         }
     },
     mounted() {
@@ -516,9 +531,9 @@ export default {
                 })
             }
         },
-        SubmitAddModel(){
+        SubmitAddModel() {
             console.log(this.formf)
-            if(this.formf.nosecond == '' || this.formf.nothird == '' || this.formf.nofourth == ''){
+            if (this.formf.nosecond == '' || this.formf.nothird == '' || this.formf.nofourth == '') {
                 this.formf.nosecond = 0
                 this.formf.nothird = 0
                 this.formf.nofourth = 0
@@ -527,41 +542,43 @@ export default {
                 formf: this.formf
             }).then(res => {
                 console.log(res.data)
-                if(res.data == 'success'){
+                if (res.data.status == 'success') {
                     Swal.fire({
                         icon: 'success',
                         title: 'Insert or Update Data Successfully',
                         text: 'บันทึกข้อมูลเรียบร้อยแล้ว',
                         showConfirmButton: false,
                         timer: 1500
+                    }).then(() => {
+                        this.formf = {
+                            model: '',
+                            pcbno: '',
+                            procs: '',
+                            codeid: '',
+                            nofirst: '',
+                            nosecond: '',
+                            nothird: '',
+                            nofourth: '',
+                        }
                     })
-                    this.formf = {
-                        model: '',
-                        pcbno: '',
-                        procs: '',
-                        codeid: '',
-                        nofirst: '',
-                        nosecond: '',
-                        nothird: '',
-                        nofourth: '',
-                    }
+
                 }
             }).catch(err => {
                 console.log(err)
             })
         },
-        EditData(data){
+        EditData(data) {
             const cloneData = data;
             console.log(cloneData)
 
         },
-        SubmitAddMask(){
+        SubmitAddMask() {
             console.log(this.forms)
             axios.post('/45_engmask/add-setting-mask', {
                 forms: this.forms
             }).then(res => {
                 console.log(res.data)
-                if(res.data == 'success'){
+                if (res.data.status == 'success') {
                     Swal.fire({
                         icon: 'success',
                         title: 'Insert or Update Data Successfully',
@@ -587,7 +604,64 @@ export default {
                 console.log(err)
             })
         },
+        EditData(data) {
+            // console.log(data)
+
+            axios.post('/45_engmask/get-edit-data', {
+                code: data
+            }).then(res => {
+                const data = res.data;
+                data.map((data) => {
+                    this.forms.qrid = data.MMST_QRID
+                    this.forms.listno = data.MMST_NO
+                    this.forms.cus = data.MMST_CUS
+                    this.forms.pcbnum = data.MMST_PCBNO
+                    this.forms.maskname = data.MMST_MSKNAME
+                    this.forms.process = data.MMST_PROCS
+                    this.forms.revision = data.MMST_REVS
+                    this.forms.ref = data.MMST_REFNO
+                    this.forms.productdate = data.MMST_PRDDATE
+                    this.forms.vendor = data.MMST_VENDOR
+                    this.forms.remark = data.MMST_REMARK
+                })
+                this.settingModel = false
+                this.settingMsk = true
+                this.Menu = false
+                this.btnback = true
+                this.reportSettingModels = false
+                this.reportSettingMask = false
+
+
+
+            }).catch(err => {
+                console.log(err)
+            })
+        },
+        EditModel(mdl){
+            axios.post('/45_engmask/get-edit-model', {
+                code: mdl
+            }).then(res => {
+                const data = res.data;
+                data.map((data) => {
+                    this.formf.model = data.LISTMDL_MDLCD
+                    this.formf.pcbno = data.LISTMDL_GRPPCB
+                    this.formf.procs = data.LISTMDL_PROCS
+                    this.formf.nofirst = data.LISTMDL_MSKNO1
+                    this.formf.nosecond = data.LISTMDL_MSKNO2
+                    this.formf.nothird = data.LISTMDL_MSKNO3
+                    this.formf.nofourth = data.LISTMDL_MSKNO4
+                })
+                this.settingModel = true
+                this.settingMsk = false
+                this.Menu = false
+                this.btnback = true
+                this.reportSettingModels = false
+                this.reportSettingMask = false
+
+            }).catch(err => {
+                console.log(err)
+            })
+        }
     }
 }
 </script>
-

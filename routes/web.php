@@ -26,6 +26,7 @@ Route::get('/{any}', function () {
 
 
 Route::post('/get-model-code', [GetDataController::class, 'getModelCode']);
+Route::post('/get-show-code', [GetDataController::class, 'getShowCode']);
 Route::post('/show-value', [GetDataController::class, 'showValueToInput']);
 Route::post('/search', [GetDataController::class, 'SearchWon']);
 Route::post('/get-wono', [GetDataController::class, 'getWono']);
@@ -39,5 +40,6 @@ Route::post('/get-change-history',[GetDataController::class, 'GetChangeHistory']
 Route::post('/set-session', [LoginController::class, 'login']);
 Route::post('/add-setting-models',[InsertChangeModelController::class, 'addSettingModels']);
 Route::post('/add-setting-mask',[InsertMetalMaskController::class, 'addSettingMasks']);
-
-
+Route::post('/get-edit-data',[GetDataController::class,'GetEditData']);
+Route::post('/get-process',[GetDataController::class , 'GetProcess']);
+Route::post('/get-edit-model',[GetDataController::class , 'GetEditModel']);
