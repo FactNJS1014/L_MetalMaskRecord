@@ -21,10 +21,10 @@
                             <button class="btn btn-success" @click="ExportExcel">Export Excel</button>
                         </div>
                     </div>
-                    <div class="overflow-auto mt-4 h-[60%]">
-                        <table class="table">
-                            <thead>
-                                <tr class="text-center text-lg font-bold text-white bg-purple-800">
+                    <div class="mt-4 max-h-[400px] overflow-auto border border-gray-300 rounded">
+                        <table class="table w-full min-w-[1000px] table-zebra">
+                            <thead class="sticky top-0 bg-purple-800 z-10">
+                                <tr class="text-center text-lg font-bold text-white">
                                     <th>QR_ID</th>
                                     <th>Model Code</th>
                                     <th>Work Order</th>
@@ -41,24 +41,25 @@
                             </thead>
                             <tbody>
                                 <tr v-for="(item, index) in MaskData" :key="index"
-                                    class="text-[16px] font-semibold text-black">
-                                    <td class="text-center">{{ item.MMST_QRID }}</td>
-                                    <td class="text-center">{{ item.MSKREC_MDLCD }}</td>
-                                    <td class="text-center">{{ item.MSKREC_WON }}</td>
-                                    <td class="text-center">{{ item.MSKREC_LISTNO }}</td>
-                                    <td class="text-center">{{ item.MSKREC_CUS }}</td>
-                                    <td class="text-center">{{ item.MSKREC_PCBNO }}</td>
-                                    <td class="text-center">{{ item.MSKREC_MMNAME }}</td>
-                                    <td class="text-center">{{ item.MSKREC_PROCS }}</td>
-                                    <td class="text-center">{{ item.MSKREC_LOTS }}</td>
-                                    <td class="text-center">{{ item.MSKREC_SHOTS }}</td>
-                                    <td class="text-center">{{ item.MSKREC_EMPREC }}</td>
-                                    <td class="text-center">{{ item.MSKREC_LSTDT }}</td>
+                                    class="text-[16px] font-semibold text-black text-center">
+                                    <td>{{ item.MMST_QRID }}</td>
+                                    <td>{{ item.MSKREC_MDLCD }}</td>
+                                    <td>{{ item.MSKREC_WON }}</td>
+                                    <td>{{ item.MSKREC_LISTNO }}</td>
+                                    <td>{{ item.MSKREC_CUS }}</td>
+                                    <td>{{ item.MSKREC_PCBNO }}</td>
+                                    <td>{{ item.MSKREC_MMNAME }}</td>
+                                    <td>{{ item.MSKREC_PROCS }}</td>
+                                    <td>{{ item.MSKREC_LOTS }}</td>
+                                    <td>{{ item.MSKREC_SHOTS }}</td>
+                                    <td>{{ item.MSKREC_EMPREC }}</td>
+                                    <td>{{ item.MSKREC_LSTDT }}</td>
                                 </tr>
                             </tbody>
-
                         </table>
                     </div>
+
+
                 </div>
             </div>
         </div>
@@ -252,10 +253,10 @@ export default {
     },
     watch: {
         searchData: function (newValue) {
-            if(!newValue) {
+            if (!newValue) {
                 this.fetchReportData();
                 return;
-            }else {
+            } else {
                 this.MaskData = this.MaskData.filter(item => {
                     return Object.values(item).some(val => {
                         return String(val).toLowerCase().includes(newValue.toLowerCase());
