@@ -245,4 +245,13 @@ class GetDataController extends Controller
 
         return response()->json($getmodel);
     }
+
+    public function SearchMask(Request $request)
+    {
+        $search = $request->input('search');
+        $getlistmask = DB::table('MM_MSKREC_TBL')
+            ->where('MSKREC_LISTNO', 'LIKE', '%' . $search . '%')
+            ->get();
+        return response()->json($getlistmask);
+    }
 }

@@ -15,7 +15,7 @@
                     <div class="flex justify-between items-center">
                         <div>
                             <input type="text" class="input input-bordered w-full max-w-xs" placeholder="Search"
-                                v-model="searchData" @input="searchData" />
+                                v-model="searchData" @input="searchNo" />
                         </div>
                         <div>
                             <button class="btn btn-success" @click="ExportExcel">Export Excel</button>
@@ -180,92 +180,33 @@ export default {
             const excelFileName = `MetalMask_${currentDate}.xlsx`;
             XLSX.writeFile(workbook, excelFileName);
         },
-        // async fetchReportData() {
-        //     try {
-        //         const res = await axios.get('/45_engmask/api/get-values');
-        //         const data = res.data;
+        searchNo() {
+            // ฟังก์ชันนี้จะถูกเรียกเมื่อมีการพิมพ์ใน input search
+            // ไม่ต้องทำอะไรที่นี่ เพราะ watch จะจัดการการค้นหาให้
+            const searchTerm = this.searchData;
+            if (!searchTerm) {
+                this.fetchReportData(); // ถ้าไม่มีการค้นหา ให้ดึงข้อมูลทั้งหมด
+            } else {
+                axios.get('/45_engmask/api/search-mask', {
+                    params: {
+                        search: searchTerm
+                    }
+                })
+                    .then(response => {
+                        this.MaskData = response.data;
+                    })
+                    .catch(error => {
+                        console.error('เกิดข้อผิดพลาดในการค้นหา:', error);
+                    });
+            }
+        }
 
-        //         this.MaskData = data;
-
-        //         const grouped = {}
-        //         const notifyStatus = {};
-        //         // รวม Shots และจำ Notify STD
-        //         data.forEach(item => {
-        //             const mdl = item.MSKREC_MDLCD;
-        //             const shots = parseInt(item.MSKREC_SHOTS) || 0;
-
-        //             grouped[mdl] = (grouped[mdl] || 0) + shots;
-
-        //             // Store status for each QRID (assumes the same QRID has same status)
-        //             if (!(mdl in notifyStatus)) {
-        //                 notifyStatus[mdl] = item.MSKREC_NOTIFY_STD;
-        //             }
-        //         });
-        //         // console.log(grouped)
-
-        //         this.runningSums = grouped;
-        //         // console.log(this.runningSums)
-        //         // console.log(notifyStatus)
-
-        //         Object.entries(grouped).forEach(([mdl, total]) => {
-        //             const notified = notifyStatus[mdl] == 1;
-
-        //             if (total >= 600 && !notified) {
-        //                 Swal.fire({
-        //                     title: 'แจ้งเตือน!',
-        //                     text: `Model: ${mdl} ครบ ${total} แล้ว!`,
-        //                     icon: 'warning',
-        //                     confirmButtonText: 'ตกลง',
-        //                     confirmButtonColor: '#8b5cf6'
-        //                 }).then((result) => {
-        //                     if (result.isConfirmed) {
-        //                         // PUT เพื่อ update notify std
-        //                         axios.put('/45_engmask/update-notify-status', {
-        //                             mdl: mdl,
-
-        //                         }).then(response => {
-        //                             console.log('Status updated successfully:', response.data);
-        //                         });
-        //                     }
-        //                 })
-
-
-
-        //                 // อัปเดต local statusMap เพื่อไม่แจ้งซ้ำ
-        //                 this.statusMap[mdl] = 1;
-        //             }
-        //         });
-
-
-        //     } catch (error) {
-        //         console.error('เกิดข้อผิดพลาด:', error);
-
-        //     }
-
-
-
-
-        // },
 
     },
     mounted() {
         this.fetchReportData();
     },
-    watch: {
-        searchData: function (newValue) {
-            if (!newValue) {
-                this.fetchReportData();
-                return;
-            } else {
-                this.MaskData = this.MaskData.filter(item => {
-                    return Object.values(item).some(val => {
-                        return String(val).toLowerCase().includes(newValue.toLowerCase());
-                    });
-                });
-            }
 
-        }
-    }
 
 }
 
