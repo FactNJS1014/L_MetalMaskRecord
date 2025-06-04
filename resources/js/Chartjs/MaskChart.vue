@@ -1,8 +1,12 @@
 <template>
-    <div class="w-full max-w-[1000px] mx-10" style="height: 640px;">
-        <canvas ref="maskChart"></canvas>
+    <div class="w-full max-w-[1000px] mx-auto">
+        <div class="h-[600px]">
+            <canvas ref="maskChart"></canvas>
+        </div>
+
     </div>
 </template>
+
 
 <script>
 import { Chart, registerables } from 'chart.js';
@@ -95,11 +99,15 @@ export default {
                         legend: {
                             position: 'bottom',
                             labels: {
-                                boxWidth: 20,
-                                padding: 10,
+                                boxWidth: 10,
+                                boxHeight: 10,
+                                font: {
+                                    size: 10
+                                },
+                                padding: 5,
                                 usePointStyle: true
                             }
-                        }
+                        },
                     },
                     layout: {
                         padding: 10
@@ -108,6 +116,7 @@ export default {
             });
 
             this.chart = chart;
+
         }
     }
 }

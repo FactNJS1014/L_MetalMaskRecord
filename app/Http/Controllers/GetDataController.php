@@ -127,6 +127,7 @@ class GetDataController extends Controller
 
             ->where('mdl1.LISTMDL_MDLCD', $mdl)
             ->where('mdl1.LISTMDL_PROCS', $prcs)
+            ->where('MMCHN_MDL_TBL.MMCHANGE_STD', '=', 1)
             ->get();
         return response()->json($gethistory);
     }
@@ -239,8 +240,10 @@ class GetDataController extends Controller
     public function GetEditModel(Request $request)
     {
         $mdl = $request->input('code');
+        $procs = $request->input('process');
         $getmodel = DB::table('MM_LISTMDL2_TBL')
             ->where('LISTMDL_MDLCD', $mdl)
+            ->where('LISTMDL_PROCS', $procs)
             ->get();
 
         return response()->json($getmodel);
@@ -251,6 +254,7 @@ class GetDataController extends Controller
         $search = $request->input('search');
         $getlistmask = DB::table('MM_MSKREC_TBL')
             ->where('MSKREC_LISTNO', 'LIKE', '%' . $search . '%')
+
             ->get();
         return response()->json($getlistmask);
     }

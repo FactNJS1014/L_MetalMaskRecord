@@ -308,7 +308,7 @@
                         <Column field="LISTMDL_STD" header="Status" style="min-width: 100px;"></Column>
                         <Column header="Action Edit" style="min-width: 200px">
                             <template #body="{ data }">
-                                <button class="btn btn-warning" @click="EditModel(data.LISTMDL_MDLCD)">
+                                <button class="btn btn-warning" @click="EditModel(data.LISTMDL_MDLCD,data.LISTMDL_PROCS)">
                                     Edit
                                 </button>
                             </template>
@@ -637,9 +637,10 @@ export default {
                 console.log(err)
             })
         },
-        EditModel(mdl){
+        EditModel(mdl,procs){
             axios.post('/45_engmask/get-edit-model', {
-                code: mdl
+                code: mdl,
+                process: procs
             }).then(res => {
                 const data = res.data;
                 data.map((data) => {

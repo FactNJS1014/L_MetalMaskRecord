@@ -74,6 +74,7 @@ class InsertChangeModelController extends Controller
         if ($havemodel) {
             $update = DB::table('MM_LISTMDL2_TBL')
                 ->where('LISTMDL_MDLCD', $data['model'])
+                ->where('LISTMDL_PROCS', $data['procs'])
                 ->update([
                     'LISTMDL_MDLCD' => $data['model'],
                     'LISTMDL_GRPPCB' => $data['pcbno'],

@@ -13,7 +13,8 @@
                                     <span>&#128292;</span></label>
                                 <AutoComplete v-model="formChange.wonNo" :suggestions="items" field="label"
                                     @complete="search" @change="checkModel" placeholder="Search WONO..."
-                                    class="input input-bordered w-full mt-2 text-white" />
+                                     class="input input-bordered w-full mt-2 bg-white text-black"
+                                      option-class="bg-white text-black" />
 
                                 <!-- <autocomplete :search="search"
                                     class="input input-bordered w-full mt-2 text-black" v-model="formChange.wonNo"
@@ -413,3 +414,11 @@ export default {
 
 }
 </script>
+
+<style scoped>
+::v-deep(.p-autocomplete-panel .p-autocomplete-item) {
+  color: black !important;
+  background-color: white !important;
+}
+</style>
+

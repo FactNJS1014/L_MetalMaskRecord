@@ -84,6 +84,14 @@ export default {
             qrid: '',
         };
     },
+    /**
+     * *ฟังก์ชันนี้จะดึงข้อมูลการใช้งาน Metal Mask ทั้งหมดจาก API
+     * *และจัดกลุ่มข้อมูลตาม QRID เพื่อคำนวณผลรวม Shots
+     * *หากจำนวน Shots ของ QRID ใดๆ ถึง 95000 และยังไม่ได้แจ้งเตือน จะมีการแจ้งเตือนผ่าน SweetAlert
+     * *และทำการอัปเดตสถานะการแจ้งเตือนในฐานข้อมูล
+     * *และส่งข้อมูลไปยัง Chartjs/MaskChart.vue เพื่อแสดงกราฟ
+     */
+
     methods: {
         async fetchReportData() {
             try {
@@ -148,6 +156,11 @@ export default {
 
             }
         },
+        /**
+         * *ฟังก์ชันนี้จะทำการส่งออกข้อมูล MaskData เป็นไฟล์ Excel
+         * *โดยใช้ไลบรารี XLSX
+         * *และกำหนดชื่อไฟล์เป็น "MetalMask_YYYY-MM-DD.xlsx"
+         */
         ExportExcel() {
             const fields = {
                 'MSKREC_QRID': 'QR Code Number',
@@ -180,6 +193,11 @@ export default {
             const excelFileName = `MetalMask_${currentDate}.xlsx`;
             XLSX.writeFile(workbook, excelFileName);
         },
+        /**
+         * *ฟังก์ชันนี้จะถูกเรียกเมื่อมีการพิมพ์ใน input search
+         * *และจะทำการค้นหาข้อมูล MaskData ตามคำค้นหา
+         * *หากไม่มีคำค้นหา จะดึงข้อมูลทั้งหมดจาก API
+         */
         searchNo() {
             // ฟังก์ชันนี้จะถูกเรียกเมื่อมีการพิมพ์ใน input search
             // ไม่ต้องทำอะไรที่นี่ เพราะ watch จะจัดการการค้นหาให้
