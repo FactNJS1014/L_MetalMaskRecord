@@ -290,9 +290,17 @@
             </div>
             <div class="card-body">
                 <div class="w-full p-3 rounded ">
-                    <div class="flex justify-end mb-4 mt-3 items-center">
-                        <input type="text" placeholder="Search..." class="input input-bordered w-full max-w-xs"
+                    <div class="flex justify-between mb-4 mt-3 items-center">
+                        <div>
+                            <button class="btn btn-success" @click="ExportExcel">
+                                Export to Excel
+                            </button>
+                        </div>
+                        <div>
+                            <input type="text" placeholder="Search..." class="input input-bordered w-full max-w-xs"
                             v-model="searchModels" @input="SearchFilterModels" />
+                        </div>
+
 
                     </div>
                     <DataTable :value="listModels" tableStyle="min-width: 50rem" showGridlines paginator :rows="5"
@@ -325,9 +333,14 @@
             <div class="card-body">
                 <div class="w-full p-3 rounded ">
                     <div class="flex justify-end mb-4 mt-3 items-center">
-                        <input type="text" placeholder="Search..." class="input input-bordered w-full max-w-xs"
+
+
+                            <input type="text" placeholder="Search..." class="input input-bordered w-full max-w-xs"
                             v-model="searchMask" @input="SearchFilterMask" />
+
+
                     </div>
+
                     <DataTable :value="listMask" tableStyle="min-width: 50rem" showGridlines paginator :rows="5"
                         :rowsPerPageOptions="[5, 10, 20, 50]" scrollable :scrollHeight="dynamicHeight">
                         <Column field="MMST_QRID" header="QR Code ID" style="min-width: 400px"></Column>
@@ -362,6 +375,7 @@
 <script>
 import axios from 'axios'
 import Swal from 'sweetalert2'
+import * as XLSX from 'xlsx';
 
 export default {
     name: 'Settingmaster',
@@ -662,6 +676,35 @@ export default {
             }).catch(err => {
                 console.log(err)
             })
+        },
+        ExportExcel() {
+            const fields = {
+                'LISTMDL_MDLCD': 'Model Code',
+                'LISTMDL_GRPPCB': 'PCB Number',
+                'LISTMDL_PROCS': 'Process',
+                'LISTMDL_MSKNO1': 'Mask No.1',
+                'LISTMDL_MSKNO2': 'Mask No.2',
+                'LISTMDL_MSKNO3': 'Mask No.3',
+                'LISTMDL_MSKNO4': 'Mask No.4',
+                'LISTMDL_QRID': 'QR Code ID',
+                'LISTMDL_STD': 'Status',
+
+            };
+
+            const data = this.listModels.map(item => {
+                const row = {};
+                for (const key in fields) {
+                    row[fields[key]] = item[key];
+                }
+                return row;
+            });
+
+            //console.log(data)
+            const worksheet = XLSX.utils.json_to_sheet(data);
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, 'Setting Models');
+            const fileName = `Setting_Models_${new Date().toISOString().slice(0, 10)}.xlsx`;
+            XLSX.writeFile(workbook, fileName);
         }
     }
 }
