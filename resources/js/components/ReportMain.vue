@@ -63,7 +63,7 @@
                                     <td>{{ item.MMCHANGE_SHIFT }}</td>
                                     <td>{{ item.MSKREC_STD }}</td>
                                 </tr>
-                                <tr class="bg-gray-100 text-black text-start font-bold text-[22px]"
+                                <tr class="bg-gray-100 text-black text-start font-bold text-[16px]"
                                     v-for="(group, index) in groupedByLine" :key="'summary-' + index">
                                     <td colspan="16" class="py-2">
                                         รวม LINE {{ group.line }}: {{ group.count }} รายการ
