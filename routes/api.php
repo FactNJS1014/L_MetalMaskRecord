@@ -26,6 +26,7 @@ Route::get('/get-pull-data',[GetDataController::class, 'GetPullData']);
 Route::get('/get-values',[GetDataController::class, 'GetValues']);
 Route::get('/get-values2',[GetDataController::class, 'GetValues2']);
 
+
 Route::get('/get-list-models',[GetDataController::class, 'GetListModel']);
 Route::get('/get-list-mask',[GetDataController::class, 'GetListMask']);
 Route::get('/gen-issue-no',[GetDataController::class, 'GetIssueNo']);

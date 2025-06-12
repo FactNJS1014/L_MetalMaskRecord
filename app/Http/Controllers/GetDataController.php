@@ -100,12 +100,13 @@ class GetDataController extends Controller
 
     public function GetValues()
     {
-        $getval = DB::table('MM_MSKREC_TBL')
-
-            // ->join('MM_LISTMDL2_TBL as mdl1', 'MM_MSKREC_TBL.MSKREC_MDLCD', '=','mdl1.LISTMDL_MDLCD')
-
+        $data = DB::table('MM_MSKREC_TBL as msk')
+            ->join('MMCHN_MDL_TBL as chn', 'msk.MSKREC_WON', '=', 'chn.MMCHANGE_WONNO')
+            ->join('MM_MASTERMSK_TBL as msk2', 'msk.MSKREC_LISTNO', '=', 'msk2.MMST_NO')
+            ->select('chn.*', 'msk.*','msk2.MMST_QRID','msk2.MMST_NO') // You can customize columns here
             ->get();
-        return response()->json($getval);
+
+        return response()->json($data);
     }
     public function GetValues2()
     {
@@ -174,7 +175,7 @@ class GetDataController extends Controller
         $get_model_code = DB::table('MM_LISTMDL2_TBL')
             ->join('MM_MASTERMSK_TBL', 'MM_LISTMDL2_TBL.LISTMDL_GRPPCB', '=', 'MM_MASTERMSK_TBL.MMST_PCBNO')
             ->where('MM_MASTERMSK_TBL.MMST_NO', $ref)
-             ->where(function ($query) use ($prcs) {
+            ->where(function ($query) use ($prcs) {
                 $query->where('MM_MASTERMSK_TBL.MMST_PROCS', '=', $prcs)
                     ->orWhere('MM_MASTERMSK_TBL.MMST_PROCS', 'LIKE', $prcs . '/%')
                     ->orWhere('MM_MASTERMSK_TBL.MMST_PROCS', 'LIKE', '%/' . $prcs)

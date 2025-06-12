@@ -13,8 +13,8 @@
                                     <span>&#128292;</span></label>
                                 <AutoComplete v-model="formChange.wonNo" :suggestions="items" field="label"
                                     @complete="search" @change="checkModel" placeholder="Search WONO..."
-                                     class="input input-bordered w-full mt-2 bg-white text-black"
-                                      option-class="bg-white text-black" />
+                                    class="input input-bordered w-full mt-2 bg-white text-black"
+                                    option-class="bg-white text-black" />
 
                                 <!-- <autocomplete :search="search"
                                     class="input input-bordered w-full mt-2 text-black" v-model="formChange.wonNo"
@@ -358,21 +358,10 @@ export default {
         },
         GetTime() {
             const now = new Date();
-            const time = now.toLocaleTimeString();
-            console.log(time);
+            const shiftCutoff = new Date();
+            shiftCutoff.setHours(19, 59, 59, 0); // 7:59:59 PM
 
-            const shiftTime = new Date(
-                now.getFullYear(),
-                now.getMonth(),
-                now.getDate(),
-                19, 59, 59
-            );
-
-            if (now > shiftTime) {
-                this.formChange.shift = 'Night';
-            } else {
-                this.formChange.shift = 'Day';
-            }
+            this.formChange.shift = now > shiftCutoff ? 'Night' : 'Day';
         },
         genIssueNo() {
             axios.get('/45_engmask/api/gen-issue-no')
@@ -417,8 +406,7 @@ export default {
 
 <style scoped>
 ::v-deep(.p-autocomplete-panel .p-autocomplete-item) {
-  color: black !important;
-  background-color: white !important;
+    color: black !important;
+    background-color: white !important;
 }
 </style>
-

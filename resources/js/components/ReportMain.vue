@@ -26,6 +26,7 @@
                             <thead class="sticky top-0 bg-purple-800 z-10">
                                 <tr class="text-center text-lg font-bold text-white">
                                     <th>QR_ID</th>
+                                    <th>Line SMT</th>
                                     <th>Model Code</th>
                                     <th>Work Order</th>
                                     <th>List Number</th>
@@ -37,12 +38,16 @@
                                     <th>Shots Qty</th>
                                     <th>Employee ID of Record</th>
                                     <th>Date of Record</th>
+                                    <th>Time of Record</th>
+                                    <th>Shift Time</th>
+                                    <th>Status</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="(item, index) in MaskData" :key="index"
+                                <tr v-for="(item, index) in GetDatas" :key="index"
                                     class="text-[16px] font-semibold text-black text-center">
                                     <td>{{ item.MMST_QRID }}</td>
+                                    <td>{{ item.MMCHANGE_LINE }}</td>
                                     <td>{{ item.MSKREC_MDLCD }}</td>
                                     <td>{{ item.MSKREC_WON }}</td>
                                     <td>{{ item.MSKREC_LISTNO }}</td>
@@ -53,7 +58,16 @@
                                     <td>{{ item.MSKREC_LOTS }}</td>
                                     <td>{{ item.MSKREC_SHOTS }}</td>
                                     <td>{{ item.MSKREC_EMPREC }}</td>
-                                    <td>{{ item.MSKREC_LSTDT }}</td>
+                                    <td>{{ formatdate(item.MSKREC_LSTDT) }}</td>
+                                    <td>{{ formatTime(item.MSKREC_LSTDT) }}</td>
+                                    <td>{{ item.MMCHANGE_SHIFT }}</td>
+                                    <td>{{ item.MSKREC_STD }}</td>
+                                </tr>
+                                <tr class="bg-gray-100 text-black text-start font-bold text-[22px]"
+                                    v-for="(group, index) in groupedByLine" :key="'summary-' + index">
+                                    <td colspan="16" class="py-2">
+                                        รวม LINE {{ group.line }}: {{ group.count }} รายการ
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
@@ -70,6 +84,7 @@
 import axios from 'axios';
 import MaskChart from "../Chartjs/MaskChart.vue";
 import * as XLSX from 'xlsx';
+import dayjs from 'dayjs';
 export default {
     components: {
         MaskChart,
@@ -82,8 +97,32 @@ export default {
             statusMap: {},
             searchData: '',
             qrid: '',
+            GetDatas: [],
         };
     },
+    computed: {
+        groupedByLine() {
+            const result = {};
+            this.GetDatas.forEach(item => {
+                const line = item.MMCHANGE_LINE;
+                if (!result[line]) {
+                    result[line] = {
+                        line: line,
+                        count: 0
+                    };
+                }
+                result[line].count++;
+            });
+
+            return Object.values(result).sort((a, b) => {
+                const aNum = parseInt(a.line.replace(/[^\d]/g, '')) || 0;
+                const bNum = parseInt(b.line.replace(/[^\d]/g, '')) || 0;
+                return aNum - bNum;
+            });
+        }
+
+    },
+
     /**
      * *ฟังก์ชันนี้จะดึงข้อมูลการใช้งาน Metal Mask ทั้งหมดจาก API
      * *และจัดกลุ่มข้อมูลตาม QRID เพื่อคำนวณผลรวม Shots
@@ -162,36 +201,34 @@ export default {
          * *และกำหนดชื่อไฟล์เป็น "MetalMask_YYYY-MM-DD.xlsx"
          */
         ExportExcel() {
-            const fields = {
-                'MSKREC_QRID': 'QR Code Number',
-                'MSKREC_MDLCD': 'Model Code',
-                'MSKREC_WON': 'Work Order',
-                'MSKREC_LISTNO': 'List Number',
-                'MSKREC_CUS': 'Customer',
-                'MSKREC_PCBNO': 'PCB Number',
-                'MSKREC_PROCS': 'Process',
-                'MSKREC_LOTS': 'Lot Size',
-                'MSKREC_SHOTS': 'Shots Qty',
-                'MSKREC_EMPREC': 'Employee',
-                'MSKREC_LSTDT': 'Date Record',
-            }
 
-            const data = this.MaskData.map(item => {
-                const row = {};
-                for (const key in item) {
-                    if (fields[key]) {
-                        row[fields[key]] = item[key];
-                    }
-                }
-                return row;
-            })
-            // console.log(data)
-            const worksheet = XLSX.utils.json_to_sheet(data);
+            const tableData = this.GetDatas.map(item => ({
+                'QRID': item.MMST_QRID,
+                'Line SMT': item.MMCHANGE_LINE,
+                'MODEL': item.MSKREC_MDLCD,
+                'W/O NO': item.MSKREC_WON,
+                'LIST NO': item.MSKREC_LISTNO,
+                'CUSTOMER': item.MSKREC_CUS,
+                'PCB NO': item.MSKREC_PCBNO,
+                'MACHINE NAME': item.MSKREC_MMNAME,
+                'PROCESS': item.MSKREC_PROCS,
+                'LOTS': item.MSKREC_LOTS,
+                'SHOTS': item.MSKREC_SHOTS,
+                'EMPLOYEE': item.MSKREC_EMPREC,
+                'DATE': this.formatdate(item.MSKREC_LSTDT),
+                'TIME': this.formatTime(item.MSKREC_LSTDT),
+                'SHIFT': item.MMCHANGE_SHIFT,
+                'STATUS': item.MSKREC_STD
+            }));
+
+            const worksheet = XLSX.utils.json_to_sheet(tableData);
             const workbook = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+            XLSX.utils.book_append_sheet(workbook, worksheet, "Report Model Change");
             const currentDate = new Date().toISOString().split('T')[0];
             const excelFileName = `MetalMask_${currentDate}.xlsx`;
             XLSX.writeFile(workbook, excelFileName);
+
+
         },
         /**
          * *ฟังก์ชันนี้จะถูกเรียกเมื่อมีการพิมพ์ใน input search
@@ -217,12 +254,32 @@ export default {
                         console.error('เกิดข้อผิดพลาดในการค้นหา:', error);
                     });
             }
+        },
+        GetDatasRep() {
+            axios.get('/45_engmask/api/get-values')
+                .then(response => {
+
+                    this.GetDatas = response.data;
+                    console.log(this.GetDatas)
+                })
+                .catch(error => {
+                    console.error('เกิดข้อผิดพลาดในการดึงข้อมูล:', error);
+                });
+        },
+        formatdate(dateString) {
+            return dayjs(dateString).format('YYYY-MM-DD');
+        },
+        formatTime(timeString) {
+            return dayjs(timeString).format('HH:mm:ss');
         }
 
 
     },
+
+
     mounted() {
-        this.fetchReportData();
+        this.fetchReportData(),
+            this.GetDatasRep()
     },
 
 
