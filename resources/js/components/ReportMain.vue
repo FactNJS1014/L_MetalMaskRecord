@@ -201,7 +201,13 @@ export default {
          * *และกำหนดชื่อไฟล์เป็น "MetalMask_YYYY-MM-DD.xlsx"
          */
         ExportExcel() {
+            // 1. สร้างข้อมูลสรุป LINE
+            const summaryData = this.groupedByLine.map(group => ({
+                'QRID': `รวม ${group.line}`,
+                'Line SMT': `${group.count} รายการ`
+            }));
 
+            // 2. สร้างข้อมูลตารางหลัก
             const tableData = this.GetDatas.map(item => ({
                 'QRID': item.MMST_QRID,
                 'Line SMT': item.MMCHANGE_LINE,
@@ -221,15 +227,23 @@ export default {
                 'STATUS': item.MSKREC_STD
             }));
 
-            const worksheet = XLSX.utils.json_to_sheet(tableData);
+            // 3. รวมข้อมูลทั้งหมด: สรุป + ค่าว่างคั่น + ข้อมูลหลัก
+            const exportData = [
+                ...tableData,
+                {}, // เว้นบรรทัด
+
+                ...summaryData
+            ];
+
+            // 4. สร้างและเขียนไฟล์ Excel
+            const worksheet = XLSX.utils.json_to_sheet(exportData);
             const workbook = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(workbook, worksheet, "Report Model Change");
             const currentDate = new Date().toISOString().split('T')[0];
             const excelFileName = `MetalMask_${currentDate}.xlsx`;
             XLSX.writeFile(workbook, excelFileName);
-
-
         },
+
         /**
          * *ฟังก์ชันนี้จะถูกเรียกเมื่อมีการพิมพ์ใน input search
          * *และจะทำการค้นหาข้อมูล MaskData ตามคำค้นหา
