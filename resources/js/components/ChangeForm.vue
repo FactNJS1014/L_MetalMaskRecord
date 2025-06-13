@@ -156,6 +156,7 @@ import AutoComplete from 'primevue/autocomplete';
 // import Autocomplete from '@trevoreyre/autocomplete-vue'
 import Swal from 'sweetalert2'
 import axios from 'axios';
+import dayjs from 'dayjs';
 export default {
     name: "ChangeForm",
     components: {
@@ -357,11 +358,30 @@ export default {
             this.formChange.empID = this.session.empno;
         },
         GetTime() {
-            const now = new Date();
-            const shiftCutoff = new Date();
-            shiftCutoff.setHours(19, 59, 59, 0); // 7:59:59 PM
+            // const now = new Date();
+            // const nightShiftStart = new Date();
+            // nightShiftStart.setHours(19, 59, 59, 0); // 7:59:59 PM
 
-            this.formChange.shift = now > shiftCutoff ? 'Night' : 'Day';
+            // const nightShiftEnd = new Date();
+            // nightShiftEnd.setHours(7, 59, 59, 0); // 7:59:59 AM
+
+            // const dayShiftStart = new Date();
+            // dayShiftStart.setHours(8, 0, 0, 0); // 8:00:00 AM
+
+            // if(now > nightShiftStart || now <= nightShiftEnd) {
+            //     this.formChange.shift = 'Night';
+            // }
+            // if(now >= dayShiftStart && now <= nightShiftStart) {
+            //     this.formChange.shift = 'Day';
+            // }
+            const time = dayjs().format('HH:mm:ss');
+            console.log(time);
+            if(time >= '19:59:59' || time <= '07:59:59') {
+                this.formChange.shift = 'Night';
+            } else {
+                this.formChange.shift = 'Day';
+            }
+
         },
         genIssueNo() {
             axios.get('/45_engmask/api/gen-issue-no')

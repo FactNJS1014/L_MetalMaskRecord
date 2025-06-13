@@ -13,6 +13,8 @@
                                 <th>Customer</th>
                                 <th>Process</th>
                                 <th>SMT</th>
+                                <th>Date</th>
+                                <th>Time</th>
                                 <th>Action เปลี่ยนโมเดลใช้งาน</th>
                                 <th>Action View Data</th>
                             </tr>
@@ -27,6 +29,8 @@
                                 <td>{{ history.MMCHANGE_CUS }}</td>
                                 <td>{{ history.MMCHANGE_PRCS }}</td>
                                 <td>{{ history.MMCHANGE_LINE }}</td>
+                                <td>{{ formatDate(history.MMCHANGE_LSTDT) }}</td>
+                                <td>{{ formatTime(history.MMCHANGE_LSTDT) }}</td>
                                 <td><button class="btn btn-warning text-xl" @click="ToRecordPage(history)"
                                         type="button"><i class="pi pi-file-edit"></i>เปลี่ยนใช้งาน</button></td>
                                 <td><button type="button" class="btn btn-accent text-xl"
@@ -53,6 +57,7 @@
 </template>
 <script>
 import axios from 'axios';
+import dayjs from 'dayjs';
 
 import 'primeicons/primeicons.css'
 import DataChange from './DataChange.vue';
@@ -123,6 +128,12 @@ export default {
                     prcs: cloneData.MMCHANGE_PRCS,
                 }
             });
+        },
+        formatDate(dateString) {
+            return dayjs(dateString).format('YYYY-MM-DD');
+        },
+        formatTime(timeString) {
+            return dayjs(timeString).format('HH:mm:ss');
         },
 
     }

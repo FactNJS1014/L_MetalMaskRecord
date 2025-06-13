@@ -25,7 +25,7 @@
     "src": "resources/css/app.css"
   },
   "resources/js/app.css": {
-    "file": "assets/app-f33a0a6b.css",
+    "file": "assets/app-61d0ad9e.css",
     "src": "resources/js/app.css"
   },
   "resources/js/app.js": {
@@ -37,9 +37,9 @@
       "assets/primeicons-36c54cec.svg"
     ],
     "css": [
-      "assets/app-f33a0a6b.css"
+      "assets/app-61d0ad9e.css"
     ],
-    "file": "assets/app-68e997b1.js",
+    "file": "assets/app-490b6e85.js",
     "isEntry": true,
     "src": "resources/js/app.js"
   }

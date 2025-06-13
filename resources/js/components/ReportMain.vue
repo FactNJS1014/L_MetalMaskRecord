@@ -49,9 +49,9 @@
                                     <th>Employee ID of Record Mask Shot</th>
                                     <th>Date of Record Model Change</th>
                                     <th>Time of Record Model Change</th>
+                                    <th>Shift Time</th>
                                     <th>Date of Record Mask Shot</th>
                                     <th>Time of Record Mask Shot</th>
-                                    <th>Shift Time</th>
                                     <th>Status</th>
                                 </tr>
                             </thead>
@@ -73,9 +73,9 @@
                                     <td>{{ getUserName(item.MSKREC_EMPREC) }}</td>
                                     <td>{{ formatdate(item.MMCHANGE_LSTDT) }}</td>
                                     <td>{{ formatTime(item.MMCHANGE_LSTDT) }}</td>
+                                    <td>{{ item.MMCHANGE_SHIFT }}</td>
                                     <td>{{ formatdate(item.MSKREC_LSTDT) }}</td>
                                     <td>{{ formatTime(item.MSKREC_LSTDT) }}</td>
-                                    <td>{{ item.MMCHANGE_SHIFT }}</td>
                                     <td>{{ item.MSKREC_STD }}</td>
                                 </tr>
                                 <!-- <tr class="bg-gray-100 text-black text-start font-bold text-[16px]"
