@@ -103,7 +103,10 @@ class GetDataController extends Controller
         $data = DB::table('MM_MSKREC_TBL as msk')
             ->join('MMCHN_MDL_TBL as chn', 'msk.MSKREC_WON', '=', 'chn.MMCHANGE_WONNO')
             ->join('MM_MASTERMSK_TBL as msk2', 'msk.MSKREC_LISTNO', '=', 'msk2.MMST_NO')
-            ->select('chn.*', 'msk.*','msk2.MMST_QRID','msk2.MMST_NO') // You can customize columns here
+            ->join('VUSER_WEB as vw', 'chn.MMCHANGE_EMPID','=', 'vw.MUSR_ID')
+            // ->join('VUSER_WEB as vw', 'msk.MSKREC_EMPREC', '=', 'vw.MUSR_ID')
+            ->select('chn.*', 'msk.*','msk2.MMST_QRID','msk2.MMST_NO','vw.MUSR_NAME') // You can customize columns here
+            ->orderBy('chn.MMCHANGE_ID', 'ASC')
             ->get();
 
         return response()->json($data);
@@ -117,6 +120,13 @@ class GetDataController extends Controller
 
             ->get();
         return response()->json($getval);
+    }
+    public function GetUserName()
+    {
+        $getuser = DB::table('VUSER_WEB')
+            ->select('MUSR_NAME', 'MUSR_ID')
+            ->get();
+        return response()->json($getuser);
     }
 
     public function GetChangeHistory(Request $request)
@@ -250,13 +260,33 @@ class GetDataController extends Controller
         return response()->json($getmodel);
     }
 
-    public function SearchMask(Request $request)
+    public function SearchLINE(Request $request)
     {
-        $search = $request->input('search');
-        $getlistmask = DB::table('MM_MSKREC_TBL')
-            ->where('MSKREC_LISTNO', 'LIKE', '%' . $search . '%')
+        $searchLine = $request->input('searchLine');
+
+        $getFilterLine = DB::table('MM_MSKREC_TBL as msk')
+            ->join('MMCHN_MDL_TBL as chn', 'msk.MSKREC_WON', '=', 'chn.MMCHANGE_WONNO')
+            ->join('MM_MASTERMSK_TBL as msk2', 'msk.MSKREC_LISTNO', '=', 'msk2.MMST_NO')
+            ->select('chn.*', 'msk.*','msk2.MMST_QRID','msk2.MMST_NO') // You can customize columns here
+            ->where('chn.MMCHANGE_LINE', '=', $searchLine)
 
             ->get();
-        return response()->json($getlistmask);
+
+
+        return response()->json($getFilterLine);
+    }
+
+    public function SearchDATE(Request $request)
+    {
+        $searchDate = $request->input('searchDate');
+
+        $getFilterDate = DB::table('MM_MSKREC_TBL as msk')
+            ->join('MMCHN_MDL_TBL as chn', 'msk.MSKREC_WON', '=', 'chn.MMCHANGE_WONNO')
+            ->join('MM_MASTERMSK_TBL as msk2', 'msk.MSKREC_LISTNO', '=', 'msk2.MMST_NO')
+            ->select('chn.*', 'msk.*','msk2.MMST_QRID','msk2.MMST_NO') // You can customize columns here
+            ->whereDate('chn.MMCHANGE_DATE', '=', $searchDate)
+
+            ->get();
+        return response()->json($getFilterDate);
     }
 }

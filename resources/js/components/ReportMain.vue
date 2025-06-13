@@ -13,9 +13,16 @@
                     </div>
                     <h5 class="text-center font-bold text-purple-700 text-xl mt-6">รายการใช้งาน Metal Mask ทั้งหมด</h5>
                     <div class="flex justify-between items-center">
-                        <div>
-                            <input type="text" class="input input-bordered w-full max-w-xs" placeholder="Search"
-                                v-model="searchData" @input="searchNo" />
+                        <div class="flex items-start">
+                            <select v-model="searchDataLine" @change="searchLine"
+                                class="select select-bordered w-full max-w-xs">
+                                <option value="">-- เลือก LINE --</option>
+                                <option v-for="line in allLines" :key="line" :value="line.LINE_NAME">
+                                    {{ line.LINE_NAME }}
+                                </option>
+                            </select>
+                            <input type="date" class="input input-bordered w-full max-w-xs ms-3"
+                                placeholder="Search Date" v-model="searchDataDate" @input="searchDate" />
                         </div>
                         <div>
                             <button class="btn btn-success" @click="ExportExcel">Export Excel</button>
@@ -36,9 +43,12 @@
                                     <th>Process</th>
                                     <th>Lot Size</th>
                                     <th>Shots Qty</th>
-                                    <th>Employee ID of Record</th>
-                                    <th>Date of Record</th>
-                                    <th>Time of Record</th>
+                                    <th>Employee ID of Record Model Change</th>
+                                    <th>Employee ID of Record Mask Shot</th>
+                                    <th>Date of Record Model Change</th>
+                                    <th>Time of Record Model Change</th>
+                                    <th>Date of Record Mask Shot</th>
+                                    <th>Time of Record Mask Shot</th>
                                     <th>Shift Time</th>
                                     <th>Status</th>
                                 </tr>
@@ -57,18 +67,21 @@
                                     <td>{{ item.MSKREC_PROCS }}</td>
                                     <td>{{ item.MSKREC_LOTS }}</td>
                                     <td>{{ item.MSKREC_SHOTS }}</td>
-                                    <td>{{ item.MSKREC_EMPREC }}</td>
+                                    <td>{{ item.MUSR_NAME }}</td>
+                                    <td>{{ getUserName(item.MSKREC_EMPREC) }}</td>
+                                    <td>{{ formatdate(item.MMCHANGE_LSTDT) }}</td>
+                                    <td>{{ formatTime(item.MMCHANGE_LSTDT) }}</td>
                                     <td>{{ formatdate(item.MSKREC_LSTDT) }}</td>
                                     <td>{{ formatTime(item.MSKREC_LSTDT) }}</td>
                                     <td>{{ item.MMCHANGE_SHIFT }}</td>
                                     <td>{{ item.MSKREC_STD }}</td>
                                 </tr>
-                                <tr class="bg-gray-100 text-black text-start font-bold text-[16px]"
+                                <!-- <tr class="bg-gray-100 text-black text-start font-bold text-[16px]"
                                     v-for="(group, index) in groupedByLine" :key="'summary-' + index">
                                     <td colspan="16" class="py-2">
                                         รวม LINE {{ group.line }}: {{ group.count }} รายการ
                                     </td>
-                                </tr>
+                                </tr> -->
                             </tbody>
                         </table>
                     </div>
@@ -95,9 +108,12 @@ export default {
             MaskData: [],
             runningSums: null,
             statusMap: {},
-            searchData: '',
+            searchDataLine: '',
+            searchDataDate: '',
             qrid: '',
             GetDatas: [],
+            allLines: [], // รายการทั้งหมดของ LINE ที่ใช้ใน select
+            userNameMap: {},
         };
     },
     computed: {
@@ -201,11 +217,11 @@ export default {
          * *และกำหนดชื่อไฟล์เป็น "MetalMask_YYYY-MM-DD.xlsx"
          */
         ExportExcel() {
-            // 1. สร้างข้อมูลสรุป LINE
-            const summaryData = this.groupedByLine.map(group => ({
-                'QRID': `รวม ${group.line}`,
-                'Line SMT': `${group.count} รายการ`
-            }));
+            // // 1. สร้างข้อมูลสรุป LINE
+            // const summaryData = this.groupedByLine.map(group => ({
+            //     'QRID': `รวม ${group.line}`,
+            //     'Line SMT': `${group.count} รายการ`
+            // }));
 
             // 2. สร้างข้อมูลตารางหลัก
             const tableData = this.GetDatas.map(item => ({
@@ -220,9 +236,12 @@ export default {
                 'PROCESS': item.MSKREC_PROCS,
                 'LOTS': item.MSKREC_LOTS,
                 'SHOTS': item.MSKREC_SHOTS,
-                'EMPLOYEE': item.MSKREC_EMPREC,
-                'DATE': this.formatdate(item.MSKREC_LSTDT),
-                'TIME': this.formatTime(item.MSKREC_LSTDT),
+                'EMPLOYEE ID OF RECORD MODEL CHANGE': item.MUSR_NAME,
+                'EMPLOYEE ID OF RECORD MASK SHOT': this.getUserName(item.MSKREC_EMPREC),
+                'DATE OF RECORD MODEL CHANGE': this.formatdate(item.MMCHANGE_LSTDT),
+                'TIME OF RECORD MODEL CHANGE': this.formatTime(item.MMCHANGE_LSTDT),
+                'DATE OF RECORD MASK SHOT': this.formatdate(item.MSKREC_LSTDT),
+                'TIME OF RECORD MASK SHOT': this.formatTime(item.MSKREC_LSTDT),
                 'SHIFT': item.MMCHANGE_SHIFT,
                 'STATUS': item.MSKREC_STD
             }));
@@ -230,9 +249,9 @@ export default {
             // 3. รวมข้อมูลทั้งหมด: สรุป + ค่าว่างคั่น + ข้อมูลหลัก
             const exportData = [
                 ...tableData,
-                {}, // เว้นบรรทัด
+                // {}, // เว้นบรรทัด
 
-                ...summaryData
+                // ...summaryData
             ];
 
             // 4. สร้างและเขียนไฟล์ Excel
@@ -249,20 +268,44 @@ export default {
          * *และจะทำการค้นหาข้อมูล MaskData ตามคำค้นหา
          * *หากไม่มีคำค้นหา จะดึงข้อมูลทั้งหมดจาก API
          */
-        searchNo() {
+        searchLine() {
             // ฟังก์ชันนี้จะถูกเรียกเมื่อมีการพิมพ์ใน input search
             // ไม่ต้องทำอะไรที่นี่ เพราะ watch จะจัดการการค้นหาให้
-            const searchTerm = this.searchData;
+            const searchTerm = this.searchDataLine;
+            console.log(searchTerm)
             if (!searchTerm) {
-                this.fetchReportData(); // ถ้าไม่มีการค้นหา ให้ดึงข้อมูลทั้งหมด
+                this.GetDatasRep(); // ถ้าไม่มีการค้นหา ให้ดึงข้อมูลทั้งหมด
             } else {
-                axios.get('/45_engmask/api/search-mask', {
+                axios.get('/45_engmask/api/search-Line', {
                     params: {
-                        search: searchTerm
+                        searchLine: searchTerm
                     }
                 })
                     .then(response => {
-                        this.MaskData = response.data;
+                        this.GetDatas = response.data;
+                        console.log(this.GetDatas)
+                    })
+                    .catch(error => {
+                        console.error('เกิดข้อผิดพลาดในการค้นหา:', error);
+                    });
+            }
+        },
+        searchDate() {
+            // ฟังก์ชันนี้จะถูกเรียกเมื่อมีการพิมพ์ใน input search
+            // ไม่ต้องทำอะไรที่นี่ เพราะ watch จะจัดการการค้นหาให้
+            const searchTerm2 = this.searchDataDate;
+            console.log(searchTerm2)
+            if (!searchTerm2) {
+                this.GetDatasRep(); // ถ้าไม่มีการค้นหา ให้ดึงข้อมูลทั้งหมด
+            } else {
+                axios.get('/45_engmask/api/search-Date', {
+                    params: {
+                        searchDate: searchTerm2
+                    }
+                })
+                    .then(response => {
+                        this.GetDatas = response.data;
+                        console.log(this.GetDatas)
                     })
                     .catch(error => {
                         console.error('เกิดข้อผิดพลาดในการค้นหา:', error);
@@ -270,6 +313,7 @@ export default {
             }
         },
         GetDatasRep() {
+
             axios.get('/45_engmask/api/get-values')
                 .then(response => {
 
@@ -285,6 +329,30 @@ export default {
         },
         formatTime(timeString) {
             return dayjs(timeString).format('HH:mm:ss');
+        },
+        loadUserNames() {
+            axios.get('/45_engmask/api/get-user-name')
+                .then(response => {
+                    response.data.forEach(user => {
+                        this.userNameMap[user.MUSR_ID] = user.MUSR_NAME;
+                    });
+                })
+                .catch(error => {
+                    console.error('โหลดชื่อผู้ใช้ไม่สำเร็จ:', error);
+                });
+        },
+        getUserName(id) {
+            return this.userNameMap[id] || 'ไม่พบชื่อผู้ใช้';
+        },
+        GetLines() {
+            axios.get('/45_engmask/api/get-list-line')
+                .then(response => {
+                    this.allLines = response.data;
+                    console.log(this.allLines)
+                })
+                .catch(error => {
+                    console.error('เกิดข้อผิดพลาดในการดึงข้อมูล LINE:', error);
+                });
         }
 
 
@@ -293,7 +361,11 @@ export default {
 
     mounted() {
         this.fetchReportData(),
-            this.GetDatasRep()
+            this.GetDatasRep(),
+            this.GetLines(),
+            this.loadUserNames()
+
+
     },
 
 

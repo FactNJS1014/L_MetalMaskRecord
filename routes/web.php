@@ -43,3 +43,4 @@ Route::post('/add-setting-mask',[InsertMetalMaskController::class, 'addSettingMa
 Route::post('/get-edit-data',[GetDataController::class,'GetEditData']);
 Route::post('/get-process',[GetDataController::class , 'GetProcess']);
 Route::post('/get-edit-model',[GetDataController::class , 'GetEditModel']);
+Route::post('/search-mask',[GetDataController::class,'SearchMask']);
