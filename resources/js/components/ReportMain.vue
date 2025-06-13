@@ -14,7 +14,7 @@
                     <h5 class="text-center font-bold text-purple-700 text-xl mt-6">รายการใช้งาน Metal Mask ทั้งหมด</h5>
                     <div class="flex justify-between items-center">
                         <div class="flex items-start">
-                            <select v-model="searchDataLine" @change="searchLine"
+                            <select v-model="searchDataLine" @change="searchAll"
                                 class="select select-bordered w-full max-w-xs">
                                 <option value="">-- เลือก LINE --</option>
                                 <option v-for="line in allLines" :key="line" :value="line.LINE_NAME">
@@ -22,7 +22,9 @@
                                 </option>
                             </select>
                             <input type="date" class="input input-bordered w-full max-w-xs ms-3"
-                                placeholder="Search Date" v-model="searchDataDate" @input="searchDate" />
+                                placeholder="Search Date" v-model="searchDataDate" @input="searchAll" />
+                            <input type="text" class="input input-bordered w-full max-w-xs ms-3"
+                                placeholder="Search QRID" v-model="searchDataQRID" @input="searchAll" />
                         </div>
                         <div>
                             <button class="btn btn-success" @click="ExportExcel">Export Excel</button>
@@ -67,7 +69,7 @@
                                     <td>{{ item.MSKREC_PROCS }}</td>
                                     <td>{{ item.MSKREC_LOTS }}</td>
                                     <td>{{ item.MSKREC_SHOTS }}</td>
-                                    <td>{{ item.MUSR_NAME }}</td>
+                                    <td>{{ getName(item.MMCHANGE_EMPID) }}</td>
                                     <td>{{ getUserName(item.MSKREC_EMPREC) }}</td>
                                     <td>{{ formatdate(item.MMCHANGE_LSTDT) }}</td>
                                     <td>{{ formatTime(item.MMCHANGE_LSTDT) }}</td>
@@ -110,6 +112,7 @@ export default {
             statusMap: {},
             searchDataLine: '',
             searchDataDate: '',
+            searchDataQRID: '',
             qrid: '',
             GetDatas: [],
             allLines: [], // รายการทั้งหมดของ LINE ที่ใช้ใน select
@@ -236,7 +239,7 @@ export default {
                 'PROCESS': item.MSKREC_PROCS,
                 'LOTS': item.MSKREC_LOTS,
                 'SHOTS': item.MSKREC_SHOTS,
-                'EMPLOYEE ID OF RECORD MODEL CHANGE': item.MUSR_NAME,
+                'EMPLOYEE ID OF RECORD MODEL CHANGE': this.getName(item.MMCHANGE_EMPID),
                 'EMPLOYEE ID OF RECORD MASK SHOT': this.getUserName(item.MSKREC_EMPREC),
                 'DATE OF RECORD MODEL CHANGE': this.formatdate(item.MMCHANGE_LSTDT),
                 'TIME OF RECORD MODEL CHANGE': this.formatTime(item.MMCHANGE_LSTDT),
@@ -268,49 +271,87 @@ export default {
          * *และจะทำการค้นหาข้อมูล MaskData ตามคำค้นหา
          * *หากไม่มีคำค้นหา จะดึงข้อมูลทั้งหมดจาก API
          */
-        searchLine() {
-            // ฟังก์ชันนี้จะถูกเรียกเมื่อมีการพิมพ์ใน input search
-            // ไม่ต้องทำอะไรที่นี่ เพราะ watch จะจัดการการค้นหาให้
-            const searchTerm = this.searchDataLine;
-            console.log(searchTerm)
-            if (!searchTerm) {
-                this.GetDatasRep(); // ถ้าไม่มีการค้นหา ให้ดึงข้อมูลทั้งหมด
-            } else {
-                axios.get('/45_engmask/api/search-Line', {
-                    params: {
-                        searchLine: searchTerm
-                    }
+        // searchLine() {
+        //     // ฟังก์ชันนี้จะถูกเรียกเมื่อมีการพิมพ์ใน input search
+        //     // ไม่ต้องทำอะไรที่นี่ เพราะ watch จะจัดการการค้นหาให้
+        //     const searchTerm = this.searchDataLine;
+        //     console.log(searchTerm)
+        //     if (!searchTerm) {
+        //         this.GetDatasRep(); // ถ้าไม่มีการค้นหา ให้ดึงข้อมูลทั้งหมด
+        //     } else {
+        //         axios.get('/45_engmask/api/search-Line', {
+        //             params: {
+        //                 searchLine: searchTerm
+        //             }
+        //         })
+        //             .then(response => {
+        //                 this.GetDatas = response.data;
+        //                 console.log(this.GetDatas)
+        //             })
+        //             .catch(error => {
+        //                 console.error('เกิดข้อผิดพลาดในการค้นหา:', error);
+        //             });
+        //     }
+        // },
+        // searchDate() {
+        //     // ฟังก์ชันนี้จะถูกเรียกเมื่อมีการพิมพ์ใน input search
+        //     // ไม่ต้องทำอะไรที่นี่ เพราะ watch จะจัดการการค้นหาให้
+        //     const searchTerm2 = this.searchDataDate;
+        //     console.log(searchTerm2)
+        //     if (!searchTerm2) {
+        //         this.GetDatasRep(); // ถ้าไม่มีการค้นหา ให้ดึงข้อมูลทั้งหมด
+        //     } else {
+        //         axios.get('/45_engmask/api/search-Date', {
+        //             params: {
+        //                 searchDate: searchTerm2
+        //             }
+        //         })
+        //             .then(response => {
+        //                 this.GetDatas = response.data;
+        //                 console.log(this.GetDatas)
+        //             })
+        //             .catch(error => {
+        //                 console.error('เกิดข้อผิดพลาดในการค้นหา:', error);
+        //             });
+        //     }
+        // },
+        // searchQRID() {
+        //     // ฟังก์ชันนี้จะถูกเรียกเมื่อมีการพิมพ์ใน input search
+        //     // ไม่ต้องทำอะไรที่นี่ เพราะ watch จะจัดการการค้นหาให้
+        //     const searchTerm3 = this.searchDataQRID;
+        //     console.log(searchTerm3)
+        //     if (!searchTerm3) {
+        //         this.GetDatasRep(); // ถ้าไม่มีการค้นหา ให้ดึงข้อมูลทั้งหมด
+        //     } else {
+        //         axios.get('/45_engmask/api/search-qrid', {
+        //             params: {
+        //                 searchQRID: searchTerm3
+        //             }
+        //         })
+        //             .then(response => {
+        //                 this.GetDatas = response.data;
+        //                 console.log(this.GetDatas)
+        //             })
+        //             .catch(error => {
+        //                 console.error('เกิดข้อผิดพลาดในการค้นหา:', error);
+        //             });
+        //     }
+        // },
+        searchAll() {
+            axios.get('/45_engmask/api/search-filter', {
+                params: {
+                    searchLine: this.searchDataLine,
+                    searchDate: this.searchDataDate,
+                    searchQRID: this.searchDataQRID
+                }
+            })
+                .then(response => {
+                    this.GetDatas = response.data;
+                    console.log(this.GetDatas);
                 })
-                    .then(response => {
-                        this.GetDatas = response.data;
-                        console.log(this.GetDatas)
-                    })
-                    .catch(error => {
-                        console.error('เกิดข้อผิดพลาดในการค้นหา:', error);
-                    });
-            }
-        },
-        searchDate() {
-            // ฟังก์ชันนี้จะถูกเรียกเมื่อมีการพิมพ์ใน input search
-            // ไม่ต้องทำอะไรที่นี่ เพราะ watch จะจัดการการค้นหาให้
-            const searchTerm2 = this.searchDataDate;
-            console.log(searchTerm2)
-            if (!searchTerm2) {
-                this.GetDatasRep(); // ถ้าไม่มีการค้นหา ให้ดึงข้อมูลทั้งหมด
-            } else {
-                axios.get('/45_engmask/api/search-Date', {
-                    params: {
-                        searchDate: searchTerm2
-                    }
-                })
-                    .then(response => {
-                        this.GetDatas = response.data;
-                        console.log(this.GetDatas)
-                    })
-                    .catch(error => {
-                        console.error('เกิดข้อผิดพลาดในการค้นหา:', error);
-                    });
-            }
+                .catch(error => {
+                    console.error('เกิดข้อผิดพลาดในการค้นหา:', error);
+                });
         },
         GetDatasRep() {
 
@@ -343,6 +384,9 @@ export default {
         },
         getUserName(id) {
             return this.userNameMap[id] || 'ไม่พบชื่อผู้ใช้';
+        },
+        getName(empId) {
+            return this.userNameMap[empId] || 'ไม่พบชื่อผู้ใช้';
         },
         GetLines() {
             axios.get('/45_engmask/api/get-list-line')

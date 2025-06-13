@@ -103,9 +103,9 @@ class GetDataController extends Controller
         $data = DB::table('MM_MSKREC_TBL as msk')
             ->join('MMCHN_MDL_TBL as chn', 'msk.MSKREC_WON', '=', 'chn.MMCHANGE_WONNO')
             ->join('MM_MASTERMSK_TBL as msk2', 'msk.MSKREC_LISTNO', '=', 'msk2.MMST_NO')
-            ->join('VUSER_WEB as vw', 'chn.MMCHANGE_EMPID','=', 'vw.MUSR_ID')
+            ->join('VUSER_WEB as vw', 'chn.MMCHANGE_EMPID', '=', 'vw.MUSR_ID')
             // ->join('VUSER_WEB as vw', 'msk.MSKREC_EMPREC', '=', 'vw.MUSR_ID')
-            ->select('chn.*', 'msk.*','msk2.MMST_QRID','msk2.MMST_NO','vw.MUSR_NAME') // You can customize columns here
+            ->select('chn.*', 'msk.*', 'msk2.MMST_QRID', 'msk2.MMST_NO', 'vw.MUSR_NAME') // You can customize columns here
             ->orderBy('chn.MMCHANGE_ID', 'ASC')
             ->get();
 
@@ -260,33 +260,96 @@ class GetDataController extends Controller
         return response()->json($getmodel);
     }
 
-    public function SearchLINE(Request $request)
+    // public function SearchLINE(Request $request)
+    // {
+    //     $searchLine = $request->input('searchLine');
+
+    //     $getFilterLine = DB::table('MM_MSKREC_TBL as msk')
+    //         ->join('MMCHN_MDL_TBL as chn', 'msk.MSKREC_WON', '=', 'chn.MMCHANGE_WONNO')
+    //         ->join('MM_MASTERMSK_TBL as msk2', 'msk.MSKREC_LISTNO', '=', 'msk2.MMST_NO')
+    //         ->join('VUSER_WEB as vw', 'chn.MMCHANGE_EMPID', '=', 'vw.MUSR_ID')
+    //         ->select('chn.*', 'msk.*', 'msk2.MMST_QRID', 'msk2.MMST_NO') // You can customize columns here
+    //         ->where('chn.MMCHANGE_LINE', '=', $searchLine)
+
+    //         ->get();
+
+
+    //     return response()->json($getFilterLine);
+    // }
+
+    // public function SearchDATE(Request $request)
+    // {
+    //     $searchDate = $request->input('searchDate');
+
+    //     if (!$searchDate) {
+    //         return response()->json(['error' => 'No date provided'], 400);
+    //     }
+
+    //     $getFilterDate = DB::table('MM_MSKREC_TBL as msk')
+    //         ->join('MMCHN_MDL_TBL as chn', 'msk.MSKREC_WON', '=', 'chn.MMCHANGE_WONNO')
+    //         ->join('MM_MASTERMSK_TBL as msk2', 'msk.MSKREC_LISTNO', '=', 'msk2.MMST_NO')
+    //         ->join('VUSER_WEB as vw', 'chn.MMCHANGE_EMPID', '=', 'vw.MUSR_ID')
+    //         ->select(
+    //             'chn.*',
+    //             'msk.*',
+    //             'msk2.MMST_QRID',
+    //             'msk2.MMST_NO'
+    //         )
+    //         ->whereDate('chn.MMCHANGE_LSTDT', $searchDate)
+    //         ->get();
+
+    //     return response()->json($getFilterDate);
+    // }
+
+    // public function SearchQRID(Request $request)
+    // {
+    //     $searchQRID = $request->input('searchQRID');
+
+    //     if (!$searchQRID) {
+    //         return response()->json(['error' => 'No QRID provided'], 400);
+    //     }
+
+    //     $getFilterQRID = DB::table('MM_MSKREC_TBL as msk')
+    //         ->join('MMCHN_MDL_TBL as chn', 'msk.MSKREC_WON', '=', 'chn.MMCHANGE_WONNO')
+    //         ->join('MM_MASTERMSK_TBL as msk2', 'msk.MSKREC_LISTNO', '=', 'msk2.MMST_NO')
+    //         ->join('VUSER_WEB as vw', 'chn.MMCHANGE_EMPID', '=', 'vw.MUSR_ID')
+    //         ->select(
+    //             'chn.*',
+    //             'msk.*',
+    //             'msk2.MMST_QRID',
+    //             'msk2.MMST_NO'
+    //         )
+    //         ->where('msk2.MMST_QRID', 'LIKE', '%' . $searchQRID . '%')
+    //         ->get();
+
+    //     return response()->json($getFilterQRID);
+    // }
+    public function SearchAllFilters(Request $request)
     {
         $searchLine = $request->input('searchLine');
-
-        $getFilterLine = DB::table('MM_MSKREC_TBL as msk')
-            ->join('MMCHN_MDL_TBL as chn', 'msk.MSKREC_WON', '=', 'chn.MMCHANGE_WONNO')
-            ->join('MM_MASTERMSK_TBL as msk2', 'msk.MSKREC_LISTNO', '=', 'msk2.MMST_NO')
-            ->select('chn.*', 'msk.*','msk2.MMST_QRID','msk2.MMST_NO') // You can customize columns here
-            ->where('chn.MMCHANGE_LINE', '=', $searchLine)
-
-            ->get();
-
-
-        return response()->json($getFilterLine);
-    }
-
-    public function SearchDATE(Request $request)
-    {
         $searchDate = $request->input('searchDate');
+        $searchQRID = $request->input('searchQRID');
 
-        $getFilterDate = DB::table('MM_MSKREC_TBL as msk')
+        $query = DB::table('MM_MSKREC_TBL as msk')
             ->join('MMCHN_MDL_TBL as chn', 'msk.MSKREC_WON', '=', 'chn.MMCHANGE_WONNO')
             ->join('MM_MASTERMSK_TBL as msk2', 'msk.MSKREC_LISTNO', '=', 'msk2.MMST_NO')
-            ->select('chn.*', 'msk.*','msk2.MMST_QRID','msk2.MMST_NO') // You can customize columns here
-            ->whereDate('chn.MMCHANGE_DATE', '=', $searchDate)
+            ->join('VUSER_WEB as vw', 'chn.MMCHANGE_EMPID', '=', 'vw.MUSR_ID')
+            ->select('chn.*', 'msk.*', 'msk2.MMST_QRID', 'msk2.MMST_NO');
 
-            ->get();
-        return response()->json($getFilterDate);
+        if (!empty($searchLine)) {
+            $query->where('chn.MMCHANGE_LINE', $searchLine);
+        }
+
+        if (!empty($searchDate)) {
+            $query->whereDate('chn.MMCHANGE_LSTDT', $searchDate);
+        }
+
+        if (!empty($searchQRID)) {
+            $query->where('msk2.MMST_QRID', 'LIKE', '%' . $searchQRID . '%');
+        }
+
+        $result = $query->get();
+
+        return response()->json($result);
     }
 }

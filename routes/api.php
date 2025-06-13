@@ -33,9 +33,12 @@ Route::get('/gen-issue-no',[GetDataController::class, 'GetIssueNo']);
 Route::get('/get-list-models2',[GetDataController::class, 'GetListModel2']);
 // Route::get('/get-edit-data',[GetDataController::class,'GetEditData']);
 Route::get('/join-data',[GetDataController::class,'JoinData']);
+Route::get('/search-filter',[GetDataController::class,'SearchAllFilters']);
 Route::get('/search-Line',[GetDataController::class,'SearchLINE']);
 Route::get('/search-Date',[GetDataController::class,'SearchDATE']);
+Route::get('/search-qrid',[GetDataController::class,'SearchQRID']);
 Route::get('/get-user-name',[GetDataController::class,'GetUserName']);
+
 Route::get('/user/session', function () {
     return response()->json([
         'username' => session('username'),
