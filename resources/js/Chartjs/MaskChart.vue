@@ -11,6 +11,7 @@
 <script>
 import { Chart, registerables } from 'chart.js';
 import Swal from 'sweetalert2';
+import dayjs from 'dayjs';
 Chart.register(...registerables);
 
 export default {
@@ -64,26 +65,37 @@ export default {
                             let rows = relatedData.map(item => `
                 <tr>
                   <td style="padding: 8px; border: 1px solid #ccc;">${item.MSKREC_LISTNO}</td>
+                  <td style="padding: 8px; border: 1px solid #ccc;">${item.MSKREC_WON}</td>
                   <td style="padding: 8px; border: 1px solid #ccc;">${item.MSKREC_MMNAME}</td>
                   <td style="padding: 8px; border: 1px solid #ccc;">${item.MSKREC_SHOTS}</td>
+                  <td style="padding: 8px; border: 1px solid #ccc;">${dayjs(item.MSKREC_LSTDT).format('DD-MM-YYYY')}</td>
+                  <td style="padding: 8px; border: 1px solid #ccc;">${dayjs(item.MSKREC_LSTDT).format('HH:mm:ss')}</td>
                 </tr>
               `).join('');
 
                             const tableHtml = `
-                <h4 style="margin-bottom: 10px;" class="text-[19px] font-semibold text-blue-600">QR Code ID: ${label} | Total Mask Shots: ${value}</h4>
-                <table style="width:100%; border-collapse: collapse; text-align: center;">
-                  <thead style="background-color: #f3f4f6;">
-                    <tr>
-                      <th style="padding: 8px; border: 1px solid #ccc;">Metal Mask No.</th>
-                      <th style="padding: 8px; border: 1px solid #ccc;">Metal Mask Name</th>
-                      <th style="padding: 8px; border: 1px solid #ccc;">Shots</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    ${rows}
-                  </tbody>
-                </table>
-              `;
+  <h4 style="margin-bottom: 10px;" class="text-[19px] font-semibold text-blue-600">
+    QR Code ID: ${label} | Total Mask Shots: ${value}
+  </h4>
+  <div class="overflow-x-auto">
+    <table class="table w-full text-sm text-left text-gray-500">
+      <thead style="background-color: #f3f4f6;">
+        <tr>
+          <th style="padding: 8px; border: 1px solid #ccc;">Metal Mask No.</th>
+          <th style="padding: 8px; border: 1px solid #ccc;">Work Order</th>
+          <th style="padding: 8px; border: 1px solid #ccc;">Metal Mask Name</th>
+          <th style="padding: 8px; border: 1px solid #ccc;">Shots</th>
+          <th style="padding: 8px; border: 1px solid #ccc;">Date</th>
+          <th style="padding: 8px; border: 1px solid #ccc;">Time</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${rows}
+      </tbody>
+    </table>
+  </div>
+`;
+
 
                             Swal.fire({
                                 title: 'ข้อมูล Metal Mask Shots',
@@ -117,7 +129,13 @@ export default {
 
             this.chart = chart;
 
-        }
+        },
+        // formatDate(dateString) {
+        //     return dayjs(dateString).format('DD/MM/YYYY');
+        // },
+        // formatTime(dateString) {
+        //     return dayjs(dateString).format('HH:mm:ss');
+        // }
     }
 }
 </script>

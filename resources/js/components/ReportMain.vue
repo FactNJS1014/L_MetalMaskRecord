@@ -34,6 +34,7 @@
                         <table class="table w-full min-w-[1000px] table-zebra">
                             <thead class="sticky top-0 bg-purple-800 z-10">
                                 <tr class="text-center text-lg font-bold text-white">
+                                    <th>Document Number</th>
                                     <th>QR_ID</th>
                                     <th>Line SMT</th>
                                     <th>Model Code</th>
@@ -58,6 +59,7 @@
                             <tbody>
                                 <tr v-for="(item, index) in GetDatas" :key="index"
                                     class="text-[16px] font-semibold text-black text-center">
+                                    <td>{{ item.MMCHANGE_ISSUE }}</td>
                                     <td>{{ item.MMST_QRID }}</td>
                                     <td>{{ item.MMCHANGE_LINE }}</td>
                                     <td>{{ item.MSKREC_MDLCD }}</td>
@@ -228,6 +230,7 @@ export default {
 
             // 2. สร้างข้อมูลตารางหลัก
             const tableData = this.GetDatas.map(item => ({
+                'Document Number': item.MMCHANGE_ISSUE,
                 'QRID': item.MMST_QRID,
                 'Line SMT': item.MMCHANGE_LINE,
                 'MODEL': item.MSKREC_MDLCD,

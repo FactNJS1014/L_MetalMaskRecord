@@ -12,6 +12,7 @@ class InsertChangeModelController extends Controller
 {
     public function insertChangeModel(Request $request)
     {
+        DB::beginTransaction();
         try {
             $data = $request->input('formChange');
 
@@ -45,6 +46,7 @@ class InsertChangeModelController extends Controller
             $changeModel->MMCHANGE_ISSUE = $data['issue'];
 
             $changeModel->save();
+            DB::commit();
 
             Log::info("Inserted ChangeMask data", $changeModel->toArray());
 

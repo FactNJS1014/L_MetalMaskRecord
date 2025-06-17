@@ -101,7 +101,7 @@ class GetDataController extends Controller
     public function GetValues()
     {
         $data = DB::table('MM_MSKREC_TBL as msk')
-            ->join('MMCHN_MDL_TBL as chn', 'msk.MSKREC_WON', '=', 'chn.MMCHANGE_WONNO')
+            ->join('MMCHN_MDL_TBL as chn', 'msk.MMCHANGE_ID', '=', 'chn.MMCHANGE_ID')
             ->join('MM_MASTERMSK_TBL as msk2', 'msk.MSKREC_LISTNO', '=', 'msk2.MMST_NO')
             ->join('VUSER_WEB as vw', 'chn.MMCHANGE_EMPID', '=', 'vw.MUSR_ID')
             // ->join('VUSER_WEB as vw', 'msk.MSKREC_EMPREC', '=', 'vw.MUSR_ID')

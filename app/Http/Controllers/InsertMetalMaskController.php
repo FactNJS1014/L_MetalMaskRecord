@@ -9,6 +9,10 @@ use App\Models\InsertMetalMask;
 class InsertMetalMaskController extends Controller
 {
     public function saveData(Request $request){
+
+        DB::beginTransaction();
+
+        try{
         $mask = $request->input('mask');
         $lotsize = intval($mask['lot']);
         $bsheet = floor($mask['blocksheet']);
@@ -58,11 +62,18 @@ class InsertMetalMaskController extends Controller
         $insertMask->MSKREC_PRODDATE = $mask['expire_d'];
         $insertMask->MSKREC_VENDOR = $mask['vendor'];
         $insertMask->MSKREC_EMPREC = $mask['empid'];
+        $insertMask->MMCHANGE_ID = $mask['changeId'];
         // $insertMask->MSKREC_DETAILS = $mask['details'];
         // $insertMask->MSKREC_TYPES = $mask['types'];
         // $insertMask->MSKREC_REMARK = $mask['remark'];
 
         $insertMask->save();
+        DB::commit();
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['status' => 'error', 'message' => 'Insert Failed: ' . $e->getMessage()], 500);
+        }
 
         $insert_std_change = DB::table('MMCHN_MDL_TBL')
         ->WHERE('MMCHANGE_WONNO', $mask['won'])

@@ -13,14 +13,10 @@
             </li>
 
             <li>
-                <router-link to="/reportChange"
-                    active-class="text-xl font-semibold text-white bg-blue-500 hover:bg-slate-200 hover:text-blue-500"
-                    class="text-black hover:text-blue-500">
-                    <!-- <span class="icon-[material-symbols--counter-2] size-8"></span> -->
+                <a @click="navigateWithReload('/reportChange')" class="text-black hover:text-blue-500">
                     <span class="icon-[material-symbols--circle-notifications-rounded] size-8"></span>
                     การแจ้งเปลี่ยนโมเดล
-                </router-link>
-
+                </a>
             </li>
             <li>
                 <router-link to="/prmetalmask"
@@ -33,20 +29,15 @@
             </li>
 
             <li>
-                <router-link to="/reportMain"
-                    active-class="text-xl font-semibold text-white bg-blue-500 hover:bg-slate-200 hover:text-blue-500"
-                    class="text-black hover:text-blue-500">
-                    <!-- <span class="icon-[material-symbols--counter-4-rounded] size-8"></span> -->
+                <a @click="navigateWithReload('/reportMain')" class="text-black hover:text-blue-500">
                     <span class="icon-[material-symbols--pie-chart] size-8"></span>
                     รายงานประวัติการใช้งาน
-                </router-link>
-
+                </a>
             </li>
             <li>
                 <router-link to="/setting"
                     active-class="text-xl font-semibold text-white bg-blue-500 hover:bg-slate-200 hover:text-blue-500"
-                    class="text-black hover:text-blue-500"
-                    v-if="permission == 9">
+                    class="text-black hover:text-blue-500" v-if="permission == 9">
                     <!-- <span class="icon-[material-symbols--counter-5-rounded] size-8"></span> -->
                     <span class="icon-[material-symbols--settings-alert-rounded] size-8"></span>
                     ตั้งค่า Master ข้อมูล
@@ -67,11 +58,20 @@ export default {
 
         };
     },
+    methods: {
+        navigateWithReload(path) {
+            this.$router.push(path).then(() => {
+                window.location.reload()
+            })
+        }
+    },
+
     mounted() {
         this.permission = this.session.permission;
         console.log('permission:', this.permission);
 
     },
+
 
 };
 </script>

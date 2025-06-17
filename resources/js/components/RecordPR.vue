@@ -49,7 +49,7 @@
                     <div class="flex flex-col col-span-2">
                         <label for="mdlcd" class="label">Model Code: <span>&#128292;</span></label>
                         <input type="text" v-model="mask.mdlcd" class="input input-bordered w-full focus:outline-none"
-                            placeholder="Model Code">
+                            placeholder="Model Code" readonly />
                         <!-- <select v-model="mask.mdlcd" class="input input-bordered w-full focus:outline-none">
                             <option value="" disabled selected>เลือก Model Code</option>
                             <option v-for="item in listModel" :key="item.LISTMDL_MDLCD" :value="item.LISTMDL_MDLCD">{{
@@ -63,41 +63,41 @@
                             @change="checkModel" placeholder="Search WONO..." class="input w-full" /> -->
 
                         <input type="text" v-model="mask.won" class="input input-bordered w-full focus:outline-none"
-                            placeholder="Search WONO..." />
+                            placeholder="Search WONO..." readonly />
 
                     </div>
                     <div class="flex flex-col">
                         <!-- <label for="listno" class="label">List No.: <span>&#128292;</span></label> -->
                         <input type="hidden" id="name" v-model="mask.listno"
-                            class="input input-bordered w-full focus:outline-none" />
+                            class="input input-bordered w-full focus:outline-none" readonly/>
                     </div>
                     <div class="flex flex-col">
                         <!-- <label for="cus" class="label">Customer: <span>&#128292;</span></label> -->
                         <input type="hidden" id="name" v-model="mask.cus"
-                            class="input input-bordered w-full focus:outline-none" />
+                            class="input input-bordered w-full focus:outline-none" readonly/>
                     </div>
 
                     <div class="flex flex-col">
                         <!-- <label for="pcbno" class="label">PCB No. <span>&#128292;</span></label> -->
                         <input type="hidden" id="name" v-model="mask.pcbno"
-                            class="input input-bordered w-full focus:outline-none" />
+                            class="input input-bordered w-full focus:outline-none" readonly/>
 
                     </div>
                     <div class="flex flex-col">
                         <!-- <label for="mskname" class="label">Metal Mask Name: <span>&#128292;</span></label> -->
                         <input type="hidden" id="name" v-model="mask.mskname"
-                            class="input input-bordered w-full focus:outline-none" />
+                            class="input input-bordered w-full focus:outline-none" readonly/>
 
                     </div>
                     <div class="flex flex-col">
                         <!-- <label for="process" class="label">Process: <span>&#128292;</span></label> -->
                         <input type="hidden" id="name" v-model="mask.procs"
-                            class="input input-bordered w-full focus:outline-none" />
+                            class="input input-bordered w-full focus:outline-none" readonly/>
                     </div>
                     <div class="flex flex-col">
                         <!-- <label for="rev" class="label">Revision: <span>🔢</span></label> -->
                         <input type="hidden" class="input input-bordered w-full focus:outline-none"
-                            v-model="mask.rev" />
+                            v-model="mask.rev" readonly/>
                     </div>
                     <div class="flex flex-col">
                         <!-- <label for="ref" class="label">Reference Number: <span>&#128292;</span></label> -->
@@ -127,6 +127,7 @@
                     </div>
 
                     <input type="hidden" v-model="mask.blocksheet">
+                    <input type="hidden" v-model="mask.changeId">
 
 
 
@@ -186,6 +187,7 @@ export default {
                 won: "",
                 scannedResult: "",
                 empid: "",
+                changeId: "",
             },
             isModalOpen: false,
             listModel: [],
@@ -491,7 +493,9 @@ export default {
         // this.mask.empid = this.dataEmpid;
         this.getLotsAndBs();
         this.getProcs = this.dataProcess;
+        this.mask.changeId = this.dataChangeId;
         console.log(this.getProcs)
+        console.log(this.mask.changeId)
         // this.fetchRecData()
 
     },
@@ -510,6 +514,9 @@ export default {
         // },
         dataProcess() {
             return this.$route.query.prcs;
+        },
+        dataChangeId() {
+            return this.$route.query.changeid;
         },
     },
    watch: {

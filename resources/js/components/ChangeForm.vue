@@ -101,7 +101,7 @@
 
 
 
-        <div class="flex justify-center items-center">
+        <!-- <div class="flex justify-center items-center">
             <div class="card w-[50%] mt-3 border border-cyan-600 absolute top-155 " v-if="isModalShow">
                 <div class="card-body">
                     <h5 class="card-title bg-pink-200 p-5 rounded-lg text-2xl"><span class="mx-2">&#128204;</span>Input
@@ -138,7 +138,7 @@
                     </form>
                 </div>
             </div>
-        </div>
+        </div> -->
 
     </div>
 
@@ -374,11 +374,12 @@ export default {
             // if(now >= dayShiftStart && now <= nightShiftStart) {
             //     this.formChange.shift = 'Day';
             // }
-            const time = dayjs().format('HH:mm:ss');
+            const time = dayjs().format('HH:mm:ss a');
             console.log(time);
-            if(time >= '19:59:59' || time <= '07:59:59') {
+            if(time > '19:59:59 pm' || time <= '07:59:59 am') {
                 this.formChange.shift = 'Night';
-            } else {
+            }
+            if(time >= '08:00:00 am' && time <= '19:59:59 pm') {
                 this.formChange.shift = 'Day';
             }
 
