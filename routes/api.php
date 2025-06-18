@@ -38,6 +38,7 @@ Route::get('/search-Line',[GetDataController::class,'SearchLINE']);
 Route::get('/search-Date',[GetDataController::class,'SearchDATE']);
 Route::get('/search-qrid',[GetDataController::class,'SearchQRID']);
 Route::get('/get-user-name',[GetDataController::class,'GetUserName']);
+Route::get('/get-mask-Id',[GetDataController::class,'GetMaskID']);
 
 Route::get('/user/session', function () {
     return response()->json([

@@ -118,7 +118,8 @@ export default {
                                 },
                                 padding: 5,
                                 usePointStyle: true
-                            }
+                            },
+                            display: false
                         },
                     },
                     layout: {

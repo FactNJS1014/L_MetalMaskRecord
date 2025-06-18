@@ -60,7 +60,8 @@
                                 <tr v-for="(item, index) in GetDatas" :key="index"
                                     class="text-[16px] font-semibold text-black text-center">
                                     <td>{{ item.MMCHANGE_ISSUE }}</td>
-                                    <td>{{ item.MMST_QRID }}</td>
+                                    <td v-if="item.MSKREC_QRID !== null">{{ getMaskNo(item.MSKREC_QRID) }}</td>
+                                    <td v-else>ไม่นับ shot</td>
                                     <td>{{ item.MMCHANGE_LINE }}</td>
                                     <td>{{ item.MSKREC_MDLCD }}</td>
                                     <td>{{ item.MSKREC_WON }}</td>
@@ -119,6 +120,7 @@ export default {
             GetDatas: [],
             allLines: [], // รายการทั้งหมดของ LINE ที่ใช้ใน select
             userNameMap: {},
+            masknoMap: {}
         };
     },
     computed: {
@@ -159,7 +161,7 @@ export default {
                 const data = res.data;
 
                 this.MaskData = data;
-                console.log(this.MaskData)
+                // console.log(this.MaskData)
                 // console.log(data)
                 const grouped = {}
                 const notifyStatus = {};
@@ -175,11 +177,11 @@ export default {
                         notifyStatus[mdl] = item.MSKREC_NOTIFY_STD;
                     }
                 });
-                console.log(grouped)
+                // console.log(grouped)
 
                 this.runningSums = grouped;
-                console.log(this.runningSums)
-                console.log(notifyStatus)
+                // console.log(this.runningSums)
+                // console.log(notifyStatus)
 
                 Object.entries(grouped).forEach(([mdl, total]) => {
                     const notified = notifyStatus[mdl] == 1;
@@ -231,7 +233,7 @@ export default {
             // 2. สร้างข้อมูลตารางหลัก
             const tableData = this.GetDatas.map(item => ({
                 'Document Number': item.MMCHANGE_ISSUE,
-                'QRID': item.MMST_QRID,
+                'QRID': this.getMaskNo(item.MSKREC_QRID),
                 'Line SMT': item.MMCHANGE_LINE,
                 'MODEL': item.MSKREC_MDLCD,
                 'W/O NO': item.MSKREC_WON,
@@ -246,9 +248,9 @@ export default {
                 'EMPLOYEE ID OF RECORD MASK SHOT': this.getUserName(item.MSKREC_EMPREC),
                 'DATE OF RECORD MODEL CHANGE': this.formatdate(item.MMCHANGE_LSTDT),
                 'TIME OF RECORD MODEL CHANGE': this.formatTime(item.MMCHANGE_LSTDT),
+                'SHIFT': item.MMCHANGE_SHIFT,
                 'DATE OF RECORD MASK SHOT': this.formatdate(item.MSKREC_LSTDT),
                 'TIME OF RECORD MASK SHOT': this.formatTime(item.MSKREC_LSTDT),
-                'SHIFT': item.MMCHANGE_SHIFT,
                 'STATUS': item.MSKREC_STD
             }));
 
@@ -350,7 +352,7 @@ export default {
             })
                 .then(response => {
                     this.GetDatas = response.data;
-                    console.log(this.GetDatas);
+                    // console.log(this.GetDatas);
                 })
                 .catch(error => {
                     console.error('เกิดข้อผิดพลาดในการค้นหา:', error);
@@ -362,7 +364,7 @@ export default {
                 .then(response => {
 
                     this.GetDatas = response.data;
-                    console.log(this.GetDatas)
+                    // console.log(this.GetDatas)
                 })
                 .catch(error => {
                     console.error('เกิดข้อผิดพลาดในการดึงข้อมูล:', error);
@@ -395,11 +397,24 @@ export default {
             axios.get('/45_engmask/api/get-list-line')
                 .then(response => {
                     this.allLines = response.data;
-                    console.log(this.allLines)
+                    // console.log(this.allLines)
                 })
                 .catch(error => {
                     console.error('เกิดข้อผิดพลาดในการดึงข้อมูล LINE:', error);
                 });
+        },
+        loadMaskID() {
+            axios.get('/45_engmask/api/get-mask-Id')
+                .then(res => {
+                    res.data.map(msk => {
+                        this.masknoMap[msk.MMST_NO] = msk.MMST_QRID
+
+                    })
+                })
+            console.log(this.masknoMap)
+        },
+        getMaskNo(id) {
+            return this.masknoMap[id]
         }
 
 
@@ -410,7 +425,8 @@ export default {
         this.fetchReportData(),
             this.GetDatasRep(),
             this.GetLines(),
-            this.loadUserNames()
+            this.loadUserNames(),
+            this.loadMaskID()
 
 
     },

@@ -29,6 +29,8 @@
                     class="mr-3">&#128196;</span>แบบฟอร์มบันทึก
                 Metal Mask
                 Sheet</h3>
+
+                <p class="p-4 text-md font-semibold">หมายเลขเอกสาร:&nbsp; {{ issueNo }}</p>
             <form @submit.prevent="savedData" class="text-xl font-bold text-blue-600 ">
                 <div class="grid grid-cols-2 gap-4">
                     <div class="flex flex-col col-span-2">
@@ -199,6 +201,7 @@ export default {
             html5QrCode: null,
             MaskData: [],
             getProcs: "",
+            issueNo: ""
             // decodedResult: "",
 
         };
@@ -440,7 +443,7 @@ export default {
                                 this.listModel.map((value) => {
                                     this.mask.listno = value.MMST_NO;
                                     this.mask.pcbno = value.MMST_PCBNO;
-                                    this.mask.procs = value.MMST_PROCS;
+
                                     this.mask.expire_d = value.MMST_PRDDATE;
                                     this.mask.vendor = value.MMST_VENDOR;
                                     if (value.MMST_REMARK === "") {
@@ -494,8 +497,11 @@ export default {
         this.getLotsAndBs();
         this.getProcs = this.dataProcess;
         this.mask.changeId = this.dataChangeId;
+        this.issueNo = this.dataIssue;
         console.log(this.getProcs)
         console.log(this.mask.changeId)
+        console.log(this.issueNo)
+
         // this.fetchRecData()
 
     },
@@ -518,6 +524,9 @@ export default {
         dataChangeId() {
             return this.$route.query.changeid;
         },
+        dataIssue(){
+            return this.$route.query.issue;
+        }
     },
    watch: {
     'mask.scannedResult'(newVal) {
@@ -567,7 +576,7 @@ export default {
                     const value = this.listModel[0];
                     this.mask.listno = value.MMST_NO;
                     this.mask.pcbno = value.MMST_PCBNO;
-                    this.mask.procs = value.MMST_PROCS;
+                    // this.mask.procs = value.MMST_PROCS;
                     this.mask.expire_d = value.MMST_PRDDATE;
                     this.mask.vendor = value.MMST_VENDOR;
                     this.mask.remark = value.MMST_REMARK === "" ? "-" : value.MMST_REMARK;

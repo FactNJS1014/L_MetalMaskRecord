@@ -102,11 +102,11 @@ class GetDataController extends Controller
     {
         $data = DB::table('MM_MSKREC_TBL as msk')
             ->join('MMCHN_MDL_TBL as chn', 'msk.MMCHANGE_ID', '=', 'chn.MMCHANGE_ID')
-            ->join('MM_MASTERMSK_TBL as msk2', 'msk.MSKREC_LISTNO', '=', 'msk2.MMST_NO')
-            ->join('VUSER_WEB as vw', 'chn.MMCHANGE_EMPID', '=', 'vw.MUSR_ID')
+            // ->join('MM_MASTERMSK_TBL as msk2', 'msk.MSKREC_LISTNO', '=', 'msk2.MMST_NO')
+            // ->join('VUSER_WEB as vw', 'chn.MMCHANGE_EMPID', '=', 'vw.MUSR_ID')
             // ->join('VUSER_WEB as vw', 'msk.MSKREC_EMPREC', '=', 'vw.MUSR_ID')
-            ->select('chn.*', 'msk.*', 'msk2.MMST_QRID', 'msk2.MMST_NO', 'vw.MUSR_NAME') // You can customize columns here
-            ->orderBy('chn.MMCHANGE_ID', 'ASC')
+            ->select('chn.*', 'msk.*') // You can customize columns here
+            ->orderBy('chn.MMCHANGE_ID', 'DESC')
             ->get();
 
         return response()->json($data);
@@ -127,6 +127,14 @@ class GetDataController extends Controller
             ->select('MUSR_NAME', 'MUSR_ID')
             ->get();
         return response()->json($getuser);
+    }
+
+    public function GetMaskID (){
+        $getmskid = DB::table('MM_MASTERMSK_TBL')
+        ->select('MMST_NO','MMST_QRID')
+        ->get();
+
+        return response()->json($getmskid);
     }
 
     public function GetChangeHistory(Request $request)
@@ -331,10 +339,11 @@ class GetDataController extends Controller
         $searchQRID = $request->input('searchQRID');
 
         $query = DB::table('MM_MSKREC_TBL as msk')
-            ->join('MMCHN_MDL_TBL as chn', 'msk.MSKREC_WON', '=', 'chn.MMCHANGE_WONNO')
-            ->join('MM_MASTERMSK_TBL as msk2', 'msk.MSKREC_LISTNO', '=', 'msk2.MMST_NO')
-            ->join('VUSER_WEB as vw', 'chn.MMCHANGE_EMPID', '=', 'vw.MUSR_ID')
-            ->select('chn.*', 'msk.*', 'msk2.MMST_QRID', 'msk2.MMST_NO');
+            ->join('MMCHN_MDL_TBL as chn', 'msk.MMCHANGE_ID', '=', 'chn.MMCHANGE_ID')
+            // ->join('MM_MASTERMSK_TBL as msk2', 'msk.MSKREC_LISTNO', '=', 'msk2.MMST_NO')
+            // ->join('VUSER_WEB as vw', 'chn.MMCHANGE_EMPID', '=', 'vw.MUSR_ID')
+            ->select('chn.*', 'msk.*')
+            ->orderBy('msk.MMCHANGE_ID','DESC');
 
         if (!empty($searchLine)) {
             $query->where('chn.MMCHANGE_LINE', $searchLine);

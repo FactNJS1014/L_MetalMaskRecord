@@ -13,7 +13,10 @@
             </li>
 
             <li>
-                <a @click="navigateWithReload('/reportChange')" class="text-black hover:text-blue-500">
+                <a @click="navigateWithReload('/reportChange')" class="text-black hover:text-blue-500" :class="[
+                    'text-black hover:text-blue-500 cursor-pointer',
+                    currentRoute === '/reportChange' ? 'text-xl font-bold text-white bg-blue-500 hover:bg-slate-200 hover:text-blue-500' : ''
+                ]">
                     <span class="icon-[material-symbols--circle-notifications-rounded] size-8"></span>
                     การแจ้งเปลี่ยนโมเดล
                 </a>
@@ -29,7 +32,10 @@
             </li>
 
             <li>
-                <a @click="navigateWithReload('/reportMain')" class="text-black hover:text-blue-500">
+                <a @click.prevent="navigateWithReload('/reportMain')" :class="[
+                    'text-black hover:text-blue-500 cursor-pointer',
+                    currentRoute === '/reportMain' ? 'text-xl font-bold text-white bg-blue-500 hover:bg-slate-200 hover:text-blue-500' : ''
+                ]">
                     <span class="icon-[material-symbols--pie-chart] size-8"></span>
                     รายงานประวัติการใช้งาน
                 </a>
@@ -55,8 +61,14 @@ export default {
         return {
             session: this.$session,
             permission: '',
+            currentRoute: this.$route.path
 
         };
+    },
+    watch: {
+        '$route.path'(newPath) {
+            this.currentRoute = newPath;
+        }
     },
     methods: {
         navigateWithReload(path) {

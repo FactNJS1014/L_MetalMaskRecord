@@ -128,6 +128,7 @@ export default {
                     empno: this.session.empno,
                     prcs: cloneData.MMCHANGE_PRCS,
                     changeid: cloneData.MMCHANGE_ID,
+                    issue: cloneData.MMCHANGE_ISSUE,
                 }
             });
         },

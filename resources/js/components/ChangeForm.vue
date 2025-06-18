@@ -69,7 +69,7 @@
                                 <label for="shift" class="text-xl font-bold">Shift : <span>&#127747; or
                                         &#127751;</span></label>
                                 <input type="text" class="input input-bordered mt-2" v-model="formChange.shift"
-                                    placeholder="Shift Day or Night">
+                                    placeholder="Shift Day or Night" readonly>
                                 <!-- <select class="select select-bordered mt-2" v-model="formChange.shift">
                                     <option value="" disabled selected>Choose Shift</option>
                                     <option value="Day">Day</option>
@@ -79,7 +79,7 @@
                             <div class="flex flex-col">
                                 <label for="issue" class="text-xl font-bold">Issue No.</label>
                                 <input type="text" class="input input-bordered mt-2" v-model="formChange.issue"
-                                    placeholder="Issue No." />
+                                    placeholder="Issue No." readonly />
                                 <!-- <select class="select select-bordered mt-2" v-model="formChange.shift">
                                     <option value="" disabled selected>Choose Shift</option>
                                     <option value="Day">Day</option>
@@ -376,11 +376,11 @@ export default {
             // }
             const time = dayjs().format('HH:mm:ss a');
             console.log(time);
-            if(time > '19:59:59 pm' || time <= '07:59:59 am') {
-                this.formChange.shift = 'Night';
-            }
+
             if(time >= '08:00:00 am' && time <= '19:59:59 pm') {
                 this.formChange.shift = 'Day';
+            }else{
+                this.formChange.shift = 'Night';
             }
 
         },
