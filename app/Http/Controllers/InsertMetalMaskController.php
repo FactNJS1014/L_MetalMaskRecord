@@ -76,10 +76,10 @@ class InsertMetalMaskController extends Controller
         }
 
         $insert_std_change = DB::table('MMCHN_MDL_TBL')
-        ->WHERE('MMCHANGE_WONNO', $mask['won'])
+        ->WHERE('MMCHANGE_ID', $mask['changeId'])
         ->update([
             'MMCHANGE_STD' => 2,
-            'MMCHANGE_LSTDT' => date('Y-m-d H:i:s'),
+
         ]);
 
 

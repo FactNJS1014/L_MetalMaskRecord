@@ -48,7 +48,7 @@ const routes = [
 ]
 
 const router = createRouter({
-    history: createWebHistory('/45_engmask/'),
+    history: createWebHistory('/45_engmask'),
     routes,
 })
 

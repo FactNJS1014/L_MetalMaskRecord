@@ -9,6 +9,7 @@
                         <table class="table w-full  text-black ">
                             <thead>
                                 <tr class="text-center text-xl bg-info text-white">
+                                    <th>Doc. No.</th>
                                     <th>Work Order</th>
                                     <th>Model</th>
                                     <th>Customer</th>
@@ -24,7 +25,7 @@
                                 <!-- Add your data rows here -->
                                 <tr v-for="(history, index) in changeHistory" :key="index"
                                     class="text-center text-[17px] font-semibold">
-
+                                    <td>{{ history.MMCHANGE_ISSUE }}</td>
                                     <td>{{ history.MMCHANGE_WONNO }}</td>
                                     <td>{{ history.MMCHANGE_MDLCHN }}</td>
                                     <td>{{ history.MMCHANGE_CUS }}</td>

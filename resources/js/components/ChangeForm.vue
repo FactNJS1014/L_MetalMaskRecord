@@ -167,6 +167,14 @@ export default {
         const v$ = useVuelidate()
         return { v$ }
     },
+    /**
+     * TODO: เป็นการกำหนดค่าของ data เพื่อไปเรียกใช้ v-model จาก form ด้านบน และรับค่ามาใส่ไว้ใน data ที่กำหนดไว้
+     * ? formChange คือชื่อ Object แม่
+     * ? ส่วนข้างใน formChange คือชื่อ Object ลูก
+     * ? ใน form ตรง v-model จะมีชื่อ formChange.empID มันก็เปรียบเสมือนชื่อตัวแปรหรือชื่อไอดีที่สร้างไว้
+     * ? ส่วนข้างนอก object formChange สามารถเรียกใช้รับ-ส่งค่าได้เหมือนกัน แต่การเขียนจะเป็น items ธรรมดา
+     *
+     */
     data() {
         return {
             formChange: {
@@ -190,6 +198,11 @@ export default {
 
         }
     },
+
+    /**
+     * TODO: validation form ที่รับค่าจาก v-model
+     * ! Check ว่าค่าที่รับมามีการ key หรือไม่
+     */
     validations() {
         return {
             formChange: {

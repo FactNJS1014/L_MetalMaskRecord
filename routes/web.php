@@ -19,11 +19,13 @@ use App\Http\Controllers\SessionController;
 */
 
 
+// Route::get('/45_engmask/{any}', function () {
+//     return view('app'); // or whatever your main blade view is
+// })->where('any', '.*');
+
 Route::get('/{any}', function () {
     return view('app'); // or whatever your main blade view is
 })->where('any', '.*');
-
-
 
 Route::post('/get-model-code', [GetDataController::class, 'getModelCode']);
 Route::post('/get-show-code', [GetDataController::class, 'getShowCode']);

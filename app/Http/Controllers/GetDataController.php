@@ -213,14 +213,14 @@ class GetDataController extends Controller
         $issue_no = '';
 
         $findPrevious = DB::table('MMCHN_MDL_TBL')
-            ->select('MMCHANGE_ID')
-            ->orderBy('MMCHANGE_ID', 'DESC')
+            ->select('MMCHANGE_ISSUE')
+            ->orderBy('MMCHANGE_ISSUE', 'DESC')
             ->get();
 
         if (empty($findPrevious[0])) {
             $issue_no = 'MTM-' . $YM . '-000001';
         } else {
-            $issue_no = AutogenerateKey('MTM', $findPrevious[0]->MMCHANGE_ID);
+            $issue_no = AutogenerateKey('MTM', $findPrevious[0]->MMCHANGE_ISSUE);
         }
         return response()->json($issue_no);
     }

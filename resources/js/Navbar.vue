@@ -72,17 +72,30 @@ export default {
     },
     methods: {
         navigateWithReload(path) {
-            this.$router.push(path).then(() => {
+            if (this.$route.path !== path) {
+                // เปลี่ยน path ปกติ ถ้ายังไม่อยู่หน้านั้น
+                this.$router.push(path).then(() => {
+                    window.location.reload()
+                })
+            } else {
+                // ถ้าอยู่หน้าเดิมแล้ว ให้แค่ reload
                 window.location.reload()
-            })
+            }
         }
+
     },
 
     mounted() {
         this.permission = this.session.permission;
         console.log('permission:', this.permission);
 
-    },
+        const path = this.$route.path;
+        const protectedPaths = ['/reportChange', '/reportMain','/setting']; // ใส่เฉพาะหน้าที่ต้องการป้องกัน
+
+        if (this.permission !== 9 && protectedPaths.includes(path)) {
+            this.$router.push('/');
+        }
+    }
 
 
 };
