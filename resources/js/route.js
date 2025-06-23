@@ -38,6 +38,7 @@ const routes = [
         name: "setting",
         component: Settingmaster,
 
+
     },
     {
         path: "/dataChange",
@@ -51,6 +52,18 @@ const router = createRouter({
     history: createWebHistory('/45_engmask'),
     routes,
 })
+
+router.beforeEach((to, from, next) => {
+    const permission = parseInt(window.sessionData?.permission || '0');
+
+    if (to.meta.requiresPermission && permission !== to.meta.requiresPermission) {
+        // ไม่อนุญาต → กลับหน้าแรก
+        next('/');
+    } else {
+        // อนุญาต → ดำเนินการต่อ
+        next();
+    }
+});
 
 export default router
 

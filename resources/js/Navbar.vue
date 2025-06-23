@@ -89,12 +89,12 @@ export default {
         this.permission = this.session.permission;
         console.log('permission:', this.permission);
 
-        const path = this.$route.path;
-        const protectedPaths = ['/reportChange', '/reportMain','/setting']; // ใส่เฉพาะหน้าที่ต้องการป้องกัน
+        // const path = this.$route.path;
+        // const protectedPaths = ['/reportChange', '/reportMain','/setting']; // ใส่เฉพาะหน้าที่ต้องการป้องกัน
 
-        if (this.permission !== 9 && protectedPaths.includes(path)) {
-            this.$router.push('/');
-        }
+        // if (this.permission !== 9 && protectedPaths.includes(path)) {
+        //     this.$router.push('/');
+        // }
     }
 
 

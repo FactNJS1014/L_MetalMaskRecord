@@ -257,6 +257,7 @@ export default {
                                 autoClose: 2000,
                                 onClose: () => {
                                     location.reload()
+                                    this.$router.push('/reportChange')
                                 }
                             })
                             this.formChange = {
