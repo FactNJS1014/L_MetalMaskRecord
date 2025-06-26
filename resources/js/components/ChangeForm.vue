@@ -221,7 +221,8 @@ export default {
         this.GetDataChange(),
             this.GetSession(),
             this.GetTime(),
-            this.genIssueNo()
+            this.genIssueNo(),
+            this.getSession()
 
     },
     methods: {
@@ -249,8 +250,10 @@ export default {
                 })
                     .then(response => {
                         console.log(response.data);
-                        if (response.data) {
-                            toast.success("Change Model Success", {
+                        console.log(response.data.issue_no);
+
+                        if (response.data.status === 'success') {
+                            toast.success(`Change Model Success & Insert Document No.: ${this.formChange.issue}`, {
                                 position: "top-center",
                                 duration: 5000,
                                 theme: "colored",
@@ -406,6 +409,15 @@ export default {
                 })
                 .catch(error => {
                     console.error('Error fetching change data:', error);
+                });
+        },
+        getSession() {
+            axios.get('/45_engmask/api/insert-change-model')
+                .then(res => {
+                    console.log(res.data.issue_no);
+                })
+                .catch(error => {
+                    console.error('Error fetching session data:', error);
                 });
         },
         // checkProcs() {

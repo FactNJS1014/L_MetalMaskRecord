@@ -23,32 +23,30 @@
 <body>
     <base href="/45_engmask/">
     <div id="app"></div>
-        <script>
-            window.sessionData = {
-                empno: '{{ session("empno") }}',
-                username: '{{ session("username") }}',
-                department: '{{ session("department") }}',
-                sec: '{{ session("sec") }}',
-                permission: '{{ session("USE_PERMISSION") }}',
-                MSECT_ID: '{{ session("MSECT_ID") }}',
-                server: '{{ $_SERVER["HTTP_HOST"] }}'
-            };
-            console.log(sessionData);
-            window.imagePath1 = '{{ asset("public/pictures/Setting Model-new.svg") }}';
-            window.imagePath2 = '{{ asset("public/pictures/SettingMask.svg") }}';
-            window.imagePath3 = '{{ asset("public/pictures/RP Model.svg") }}';
-            window.imagePath4 = '{{ asset("public/pictures/RP Mask.svg") }}';
-            window.documentPath = '{{ asset("public/document/Manual-Program.pdf") }}';
-            window.videoPath = '{{ asset("public/video/manual-mask.mp4") }}';
-
-
-
-
-
-        </script>
+    {{-- @if (!session('username'))
+        @php
+            abort(404, 'Missing username in session');
+        @endphp
+    @endif --}}
+    <script>
+        window.sessionData = {
+            empno: '{{ session('empno') }}',
+            username: '{{ session('username') }}',
+            department: '{{ session('department') }}',
+            sec: '{{ session('sec') }}',
+            permission: '{{ session('USE_PERMISSION') }}',
+            MSECT_ID: '{{ session('MSECT_ID') }}',
+            server: '{{ $_SERVER['HTTP_HOST'] }}'
+        };
+        console.log(sessionData);
+        window.imagePath1 = '{{ asset('public/pictures/Setting Model-new.svg') }}';
+        window.imagePath2 = '{{ asset('public/pictures/SettingMask.svg') }}';
+        window.imagePath3 = '{{ asset('public/pictures/RP Model.svg') }}';
+        window.imagePath4 = '{{ asset('public/pictures/RP Mask.svg') }}';
+        window.documentPath = '{{ asset('public/document/Manual-Program.pdf') }}';
+        window.videoPath = '{{ asset('public/video/manual-mask.mp4') }}';
+    </script>
 
 </body>
 
 </html>
-
-

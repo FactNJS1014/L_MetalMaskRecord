@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class StoreSession
 {
@@ -17,16 +18,20 @@ class StoreSession
      */
     public function handle(Request $request, Closure $next)
     {
-        // Example: Store session data from query parameters
-        if ($request->has('username')) {
-            session([
-                'username' => $request->query('username'),
-                'empno' => $request->query('empno'),
-                'department' => $request->query('department'),
-                'USE_PERMISSION' => $request->query('USE_PERMISSION'),
-                'sec' => $request->query('sec'),
-                'MSECT_ID' => $request->query('MSECT_ID'),
-            ]);
+
+
+        // รายการ key ที่จะเก็บใน session
+        $keys = ['username', 'empno', 'department', 'USE_PERMISSION', 'sec', 'MSECT_ID'];
+
+        foreach ($keys as $key) {
+            if ($request->has($key)) {
+                session([$key => $request->query($key)]);
+            }
+        }
+
+        // ถ้ายังไม่มี username ใน session หลังจากเช็คและเซตแล้ว → แสดง 404
+        if (!session()->has('username') || empty(session('username'))) {
+            throw new NotFoundHttpException(); // ส่งไปยังหน้า 404
         }
 
         return $next($request);

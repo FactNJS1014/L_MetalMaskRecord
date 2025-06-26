@@ -313,7 +313,7 @@ export default {
                             timer: 1500,
                         })
                             .then(() => {
-                                location.reload();
+                                this.$router.push('/reportChange')
                                 this.mask = {
                                     pcbno: "",
                                     ref: "",

@@ -30,6 +30,20 @@ class InsertChangeModelController extends Controller
                 $Change_ID = AutogenerateKey('CHNG', $findPrevious[0]->MMCHANGE_ID);
             }
 
+            $YM = date('Ym');
+            $issue_no = '';
+
+            $findPrevious = DB::table('MMCHN_MDL_TBL')
+                ->select('MMCHANGE_ID')
+                ->orderBy('MMCHANGE_ID', 'DESC')
+                ->get();
+
+            if (empty($findPrevious[0])) {
+                $issue_no = 'MTM-' . $YM . '-000001';
+            } else {
+                $issue_no = AutogenerateKey('MTM', $findPrevious[0]->MMCHANGE_ID);
+            }
+
             Log::info("Generated Change_ID: " . $Change_ID);
 
             $changeModel = new ChangeMask();
@@ -50,7 +64,11 @@ class InsertChangeModelController extends Controller
 
             Log::info("Inserted ChangeMask data", $changeModel->toArray());
 
-            return response()->json($changeModel);
+            return response()->json([
+                'status' => 'success',
+                'message' => 'บันทึกข้อมูลสำเร็จ',
+                'issue_no' => $issue_no
+            ]);
         } catch (\Exception $e) {
             Log::error('Error in insertChangeModel: ' . $e->getMessage() .
                 ' on line ' . $e->getLine() .
@@ -127,8 +145,5 @@ class InsertChangeModelController extends Controller
                 ]);
             }
         }
-
     }
-
-
 }
