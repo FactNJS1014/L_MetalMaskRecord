@@ -57,7 +57,7 @@ class InsertChangeModelController extends Controller
             $changeModel->MMCHANGE_LSTDT = date('Y-m-d H:i:s');
             $changeModel->MMCHANGE_STD = 1;
             $changeModel->MMCHANGE_MDLCHN = $data['mdlch'];
-            $changeModel->MMCHANGE_ISSUE = $data['issue'];
+            $changeModel->MMCHANGE_ISSUE = $issue_no;
 
             $changeModel->save();
             DB::commit();
@@ -67,7 +67,7 @@ class InsertChangeModelController extends Controller
             return response()->json([
                 'status' => 'success',
                 'message' => 'บันทึกข้อมูลสำเร็จ',
-                'issue_no' => $issue_no
+                // 'issue_no' => $issue_no
             ]);
         } catch (\Exception $e) {
             Log::error('Error in insertChangeModel: ' . $e->getMessage() .

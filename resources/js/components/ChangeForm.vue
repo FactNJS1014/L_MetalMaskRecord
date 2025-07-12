@@ -76,16 +76,12 @@
                                     <option value="Night">Night</option>
                                 </select> -->
                             </div>
-                            <div class="flex flex-col">
+                            <!-- <div class="flex flex-col">
                                 <label for="issue" class="text-xl font-bold">Issue No.</label>
                                 <input type="text" class="input input-bordered mt-2" v-model="formChange.issue"
                                     placeholder="Issue No." readonly />
-                                <!-- <select class="select select-bordered mt-2" v-model="formChange.shift">
-                                    <option value="" disabled selected>Choose Shift</option>
-                                    <option value="Day">Day</option>
-                                    <option value="Night">Night</option>
-                                </select> -->
-                            </div>
+
+                            </div> -->
                         </div>
                         <div class="card-actions mt-5 justify-between">
                             <button
@@ -221,8 +217,8 @@ export default {
         this.GetDataChange(),
             this.GetSession(),
             this.GetTime(),
-            this.genIssueNo(),
-            this.getSession()
+            this.genIssueNo()
+            // this.getSession()
 
     },
     methods: {
@@ -411,15 +407,15 @@ export default {
                     console.error('Error fetching change data:', error);
                 });
         },
-        getSession() {
-            axios.get('/45_engmask/api/insert-change-model')
-                .then(res => {
-                    console.log(res.data.issue_no);
-                })
-                .catch(error => {
-                    console.error('Error fetching session data:', error);
-                });
-        },
+        // getSession() {
+        //     axios.get('/45_engmask/api/insert-change-model')
+        //         .then(res => {
+        //             console.log(res.data.issue_no);
+        //         })
+        //         .catch(error => {
+        //             console.error('Error fetching session data:', error);
+        //         });
+        // },
         // checkProcs() {
 
         //     // console.log(this.mask.mdlcd)

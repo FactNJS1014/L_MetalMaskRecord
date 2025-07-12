@@ -40,6 +40,6 @@ Route::get('/search-Date',[GetDataController::class,'SearchDATE']);
 Route::get('/search-qrid',[GetDataController::class,'SearchQRID']);
 Route::get('/get-user-name',[GetDataController::class,'GetUserName']);
 Route::get('/get-mask-Id',[GetDataController::class,'GetMaskID']);
-Route::get('/insert-change-model', [InsertChangeModelController::class, 'insertChangeModel']);
+// Route::get('/insert-change-model', [InsertChangeModelController::class, 'insertChangeModel']);
 
 

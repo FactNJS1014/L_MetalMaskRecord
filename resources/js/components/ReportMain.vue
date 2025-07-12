@@ -25,6 +25,10 @@
                                 placeholder="Search Date" v-model="searchDataDate" @input="searchAll" />
                             <input type="text" class="input input-bordered w-full max-w-xs ms-3"
                                 placeholder="Search QRID" v-model="searchDataQRID" @input="searchAll" />
+                            <span class="ms-3 font-semibold text-md mt-2">Day:</span>&nbsp;
+                            <span id="day" class="font-mormal text-md mt-2"></span>
+                            <span class="ms-3 font-semibold text-md mt-2">Night:</span>&nbsp;
+                            <span id="night" class="font-mormal text-md mt-2"></span>
                         </div>
                         <div>
                             <button class="btn btn-success" @click="ExportExcel">Export Excel</button>
@@ -276,72 +280,7 @@ export default {
          * *และจะทำการค้นหาข้อมูล MaskData ตามคำค้นหา
          * *หากไม่มีคำค้นหา จะดึงข้อมูลทั้งหมดจาก API
          */
-        // searchLine() {
-        //     // ฟังก์ชันนี้จะถูกเรียกเมื่อมีการพิมพ์ใน input search
-        //     // ไม่ต้องทำอะไรที่นี่ เพราะ watch จะจัดการการค้นหาให้
-        //     const searchTerm = this.searchDataLine;
-        //     console.log(searchTerm)
-        //     if (!searchTerm) {
-        //         this.GetDatasRep(); // ถ้าไม่มีการค้นหา ให้ดึงข้อมูลทั้งหมด
-        //     } else {
-        //         axios.get('/45_engmask/api/search-Line', {
-        //             params: {
-        //                 searchLine: searchTerm
-        //             }
-        //         })
-        //             .then(response => {
-        //                 this.GetDatas = response.data;
-        //                 console.log(this.GetDatas)
-        //             })
-        //             .catch(error => {
-        //                 console.error('เกิดข้อผิดพลาดในการค้นหา:', error);
-        //             });
-        //     }
-        // },
-        // searchDate() {
-        //     // ฟังก์ชันนี้จะถูกเรียกเมื่อมีการพิมพ์ใน input search
-        //     // ไม่ต้องทำอะไรที่นี่ เพราะ watch จะจัดการการค้นหาให้
-        //     const searchTerm2 = this.searchDataDate;
-        //     console.log(searchTerm2)
-        //     if (!searchTerm2) {
-        //         this.GetDatasRep(); // ถ้าไม่มีการค้นหา ให้ดึงข้อมูลทั้งหมด
-        //     } else {
-        //         axios.get('/45_engmask/api/search-Date', {
-        //             params: {
-        //                 searchDate: searchTerm2
-        //             }
-        //         })
-        //             .then(response => {
-        //                 this.GetDatas = response.data;
-        //                 console.log(this.GetDatas)
-        //             })
-        //             .catch(error => {
-        //                 console.error('เกิดข้อผิดพลาดในการค้นหา:', error);
-        //             });
-        //     }
-        // },
-        // searchQRID() {
-        //     // ฟังก์ชันนี้จะถูกเรียกเมื่อมีการพิมพ์ใน input search
-        //     // ไม่ต้องทำอะไรที่นี่ เพราะ watch จะจัดการการค้นหาให้
-        //     const searchTerm3 = this.searchDataQRID;
-        //     console.log(searchTerm3)
-        //     if (!searchTerm3) {
-        //         this.GetDatasRep(); // ถ้าไม่มีการค้นหา ให้ดึงข้อมูลทั้งหมด
-        //     } else {
-        //         axios.get('/45_engmask/api/search-qrid', {
-        //             params: {
-        //                 searchQRID: searchTerm3
-        //             }
-        //         })
-        //             .then(response => {
-        //                 this.GetDatas = response.data;
-        //                 console.log(this.GetDatas)
-        //             })
-        //             .catch(error => {
-        //                 console.error('เกิดข้อผิดพลาดในการค้นหา:', error);
-        //             });
-        //     }
-        // },
+
         searchAll() {
             axios.get('/45_engmask/api/search-filter', {
                 params: {
@@ -352,6 +291,13 @@ export default {
             })
                 .then(response => {
                     this.GetDatas = response.data;
+                    // นับจำนวน Day shift
+                    const dayShiftCount = response.data.filter(item => item.MMCHANGE_SHIFT === 'Day').length;
+                    const nightShiftCount = response.data.filter(item => item.MMCHANGE_SHIFT === 'Night').length;
+
+                    document.getElementById('day').textContent = dayShiftCount;
+                    document.getElementById('night').textContent = nightShiftCount;
+                    // console.log('จำนวนรายการที่เป็น Day Shift:', dayShiftCount);
                     // console.log(this.GetDatas);
                 })
                 .catch(error => {

@@ -10,11 +10,11 @@
                             <thead>
                                 <tr class="text-center text-xl bg-info text-white">
                                     <th>Doc. No.</th>
+                                    <th>SMT</th>
                                     <th>Work Order</th>
                                     <th>Model</th>
                                     <th>Customer</th>
                                     <th>Process</th>
-                                    <th>SMT</th>
                                     <th>Date</th>
                                     <th>Time</th>
                                     <th>Action เปลี่ยนโมเดลใช้งาน</th>
@@ -26,11 +26,11 @@
                                 <tr v-for="(history, index) in changeHistory" :key="index"
                                     class="text-center text-[17px] font-semibold">
                                     <td>{{ history.MMCHANGE_ISSUE }}</td>
+                                    <td>{{ history.MMCHANGE_LINE }}</td>
                                     <td>{{ history.MMCHANGE_WONNO }}</td>
                                     <td>{{ history.MMCHANGE_MDLCHN }}</td>
                                     <td>{{ history.MMCHANGE_CUS }}</td>
                                     <td>{{ history.MMCHANGE_PRCS }}</td>
-                                    <td>{{ history.MMCHANGE_LINE }}</td>
                                     <td>{{ formatDate(history.MMCHANGE_LSTDT) }}</td>
                                     <td>{{ formatTime(history.MMCHANGE_LSTDT) }}</td>
                                     <td><button class="btn btn-warning text-xl" @click="ToRecordPage(history)"
