@@ -67,6 +67,20 @@ class GetDataController extends Controller
         return response()->json($get_mdl_code);
     }
 
+    public function getCus(Request $request)
+    {
+
+
+        // Query the database table using a LIKE clause
+        $get_cus = DB::table('VWORLIST')
+            ->select('BGCD')
+            ->distinct()
+            ->get();
+
+        // Return the result as JSON
+        return response()->json($get_cus);
+    }
+
     public function GetChangeData()
     {
         $data = DB::table('VLINE')
@@ -337,6 +351,8 @@ class GetDataController extends Controller
         $searchLine = $request->input('searchLine');
         $searchDate = $request->input('searchDate');
         $searchQRID = $request->input('searchQRID');
+        $searchDate2 = $request->input('searchDate2');
+        $searchCus = $request->input('searchCus');
 
         $query = DB::table('MM_MSKREC_TBL as msk')
             ->join('MMCHN_MDL_TBL as chn', 'msk.MMCHANGE_ID', '=', 'chn.MMCHANGE_ID')
@@ -350,11 +366,19 @@ class GetDataController extends Controller
         }
 
         if (!empty($searchDate)) {
-            $query->whereDate('chn.MMCHANGE_LSTDT', $searchDate);
+            $query->whereDate('chn.MMCHANGE_LSTDT', '>=' ,  $searchDate);
         }
 
         if (!empty($searchQRID)) {
             $query->where('msk2.MMST_QRID', 'LIKE', '%' . $searchQRID . '%');
+        }
+
+        if (!empty($searchDate2)) {
+            $query->whereDate('chn.MMCHANGE_LSTDT', '<=', $searchDate2);
+        }
+
+        if (!empty($searchCus)) {
+            $query->where('chn.MMCHANGE_CUS', $searchCus);
         }
 
         $result = $query->get();

@@ -15,7 +15,7 @@
                     <div class="flex justify-between items-center">
                         <div class="flex items-start">
                             <select v-model="searchDataLine" @change="searchAll"
-                                class="select select-bordered w-full max-w-xs">
+                                class="select select-bordered w-full max-w-xs max-h-[200px]">
                                 <option value="">-- เลือก LINE --</option>
                                 <option v-for="line in allLines" :key="line" :value="line.LINE_NAME">
                                     {{ line.LINE_NAME }}
@@ -23,16 +23,34 @@
                             </select>
                             <input type="date" class="input input-bordered w-full max-w-xs ms-3"
                                 placeholder="Search Date" v-model="searchDataDate" @input="searchAll" />
-                            <input type="text" class="input input-bordered w-full max-w-xs ms-3"
-                                placeholder="Search QRID" v-model="searchDataQRID" @input="searchAll" />
-                            <span class="ms-3 font-semibold text-md mt-2">Day:</span>&nbsp;
-                            <span id="day" class="font-mormal text-md mt-2"></span>
-                            <span class="ms-3 font-semibold text-md mt-2">Night:</span>&nbsp;
-                            <span id="night" class="font-mormal text-md mt-2"></span>
+                            <div class="flex items-center justify-center ms-3 mt-2">
+                                <p>to</p>
+                            </div>
+
+                            <input type="date" class="input input-bordered w-full max-w-xs ms-3"
+                                placeholder="Search Date" v-model="searchDataDate2" @input="searchAll" />
+
+                            <select v-model="searchDataCus" @change="searchAll"
+                                class="select select-bordered w-full max-w-xs max-h-[200px] ms-3">
+                                <option value="">-- เลือก Customer --</option>
+                                <option v-for="cus in allCus" :key="cus" :value="cus.BGCD">
+                                    {{ cus.BGCD }}
+                                </option>
+                            </select>
+
                         </div>
+
                         <div>
                             <button class="btn btn-success" @click="ExportExcel">Export Excel</button>
                         </div>
+                    </div>
+                    <div class="flex items-start mt-2">
+                        <input type="text" class="input input-bordered w-full max-w-xs ms-3" placeholder="Search QRID"
+                            v-model="searchDataQRID" @input="searchAll" />
+                        <span class="ms-3 font-semibold text-md mt-2">Day:</span>&nbsp;
+                        <span id="day" class="font-mormal text-md mt-2"></span>
+                        <span class="ms-3 font-semibold text-md mt-2">Night:</span>&nbsp;
+                        <span id="night" class="font-mormal text-md mt-2"></span>
                     </div>
                     <div class="mt-4 max-h-[400px] overflow-auto border border-gray-300 rounded">
                         <table class="table w-full min-w-[1000px] table-zebra">
@@ -120,11 +138,15 @@ export default {
             searchDataLine: '',
             searchDataDate: '',
             searchDataQRID: '',
+            searchDataDate2: '',
+            searchDataCus: '',
             qrid: '',
             GetDatas: [],
             allLines: [], // รายการทั้งหมดของ LINE ที่ใช้ใน select
             userNameMap: {},
-            masknoMap: {}
+            masknoMap: {},
+            allCus: [], // รายการทั้งหมดของ Customer ที่ใช้ใน select
+
         };
     },
     computed: {
@@ -184,7 +206,7 @@ export default {
                 // console.log(grouped)
 
                 this.runningSums = grouped;
-                // console.log(this.runningSums)
+                console.log(this.runningSums)
                 // console.log(notifyStatus)
 
                 Object.entries(grouped).forEach(([mdl, total]) => {
@@ -286,7 +308,9 @@ export default {
                 params: {
                     searchLine: this.searchDataLine,
                     searchDate: this.searchDataDate,
-                    searchQRID: this.searchDataQRID
+                    searchQRID: this.searchDataQRID,
+                    searchDate2: this.searchDataDate2,
+                    searchCus: this.searchDataCus
                 }
             })
                 .then(response => {
@@ -361,6 +385,16 @@ export default {
         },
         getMaskNo(id) {
             return this.masknoMap[id]
+        },
+        GetCus() {
+            axios.get('/45_engmask/api/get-cus')
+                .then(response => {
+                    this.allCus = response.data;
+                    // console.log(this.allCus)
+                })
+                .catch(error => {
+                    console.error('เกิดข้อผิดพลาดในการดึงข้อมูล Customer:', error);
+                });
         }
 
 
@@ -372,7 +406,9 @@ export default {
             this.GetDatasRep(),
             this.GetLines(),
             this.loadUserNames(),
-            this.loadMaskID()
+            this.loadMaskID(),
+            this.GetCus();
+
 
 
     },

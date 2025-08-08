@@ -57,10 +57,14 @@ export default {
                             const label = chart.data.labels[index];
                             const value = chart.data.datasets[0].data[index];
 
+                            // const relatedData = this.rawData
+                            //     .filter(item => item.MMST_QRID === label)
+                            //     .sort((a, b) => new Date(b.MSKREC_PRODDATE) - new Date(a.MSKREC_PRODDATE))
+                            //     .slice(0, 5);
                             const relatedData = this.rawData
                                 .filter(item => item.MMST_QRID === label)
-                                .sort((a, b) => new Date(b.MSKREC_PRODDATE) - new Date(a.MSKREC_PRODDATE))
-                                .slice(0, 5);
+
+                            console.log(relatedData);
 
                             let rows = relatedData.map(item => `
                 <tr>
@@ -74,12 +78,13 @@ export default {
               `).join('');
 
                             const tableHtml = `
+
   <h4 style="margin-bottom: 10px;" class="text-[19px] font-semibold text-blue-600">
-    QR Code ID: ${label} | Total Mask Shots: ${value}
+    QR Code ID: ${label} <span class="text-red-600">|</span> Total Mask Shots: ${value}
   </h4>
-  <div class="overflow-x-auto">
-    <table class="table w-full text-sm text-left text-gray-500">
-      <thead style="background-color: #f3f4f6;">
+  <div class="mt-4 max-h-[400px] overflow-auto border border-gray-300 rounded">
+    <table class="table w-full min-w-[1000px] table-zebra">
+      <thead style="background-color: #f3f4f6;" class="sticky top-0 bg-purple-800 z-10">
         <tr>
           <th style="padding: 8px; border: 1px solid #ccc;">Metal Mask No.</th>
           <th style="padding: 8px; border: 1px solid #ccc;">Work Order</th>
@@ -93,7 +98,11 @@ export default {
         ${rows}
       </tbody>
     </table>
+
   </div>
+    <div class="mt-3 flex justify-start items-center">
+        <p class="text-[16px] font-semibold text-sky-600">รายการทั้งหมด ${relatedData.length} รายการ</p>
+    </div>
 `;
 
 
